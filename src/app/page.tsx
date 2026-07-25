@@ -1,7 +1,7 @@
-export default function Home() {
+export default function LandingPage() {
   return (
     <div>
-
+      
     </div>
   )
 }
