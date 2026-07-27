@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,54 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model User { 
+  id             String   @id @default(uuid())
+  email          String   @unique
+  username       String   @unique
+  password       String   
+  baseCurrency   String   @default("USD")
+  theme          String   @default("dark")
+  createdAt      DateTime @default(now())
+  watchlistItems WatchlistItem[]
+  trades         Trade[]
+  holdings       Holding[]
+} 
+
+model WatchlistItem {
+  id      String   @id @default(uuid())
+  userId  String   
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbol  String   
+  addedAt DateTime @default(now())
+
+  @@unique([userId, symbol])
+}
+
+model Trade {
+  id         String    @id @default(uuid())
+  userId     String    
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbol     String    
+  direction  String
+  entryPrice Float
+  exitPrice  Float?
+  quantity   Float
+  notes      String?
+  openedAt   DateTime
+  closedAt   DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model Holding {
+  id        String   @id @default(uuid())
+  userId    String   
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbol    String   
+  amount    Float
+  avgBuy    Float
+  createdAt DateTime @default(now())
+
+  @@unique([userId, symbol])
 }
