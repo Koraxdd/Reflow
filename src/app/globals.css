@@ -1,28 +1,81 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0e1a;
+  --foreground: #e2e8f0;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-neon-cyan: #00d4ff;
+  --color-neon-green: #00e676;
+  --color-neon-red: #ff4d6d;
+  --color-neon-purple: #a855f7;
+  --color-card: #111827;
+  --color-text-muted: #64748b;
+  --color-input: #1e2435;
+  --color-placeholder: #e2e8f0;
+  --color-border: rgba(255, 255, 255, 0.07);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-* {
-  box-sizing: border-box;
+@layer utilities {
+  .bg-grid {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), 
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+
+    background-size: 40px 40px;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-height: 100vh;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), sans-serif;
+  }
+  
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+  }
 }
