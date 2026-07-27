@@ -10,7 +10,7 @@ export default function AuthForm() {
     const [isLogin, setIsLogin] = useState(true)
 
     return (
-        <form className="flex flex-col gap-7 bg-card border border-border p-8 rounded-2xl w-full">
+        <form className="flex flex-col gap-7 bg-card border border-border p-8 rounded-2xl w-full md:w-95 shadow-[0_0_60px_rgba(0,212,255,0.1)] md:shadow-[0_0_30px_rgba(0,212,255,0.05)]">
             <div className="bg-input rounded-xl grid grid-cols-2 p-1">
                 <Button 
                     variant="ghost" 

@@ -30,6 +30,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({ label, icon, type, placehol
                     ref={ref}
                     className={cn(
                         "bg-input border border-border text-placeholder/30 text-sm rounded-2xl py-3 w-full font-light",
+                        "outline-none focus:ring-[0.5px] focus:ring-neon-cyan transition-shadow duration-200",
                         icon ? "pl-10 pr-4" : "px-4",
                         className
                     )}
