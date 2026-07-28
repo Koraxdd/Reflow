@@ -101,7 +101,7 @@ export default function AuthForm() {
                     size="sm"
                     className={cn(
                         isLogin && "bg-neon-cyan text-background",
-                        !isLogin && "transition-all duration-250"
+                        !isLogin && "transition-all hover:text-foreground"
                     )}
                     onClick={() => {
                         setIsLogin(true)
@@ -116,7 +116,7 @@ export default function AuthForm() {
                     size="sm"
                     className={cn(
                         !isLogin && "bg-neon-cyan text-background",
-                        isLogin && "transition-all duration-250"
+                        isLogin && "transition-all hover:text-foreground"
                     )}
                     onClick={() => {
                         setIsLogin(false)
@@ -173,7 +173,7 @@ export default function AuthForm() {
                 {isLogin && (
                     <Button
                         type="button"
-                        className="text-neon-cyan text-xs self-end mb-1"
+                        className="text-neon-cyan text-xs self-end mb-1 transition-opacity hover:opacity-80"
                     >
                         Forgot password?
                     </Button>
@@ -187,7 +187,7 @@ export default function AuthForm() {
                     </span>
                     <Button
                         type="button"
-                        className="text-neon-cyan text-sm"
+                        className="text-neon-cyan text-sm transition-opacity hover:opacity-80"
                         onClick={() => {
                             setIsLogin((prev) => !prev)
                             reset()
