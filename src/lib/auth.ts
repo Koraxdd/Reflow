@@ -10,21 +10,24 @@ export const authOptions: NextAuthOptions = {
             name: "Credentials",
             credentials: {
                 email: {},
-                password: {}
+                password: {},
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials.password) return null
                 const user = await prisma.user.findUnique({
-                    where: { email: credentials.email }
+                    where: { email: credentials.email },
                 })
                 if (!user) return null
 
-                const validPassword = await argon2.verify(user.password, credentials.password)
+                const validPassword = await argon2.verify(
+                    user.password,
+                    credentials.password
+                )
                 if (!validPassword) return null
 
                 return { id: user.id, email: user.email, name: user.username }
-            }
-        })
+            },
+        }),
     ],
     callbacks: {
         async jwt({ token, user }) {
@@ -36,9 +39,9 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.user.id = token.id
             return session
-        }
+        },
     },
     pages: {
-        signIn: "/"
-    }
+        signIn: "/",
+    },
 }
