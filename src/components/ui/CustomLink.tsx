@@ -18,7 +18,7 @@ export default function CustomLink({ children, href, className }: Props) {
             className={cn(
                 "font-medium text-sm text-link px-3 py-2 rounded-2xl",
                 pathname === href &&
-                    "text-neon-cyan border border-neon-cyan/15 bg-neon-cyan/10",
+                    "text-neon-cyan border border-neon-cyan/20 bg-neon-cyan/10",
                 className
             )}
         >

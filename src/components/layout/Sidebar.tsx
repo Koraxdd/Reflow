@@ -8,7 +8,7 @@ import SidebarButton from "../ui/SidebarButton"
 
 export default function Sidebar() {
     return (
-        <aside className="bg-header border-r border-border min-h-screen w-4/7 md:w-1/8 fixed flex flex-col">
+        <aside className="bg-header border-r border-border min-h-screen w-55 md:w-60 fixed top-0 flex flex-col">
             <div className="flex items-center gap-3 border-b border-border py-5 px-4">
                 <TrendingUp className="bg-neon-cyan/20 text-neon-cyan w-8 h-8 p-2 rounded-xl" />
                 <h2 className="text-base font-semibold">CryptoLog</h2>

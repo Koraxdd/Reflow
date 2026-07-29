@@ -3,9 +3,9 @@
 import { Menu, Sun } from "lucide-react"
 import Button from "../ui/Button"
 
-export default function Header() {
+export default function MobileHeader() {
     return (
-        <header className="bg-header border border-border px-5 py-4 flex justify-between">
+        <header className="bg-header border border-border px-5 py-4 flex justify-between md:hidden">
             <div className="flex items-center gap-3">
                 <Button className="text-white/50 cursor-pointer p-1">
                     <Menu className="w-5 h-5" />
