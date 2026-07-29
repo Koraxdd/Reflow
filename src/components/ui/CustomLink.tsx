@@ -1,5 +1,3 @@
-"use client"
-
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -18,9 +16,9 @@ export default function CustomLink({ children, href, className }: Props) {
         <Link
             href={href}
             className={cn(
-                "font-medium text-sm text-link px-3 py-2",
+                "font-medium text-sm text-link px-3 py-2 rounded-2xl",
                 pathname === href &&
-                    "text-neon-cyan border border-neon-cyan/15 rounded-2xl bg-neon-cyan/10",
+                    "text-neon-cyan border border-neon-cyan/15 bg-neon-cyan/10",
                 className
             )}
         >
