@@ -1,6 +1,4 @@
-import DesktopHeader from "@/components/layout/DesktopHeader"
-import MobileHeader from "@/components/layout/MobileHeader"
-import Sidebar from "@/components/layout/Sidebar"
+import DashboardShell from "@/components/layout/DashboardShell"
 import type { ReactNode } from "react"
 
 type Props = {
@@ -10,9 +8,7 @@ type Props = {
 export default function DashboardLayout({ children }: Props) {
     return (
         <div className="min-h-screen">
-            <MobileHeader />
-            <DesktopHeader />
-            <Sidebar />
+            <DashboardShell />
             <main>{children}</main>
         </div>
     )

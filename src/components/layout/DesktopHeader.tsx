@@ -2,10 +2,19 @@
 
 import { Sun } from "lucide-react"
 import Button from "../ui/Button"
+import { motion } from "motion/react"
 
-export default function DesktopHeader() {
+type Props = {
+    isOpen: boolean
+}
+
+export default function DesktopHeader({ isOpen }: Props) {
     return (
-        <header className="hidden md:flex px-6 py-4 justify-between items-center border-b border-border ml-60">
+        <motion.header
+            animate={{ marginLeft: isOpen ? 240 : 80 }}
+            transition={{ type: "tween", duration: 0.2 }}
+            className="hidden md:flex px-6 py-4 justify-between items-center border-b border-border ml-60"
+        >
             <span className="text-foreground/40 text-sm font-medium">
                 Dashboard
             </span>
@@ -18,6 +27,6 @@ export default function DesktopHeader() {
                     A
                 </Button>
             </div>
-        </header>
+        </motion.header>
     )
 }

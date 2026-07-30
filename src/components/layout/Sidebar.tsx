@@ -1,19 +1,29 @@
-"use client"
-
 import { Bell, TrendingUp } from "lucide-react"
 import CustomLink from "../ui/CustomLink"
 import { navLinks } from "@/lib/navLinks"
 import LogoutButton from "../ui/LogoutButton"
 import SidebarButton from "../ui/SidebarButton"
+import { AnimatePresence, motion } from "motion/react"
 
-export default function Sidebar() {
+type Props = {
+    isOpen: boolean
+    handleToggle: () => void
+}
+
+export default function Sidebar({ isOpen, handleToggle }: Props) {
     return (
-        <aside className="bg-header border-r border-border min-h-screen w-55 md:w-60 fixed top-0 flex flex-col">
+        <motion.aside
+            animate={{ width: isOpen ? 240 : 80 }}
+            transition={{ type: "tween", duration: 0.2 }}
+            className="bg-header border-r border-border min-h-screen w-55 md:w-60 fixed top-0 flex flex-col"
+        >
             <div className="flex items-center gap-3 border-b border-border py-5 px-4">
                 <TrendingUp className="bg-neon-cyan/20 text-neon-cyan w-8 h-8 p-2 rounded-xl" />
-                <h2 className="text-base font-semibold">CryptoLog</h2>
+                {isOpen && (
+                    <h2 className="text-base font-semibold">CryptoLog</h2>
+                )}
             </div>
-            <SidebarButton />
+            <SidebarButton onClick={handleToggle} isOpen={isOpen} />
             <nav className="p-4 flex flex-col gap-1">
                 {navLinks.map((link) => {
                     const Icon = link.icon
@@ -24,7 +34,7 @@ export default function Sidebar() {
                             className="w-full flex items-center gap-3"
                         >
                             <Icon className="w-3.5 h-3.5" />
-                            {link.label}
+                            {isOpen && link.label}
                         </CustomLink>
                     )
                 })}
@@ -35,13 +45,14 @@ export default function Sidebar() {
                     className="w-full flex items-center gap-3"
                 >
                     <Bell className="w-3.5 h-3.5" />
-                    Alerts
+                    {isOpen && "Alerts"}
                 </CustomLink>
                 <LogoutButton
                     size="sm"
                     className="w-full flex items-center gap-3 px-3 py-2 text-link font-medium rounded-2xl hover:bg-red-500/10"
+                    isOpen={isOpen}
                 />
             </div>
-        </aside>
+        </motion.aside>
     )
 }

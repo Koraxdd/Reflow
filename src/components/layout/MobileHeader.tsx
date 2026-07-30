@@ -3,7 +3,11 @@
 import { Menu, Sun } from "lucide-react"
 import Button from "../ui/Button"
 
-export default function MobileHeader() {
+type Props = {
+    isOpen: boolean
+}
+
+export default function MobileHeader({ isOpen }: Props) {
     return (
         <header className="bg-header border border-border px-5 py-4 flex justify-between md:hidden">
             <div className="flex items-center gap-3">
