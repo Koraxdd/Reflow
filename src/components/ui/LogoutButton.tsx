@@ -1,7 +1,6 @@
 import { LogOut } from "lucide-react"
 import Button from "./Button"
 import { signOut } from "next-auth/react"
-import { AnimatePresence, motion } from "motion/react"
 
 type Props = {
     size?: "xs" | "sm" | "md" | "lg"

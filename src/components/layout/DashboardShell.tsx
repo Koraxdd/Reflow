@@ -1,18 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DesktopHeader from "./DesktopHeader"
 import MobileHeader from "./MobileHeader"
 import Sidebar from "./Sidebar"
 
 export default function DashboardShell() {
-    const [isOpen, setIsOpen] = useState<boolean>(true)
+    const [isDesktop, setIsDesktop] = useState<boolean>(false)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    useEffect(() => {
+        const check = () => {
+            const desktop = window.innerWidth >= 768
+            setIsDesktop(desktop)
+            setIsOpen(desktop)
+        }
+        check()
+        window.addEventListener("resize", check)
+        return () => window.removeEventListener("resize", check)
+    }, [])
 
     return (
         <>
-            <MobileHeader isOpen={isOpen} />
+            <MobileHeader handleOpen={() => setIsOpen(true)} />
             <DesktopHeader isOpen={isOpen} />
             <Sidebar
+                isDesktop={isDesktop}
                 isOpen={isOpen}
                 handleToggle={() => setIsOpen((prev) => !prev)}
             />

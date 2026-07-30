@@ -4,15 +4,15 @@ import { Menu, Sun } from "lucide-react"
 import Button from "../ui/Button"
 
 type Props = {
-    isOpen: boolean
+    handleOpen: () => void
 }
 
-export default function MobileHeader({ isOpen }: Props) {
+export default function MobileHeader({ handleOpen }: Props) {
     return (
         <header className="bg-header border border-border px-5 py-4 flex justify-between md:hidden">
             <div className="flex items-center gap-3">
                 <Button className="text-white/50 cursor-pointer p-1">
-                    <Menu className="w-5 h-5" />
+                    <Menu className="w-5 h-5" onClick={handleOpen} />
                 </Button>
                 <h1 className="text-base font-semibold">CryptoLog</h1>
             </div>
