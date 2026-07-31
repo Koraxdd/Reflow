@@ -33,7 +33,7 @@ export default function Sidebar({ isDesktop, isOpen, handleToggle }: Props) {
                 <div className="flex items-center gap-3 border-b border-border py-5 px-4">
                     <TrendingUp className="bg-neon-cyan/20 text-neon-cyan w-8 h-8 p-2 rounded-xl" />
                     {isOpen && (
-                        <h2 className="text-base font-semibold">CryptoLog</h2>
+                        <h2 className="text-base font-semibold">Reflow</h2>
                     )}
                 </div>
                 <SidebarButton onClick={handleToggle} isOpen={isOpen} />
