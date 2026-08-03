@@ -6,6 +6,7 @@ import Button from "../ui/Button"
 import { Input } from "../ui/Input"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { submitTrade } from "@/actions/trades"
 
 type Props = {
     handleClose: () => void
@@ -17,21 +18,28 @@ const TradeSchema = z.object({
         .min(3, "Symbol must be 3 characters")
         .max(3, "Symbol must be 3 characters"),
     openedAt: z.coerce.date(),
-    closedAt: z.coerce.date().optional(),
+    closedAt: z.preprocess(
+        (val) => (val === "" ? undefined : val),
+        z.coerce.date().optional()
+    ),
     direction: z.enum(["Long", "Short"]),
     amount: z.coerce.number().positive("Amount must be greater than 0"),
     entryPrice: z.coerce
         .number()
         .positive("Entry price must be greater than 0"),
-    exitPrice: z.coerce
-        .number()
-        .positive("Exit price must be greater than 0")
-        .optional(),
+    exitPrice: z.preprocess(
+        (val) => (val === "" ? undefined : val),
+        z.coerce
+            .number()
+            .positive("Exit price must be greater than 0")
+            .optional()
+    ),
     reflection: z.string().optional(),
     tags: z.array(z.string()).optional(),
 })
 
 type TradeInput = z.input<typeof TradeSchema>
+export type TradeOutput = z.infer<typeof TradeSchema>
 
 export default function TradeForm({ handleClose }: Props) {
     const [tagValue, setTagValue] = useState<string>("")
@@ -41,7 +49,10 @@ export default function TradeForm({ handleClose }: Props) {
         const trimmed = tagValue.trim()
         if (!trimmed) return
         if (tags.includes(trimmed)) return
-        setTags((prev) => [...prev, trimmed])
+
+        const updated = [...tags, trimmed]
+        setTags(updated)
+        setValue("tags", updated)
         setTagValue("")
     }
 
@@ -50,6 +61,7 @@ export default function TradeForm({ handleClose }: Props) {
         handleSubmit,
         setValue,
         watch,
+        reset,
         setError,
         formState: { errors },
     } = useForm<TradeInput>({
@@ -61,8 +73,11 @@ export default function TradeForm({ handleClose }: Props) {
 
     const onSubmit: SubmitHandler<TradeInput> = async (data) => {
         try {
+            await submitTrade(TradeSchema.parse(data))
+            reset()
+            handleClose()
         } catch (err) {
-            throw new Error(`Unexpected error: ${err}`)
+            setError("root", { message: "Failed to save trade" })
         }
     }
 
@@ -78,20 +93,35 @@ export default function TradeForm({ handleClose }: Props) {
                 </Button>
             </div>
             <div className="grid grid-cols-2 gap-4 justify-center">
-                <Input
-                    {...register("coin")}
-                    type="text"
-                    label="COIN"
-                    placeholder="BTC, ETH, SOL..."
-                    className="text-foreground font-normal"
-                />
-                <Input
-                    {...register("amount")}
-                    type="number"
-                    label="AMOUNT"
-                    placeholder="0.00"
-                    className="text-foreground font-normal"
-                />
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("coin")}
+                        type="text"
+                        label="COIN"
+                        placeholder="BTC, ETH, SOL..."
+                        className="text-foreground font-normal"
+                    />
+                    {errors.coin && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.coin.message}
+                        </span>
+                    )}
+                </div>
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("amount")}
+                        type="number"
+                        step="0.00000001"
+                        label="AMOUNT"
+                        placeholder="0.00"
+                        className="text-foreground font-normal"
+                    />
+                    {errors.amount && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.amount.message}
+                        </span>
+                    )}
+                </div>
                 <div className="flex flex-col gap-2 col-span-2">
                     <label className="font-semibold text-xs text-text-muted">
                         TYPE
@@ -137,20 +167,36 @@ export default function TradeForm({ handleClose }: Props) {
                     label="CLOSED AT"
                     className="text-foreground font-normal"
                 />
-                <Input
-                    {...register("entryPrice")}
-                    type="number"
-                    label="ENTRY PRICE (USD)"
-                    placeholder="0.00"
-                    className="text-foreground font-normal"
-                />
-                <Input
-                    {...register("exitPrice")}
-                    type="number"
-                    label="EXIT PRICE (USD)"
-                    placeholder="0.00"
-                    className="text-foreground font-normal"
-                />
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("entryPrice")}
+                        type="number"
+                        step="0.01"
+                        label="ENTRY PRICE (USD)"
+                        placeholder="0.00"
+                        className="text-foreground font-normal"
+                    />
+                    {errors.entryPrice && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.entryPrice.message}
+                        </span>
+                    )}
+                </div>
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("exitPrice")}
+                        type="number"
+                        step="0.01"
+                        label="EXIT PRICE (USD)"
+                        placeholder="0.00"
+                        className="text-foreground font-normal"
+                    />
+                    {errors.exitPrice && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.exitPrice.message}
+                        </span>
+                    )}
+                </div>
             </div>
             <div className="flex flex-col gap-2">
                 <label className="font-semibold text-xs text-text-muted">
@@ -189,19 +235,26 @@ export default function TradeForm({ handleClose }: Props) {
                             ))}
                         </div>
                     )}
-                    <Input
-                        type="text"
-                        placeholder="Add a tag..."
-                        className="text-xs py-2 text-foreground font-normal w-full"
-                        value={tagValue}
-                        onChange={(e) => setTagValue(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault()
-                                handleAddTag()
-                            }
-                        }}
-                    />
+                    <div>
+                        <Input
+                            type="text"
+                            placeholder="Add a tag..."
+                            className="text-xs py-2 text-foreground font-normal w-full"
+                            value={tagValue}
+                            onChange={(e) => setTagValue(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault()
+                                    handleAddTag()
+                                }
+                            }}
+                        />
+                        {errors.root && (
+                            <span className="text-neon-cyan text-xs">
+                                {errors.root.message}
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <Button
                     type="button"

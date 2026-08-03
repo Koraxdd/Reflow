@@ -10,6 +10,7 @@ type Props = {
     label?: string
     icon?: ReactNode
     type: "text" | "email" | "password" | "number" | "date"
+    step?: string
     placeholder?: string
     className?: string
     value?: string
@@ -23,6 +24,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
             label,
             icon,
             type,
+            step,
             placeholder,
             className,
             value,
@@ -47,6 +49,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
                     <input
                         {...props}
                         type={type}
+                        step={step}
                         placeholder={placeholder}
                         ref={ref}
                         className={cn(
