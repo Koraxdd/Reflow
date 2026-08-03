@@ -10,6 +10,7 @@ import { submitTrade } from "@/actions/trades"
 
 type Props = {
     handleClose: () => void
+    onAddTrade: (data: TradeOutput) => void
 }
 
 const TradeSchema = z.object({
@@ -41,7 +42,7 @@ const TradeSchema = z.object({
 type TradeInput = z.input<typeof TradeSchema>
 export type TradeOutput = z.infer<typeof TradeSchema>
 
-export default function TradeForm({ handleClose }: Props) {
+export default function TradeForm({ handleClose, onAddTrade }: Props) {
     const [tagValue, setTagValue] = useState<string>("")
     const [tags, setTags] = useState<string[]>([])
 
@@ -73,7 +74,7 @@ export default function TradeForm({ handleClose }: Props) {
 
     const onSubmit: SubmitHandler<TradeInput> = async (data) => {
         try {
-            await submitTrade(TradeSchema.parse(data))
+            onAddTrade(TradeSchema.parse(data))
             reset()
             handleClose()
         } catch (err) {

@@ -33,3 +33,12 @@ export async function createTrade(
         },
     })
 }
+
+export async function getTradesByUser(userId: string): Promise<Trade[] | null> {
+    return await prisma.trade.findMany({
+        where: {
+            userId,
+        },
+        orderBy: { openedAt: "desc" },
+    })
+}

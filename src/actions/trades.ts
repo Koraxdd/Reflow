@@ -2,7 +2,7 @@
 
 import { TradeOutput } from "@/components/forms/TradeForm"
 import { authOptions } from "@/lib/auth"
-import { createTrade } from "@/queries/trades"
+import { createTrade, getTradesByUser } from "@/queries/trades"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
@@ -14,4 +14,14 @@ export async function submitTrade(data: TradeOutput) {
     }
 
     return await createTrade(userId, data)
+}
+
+export async function getTrades() {
+    const session = await getServerSession(authOptions)
+    const userId = session?.user.id
+    if (!userId) {
+        redirect("/")
+    }
+
+    return await getTradesByUser(userId)
 }

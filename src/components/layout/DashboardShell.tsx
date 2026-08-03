@@ -35,7 +35,7 @@ export default function DashboardShell({ children }: Props) {
                 handleToggle={() => setIsOpen((prev) => !prev)}
             />
             <motion.main
-                animate={{ marginLeft: isOpen ? 240 : 80 }}
+                animate={isDesktop && { marginLeft: isOpen ? 240 : 80 }}
                 transition={{ type: "tween", duration: 0.2 }}
                 className="md:ml-60"
             >
