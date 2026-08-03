@@ -59,10 +59,18 @@ export default function TradeForm({ handleClose }: Props) {
 
     const direction = watch("direction")
 
-    const onSubmit: SubmitHandler<TradeInput> = async (data) => {}
+    const onSubmit: SubmitHandler<TradeInput> = async (data) => {
+        try {
+        } catch (err) {
+            throw new Error(`Unexpected error: ${err}`)
+        }
+    }
 
     return (
-        <form className="bg-card border border-neon-cyan/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,212,255,0.1)] flex flex-col gap-5">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-card border border-neon-cyan/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,212,255,0.1)] flex flex-col gap-5"
+        >
             <div className="flex justify-between">
                 <h2 className="text-sm">New Trade Entry</h2>
                 <Button type="button" onClick={handleClose}>
