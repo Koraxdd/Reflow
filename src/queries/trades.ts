@@ -42,3 +42,11 @@ export async function getTradesByUser(userId: string): Promise<Trade[] | null> {
         orderBy: { openedAt: "desc" },
     })
 }
+
+export async function deleteTradeById(id: string): Promise<Trade> {
+    return await prisma.trade.delete({
+        where: {
+            id,
+        },
+    })
+}

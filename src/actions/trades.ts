@@ -2,7 +2,7 @@
 
 import { TradeOutput } from "@/components/forms/TradeForm"
 import { authOptions } from "@/lib/auth"
-import { createTrade, getTradesByUser } from "@/queries/trades"
+import { createTrade, deleteTradeById, getTradesByUser } from "@/queries/trades"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
@@ -24,4 +24,8 @@ export async function getTrades() {
     }
 
     return await getTradesByUser(userId)
+}
+
+export async function removeTrade(id: string) {
+    return await deleteTradeById(id)
 }

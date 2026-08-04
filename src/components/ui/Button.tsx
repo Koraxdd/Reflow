@@ -5,7 +5,7 @@ type Props = {
     children: ReactNode
     type?: "button" | "submit" | "reset"
     size?: "xs" | "sm" | "md" | "lg"
-    variant?: "ghost" | "neon"
+    variant?: "ghost" | "neon" | "danger"
     className?: string
     onClick?: MouseEventHandler<HTMLButtonElement>
 }
@@ -27,6 +27,8 @@ export default function Button({
                 variant === "ghost" && "text-text-muted",
                 variant === "neon" &&
                     "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:bg-dark-cyan",
+                variant === "danger" &&
+                    "bg-neon-red shadow-[0_0_20px_rgba(255,77,109,0.3)]",
                 size === "xs" && "text-xs",
                 size === "sm" && "text-sm py-2",
                 size === "lg" && "text-sm py-3",
