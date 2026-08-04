@@ -1,13 +1,16 @@
 "use client"
 
+import { format } from "date-fns"
 import { removeTrade } from "@/actions/trades"
 import Button from "@/components/ui/Button"
 import Modal from "@/components/ui/Modal"
-import { Trade } from "@/generated/prisma/client"
+import { type Trade } from "@/generated/prisma/client"
 import { cn } from "@/lib/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { BookOpen, Trash2, TriangleAlert } from "lucide-react"
+import { ArrowRight, BookOpen, Trash2, TriangleAlert } from "lucide-react"
 import { useState } from "react"
+import Pill from "@/components/ui/Pill"
+import { calculatePnL } from "@/utils/calculatePnL"
 
 type Props = {
     data: Trade
@@ -17,7 +20,20 @@ export default function TradeCard({ data }: Props) {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
     const queryClient = useQueryClient()
 
-    const { quantity, symbol, direction, notes, tags, entryPrice, id } = data
+    const {
+        quantity,
+        symbol,
+        direction,
+        notes,
+        tags,
+        openedAt,
+        closedAt,
+        entryPrice,
+        exitPrice,
+        id,
+    } = data
+
+    const pnl = exitPrice ? calculatePnL(exitPrice, entryPrice, quantity) : null
 
     const { mutate: deleteTrade } = useMutation({
         mutationFn: removeTrade,
@@ -29,7 +45,7 @@ export default function TradeCard({ data }: Props) {
     return (
         <>
             <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4">
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <span
                             className={cn(
@@ -54,22 +70,73 @@ export default function TradeCard({ data }: Props) {
                                             : "text-neon-red bg-neon-red/10"
                                     )}
                                 >
-                                    {direction === "Long" ? "Buy" : "Sell"}
+                                    {direction === "Long"
+                                        ? "▲ Long"
+                                        : "▼ Short"}
                                 </span>
                             </div>
-                            <span className="text-xs text-text-muted">
-                                {"Aug 3, 2026"}
-                            </span>
+                            <div className="text-xs text-text-muted flex items-center flex-wrap gap-1.5">
+                                <span>{format(openedAt, "MMM d, yyyy")}</span>
+                                <ArrowRight className="w-2.5 h-2.5" />
+                                {closedAt && (
+                                    <span>
+                                        {format(closedAt, "MMM d, yyyy")}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
-                    <div className="flex flex-col items-end [word-spacing:5px]">
-                        <span className="text-sm font-medium">
+                    {pnl && (
+                        <div className="flex flex-col items-end">
+                            <span
+                                className={cn(
+                                    "text-sm font-medium",
+                                    pnl.pnlAmount >= 0
+                                        ? "text-neon-green"
+                                        : "text-neon-red"
+                                )}
+                            >
+                                {pnl.pnlAmount >= 0
+                                    ? `+${pnl.pnlAmount}`
+                                    : `${pnl.pnlAmount}`}
+                            </span>
+                            <span
+                                className={cn(
+                                    "text-xs text-text-muted font-medium",
+                                    pnl.pnlPercentage >= 0
+                                        ? "text-neon-green/70"
+                                        : "text-neon-red/70"
+                                )}
+                            >
+                                {pnl.pnlPercentage >= 0
+                                    ? `+${pnl.pnlPercentage}%`
+                                    : `${pnl.pnlPercentage}%`}
+                            </span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center flex-wrap gap-3">
+                    <Pill>
+                        <span className="text-text-muted font-medium">
+                            Entry
+                        </span>
+                        <span className="font-medium">${entryPrice}</span>
+                    </Pill>
+                    <ArrowRight className="w-3 h-3 text-text-muted" />
+                    <Pill>
+                        <span className="text-text-muted font-medium">
+                            Exit
+                        </span>
+                        <span className="font-medium">${exitPrice}</span>
+                    </Pill>
+                    <Pill>
+                        <span className="text-text-muted font-medium">
+                            Size
+                        </span>
+                        <span className="font-medium">
                             {quantity} {symbol}
                         </span>
-                        <span className="text-xs text-text-muted font-medium">
-                            @ ${entryPrice}
-                        </span>
-                    </div>
+                    </Pill>
                 </div>
                 <div className="bg-input flex gap-2 p-2 text-text-muted text-xs rounded-xl font-medium">
                     <BookOpen className="w-3.5 h-3.5 shrink-0" />
@@ -94,11 +161,12 @@ export default function TradeCard({ data }: Props) {
                         Edit
                     </Button>
                     <Button
-                        variant="ghost"
+                        variant="destructive"
                         size="xs"
-                        className="bg-input px-2.5 py-1.5 rounded-xl"
+                        className="px-2.5 py-1.5 rounded-xl flex items-center justify-center gap-2"
                         onClick={() => setShowDeleteModal(true)}
                     >
+                        <Trash2 className="w-3 h-3" />
                         Delete
                     </Button>
                 </div>
@@ -132,7 +200,7 @@ export default function TradeCard({ data }: Props) {
                                 size="sm"
                                 className="flex items-center justify-center gap-2 rounded-2xl"
                                 onClick={() => {
-                                    deleteTrade(data.id)
+                                    deleteTrade(id)
                                     setShowDeleteModal(false)
                                 }}
                             >
