@@ -64,7 +64,7 @@ export default function TradeCard({ data }: Props) {
                                 </span>
                                 <span
                                     className={cn(
-                                        "rounded-full text-xs flex items-center justify-center font-semibold px-2",
+                                        "rounded-full text-xs flex items-center justify-center font-medium px-2",
                                         direction === "Long"
                                             ? "text-neon-green bg-neon-green/10"
                                             : "text-neon-red bg-neon-red/10"
@@ -74,10 +74,18 @@ export default function TradeCard({ data }: Props) {
                                         ? "▲ Long"
                                         : "▼ Short"}
                                 </span>
+                                {!closedAt && (
+                                    <div className="bg-neon-orange/15 border border-neon-orange/40 text-neon-orange text-xs font-medium rounded-full px-2 flex gap-1 items-center justify-center">
+                                        <span className="w-1.25 h-1.25 bg-neon-orange rounded-full animate-pulse"></span>
+                                        <span>Open</span>
+                                    </div>
+                                )}
                             </div>
                             <div className="text-xs text-text-muted flex items-center flex-wrap gap-1.5">
                                 <span>{format(openedAt, "MMM d, yyyy")}</span>
-                                <ArrowRight className="w-2.5 h-2.5" />
+                                {closedAt && (
+                                    <ArrowRight className="w-2.5 h-2.5" />
+                                )}
                                 {closedAt && (
                                     <span>
                                         {format(closedAt, "MMM d, yyyy")}
@@ -122,13 +130,17 @@ export default function TradeCard({ data }: Props) {
                         </span>
                         <span className="font-medium">${entryPrice}</span>
                     </Pill>
-                    <ArrowRight className="w-3 h-3 text-text-muted" />
-                    <Pill>
-                        <span className="text-text-muted font-medium">
-                            Exit
-                        </span>
-                        <span className="font-medium">${exitPrice}</span>
-                    </Pill>
+                    {exitPrice && (
+                        <ArrowRight className="w-3 h-3 text-text-muted" />
+                    )}
+                    {exitPrice && (
+                        <Pill>
+                            <span className="text-text-muted font-medium">
+                                Exit
+                            </span>
+                            <span className="font-medium">${exitPrice}</span>
+                        </Pill>
+                    )}
                     <Pill>
                         <span className="text-text-muted font-medium">
                             Size
@@ -138,20 +150,24 @@ export default function TradeCard({ data }: Props) {
                         </span>
                     </Pill>
                 </div>
-                <div className="bg-input flex gap-2 p-2 text-text-muted text-xs rounded-xl font-medium">
-                    <BookOpen className="w-3.5 h-3.5 shrink-0" />
-                    <span>{notes}</span>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                    {tags.map((tag) => (
-                        <span
-                            key={tag}
-                            className="flex justify-center items-center gap-1 text-xs text-neon-cyan bg-neon-cyan/10 py-1 px-2.5 rounded-2xl"
-                        >
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
+                {notes && (
+                    <div className="bg-input flex gap-2 p-2 text-text-muted text-xs rounded-xl font-medium">
+                        <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                        <span>{notes}</span>
+                    </div>
+                )}
+                {tags.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                        {tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="flex justify-center items-center gap-1 text-xs text-neon-cyan bg-neon-cyan/10 py-1 px-2.5 rounded-2xl"
+                            >
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
                 <div className="flex gap-2">
                     <Button
                         variant="ghost"
