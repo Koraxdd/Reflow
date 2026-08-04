@@ -19,7 +19,6 @@ export default function TradeJournalClient({ initialTrades }: Props) {
 
     const {
         data: trades,
-        isLoading,
         isPending,
         isError,
     } = useQuery({
