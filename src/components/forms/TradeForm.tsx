@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Save, X } from "lucide-react"
+import { Calendar, DollarSign, Hash, Save, TrendingUp, X } from "lucide-react"
 import Button from "../ui/Button"
 import { Input } from "../ui/Input"
 import { cn } from "@/lib/utils"
@@ -93,110 +93,132 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                     <X className="w-4 h-4 text-text-muted" />
                 </Button>
             </div>
-            <div className="grid grid-cols-2 gap-4 justify-center">
-                <div className="flex flex-col gap-2.5">
-                    <Input
-                        {...register("coin")}
-                        type="text"
-                        label="COIN"
-                        placeholder="BTC, ETH, SOL..."
-                        className="text-foreground font-normal"
-                    />
-                    {errors.coin && (
-                        <span className="text-neon-cyan text-xs">
-                            {errors.coin.message}
-                        </span>
-                    )}
-                </div>
-                <div className="flex flex-col gap-2.5">
-                    <Input
-                        {...register("amount")}
-                        type="number"
-                        step="0.00000001"
-                        label="AMOUNT"
-                        placeholder="0.00"
-                        className="text-foreground font-normal"
-                    />
-                    {errors.amount && (
-                        <span className="text-neon-cyan text-xs">
-                            {errors.amount.message}
-                        </span>
-                    )}
-                </div>
-                <div className="flex flex-col gap-2 col-span-2">
-                    <label className="font-semibold text-xs text-text-muted">
-                        TYPE
-                    </label>
-                    <div className="bg-input rounded-2xl grid grid-cols-2 p-1">
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="xs"
-                            className={cn(
-                                "py-2 rounded-xl",
-                                direction === "Long" &&
-                                    "bg-neon-green text-background"
-                            )}
-                            onClick={() => setValue("direction", "Long")}
-                        >
-                            Buy
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="xs"
-                            className={cn(
-                                "py-2 rounded-xl",
-                                direction === "Short" &&
-                                    "bg-neon-red text-background"
-                            )}
-                            onClick={() => setValue("direction", "Short")}
-                        >
-                            Sell
-                        </Button>
+            <div className="flex flex-col gap-4 justify-center">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="flex flex-col gap-2.5">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <Hash className="w-3 h-3" /> COIN
+                        </label>
+                        <Input
+                            {...register("coin")}
+                            type="text"
+                            placeholder="BTC, ETH, SOL..."
+                            className="text-foreground font-normal"
+                        />
+                        {errors.coin && (
+                            <span className="text-neon-cyan text-xs">
+                                {errors.coin.message}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-xs text-text-muted">
+                            DIRECTION
+                        </label>
+                        <div className="bg-input rounded-2xl grid grid-cols-2 p-1">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="xs"
+                                className={cn(
+                                    "py-2 rounded-xl",
+                                    direction === "Long" &&
+                                        "bg-neon-green text-background"
+                                )}
+                                onClick={() => setValue("direction", "Long")}
+                            >
+                                ▲ Long
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="xs"
+                                className={cn(
+                                    "py-2 rounded-xl",
+                                    direction === "Short" &&
+                                        "bg-neon-red text-background"
+                                )}
+                                onClick={() => setValue("direction", "Short")}
+                            >
+                                ▼ Short
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-2.5 col-span-2">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" /> AMOUNT / SIZE
+                        </label>
+                        <Input
+                            {...register("amount")}
+                            type="number"
+                            step="0.00000001"
+                            placeholder="0.00"
+                            className="text-foreground font-normal"
+                        />
+                        {errors.amount && (
+                            <span className="text-neon-cyan text-xs">
+                                {errors.amount.message}
+                            </span>
+                        )}
                     </div>
                 </div>
-                <Input
-                    {...register("openedAt")}
-                    type="date"
-                    label="OPENED AT"
-                    className="text-foreground font-normal"
-                />
-                <Input
-                    {...register("closedAt")}
-                    type="date"
-                    label="CLOSED AT"
-                    className="text-foreground font-normal"
-                />
-                <div className="flex flex-col gap-2.5">
-                    <Input
-                        {...register("entryPrice")}
-                        type="number"
-                        step="0.01"
-                        label="ENTRY PRICE (USD)"
-                        placeholder="0.00"
-                        className="text-foreground font-normal"
-                    />
-                    {errors.entryPrice && (
-                        <span className="text-neon-cyan text-xs">
-                            {errors.entryPrice.message}
-                        </span>
-                    )}
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-2.5">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <DollarSign className="w-3 h-3" /> ENTRY PRICE (USD)
+                        </label>
+                        <Input
+                            {...register("entryPrice")}
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            className="text-foreground font-normal"
+                        />
+                        {errors.entryPrice && (
+                            <span className="text-neon-cyan text-xs">
+                                {errors.entryPrice.message}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2.5">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <DollarSign className="w-3 h-3" /> EXIT PRICE (USD)
+                        </label>
+                        <Input
+                            {...register("exitPrice")}
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            className="text-foreground font-normal"
+                        />
+                        {errors.exitPrice && (
+                            <span className="text-neon-cyan text-xs">
+                                {errors.exitPrice.message}
+                            </span>
+                        )}
+                    </div>
                 </div>
-                <div className="flex flex-col gap-2.5">
-                    <Input
-                        {...register("exitPrice")}
-                        type="number"
-                        step="0.01"
-                        label="EXIT PRICE (USD)"
-                        placeholder="0.00"
-                        className="text-foreground font-normal"
-                    />
-                    {errors.exitPrice && (
-                        <span className="text-neon-cyan text-xs">
-                            {errors.exitPrice.message}
-                        </span>
-                    )}
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-2.5">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <Calendar className="w-3 h-3" /> OPENED AT
+                        </label>
+                        <Input
+                            {...register("openedAt")}
+                            type="date"
+                            className="text-foreground font-normal"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2.5">
+                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                            <Calendar className="w-3 h-3" /> CLOSED AT
+                        </label>
+                        <Input
+                            {...register("closedAt")}
+                            type="date"
+                            className="text-foreground font-normal"
+                        />
+                    </div>
                 </div>
             </div>
             <div className="flex flex-col gap-2">
