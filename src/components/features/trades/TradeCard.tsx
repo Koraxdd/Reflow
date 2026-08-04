@@ -156,7 +156,7 @@ export default function TradeCard({ data }: Props) {
                     <Button
                         variant="ghost"
                         size="xs"
-                        className="bg-input px-2.5 py-1.5 rounded-xl"
+                        className="bg-input px-2.5 py-1.5 rounded-xl hover:opacity-80 active:scale-95"
                     >
                         Edit
                     </Button>
@@ -190,7 +190,7 @@ export default function TradeCard({ data }: Props) {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="bg-input rounded-2xl"
+                                className="bg-input rounded-2xl hover:opacity-80"
                                 onClick={() => setShowDeleteModal(false)}
                             >
                                 Cancel

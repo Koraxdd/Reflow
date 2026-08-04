@@ -23,14 +23,14 @@ export default function Button({
             type={type}
             onClick={onClick}
             className={cn(
-                "rounded-lg transition-colors cursor-pointer font-semibold",
+                "rounded-lg transition-all cursor-pointer font-semibold",
                 variant === "ghost" && "text-text-muted",
                 variant === "neon" &&
                     "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:bg-dark-cyan",
                 variant === "danger" &&
                     "bg-neon-red shadow-[0_0_20px_rgba(255,77,109,0.3)]",
                 variant === "destructive" &&
-                    "bg-neon-red/10 border border-neon-red/30 text-neon-red",
+                    "bg-neon-red/10 border border-neon-red/15 text-neon-red hover:bg-neon-red/20 hover:border-neon-red/40",
                 size === "xs" && "text-xs",
                 size === "sm" && "text-sm py-2",
                 size === "lg" && "text-sm py-3",

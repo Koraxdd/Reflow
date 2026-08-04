@@ -9,11 +9,11 @@ export default function Modal({ children, onClose }: Props) {
     return (
         <>
             <div
-                className="fixed inset-0 backdrop-blur-sm bg-black/50"
+                className="fixed inset-0 backdrop-blur-sm bg-black/50 z-100"
                 onClick={onClose}
             />
-            <div className="fixed inset-0 flex justify-center pointer-events-none items-center z-50 px-4">
-                <div className="pointer-events-auto">{children}</div>
+            <div className="fixed inset-0 flex justify-center pointer-events-none items-center z-100 px-4">
+                <div className="pointer-events-auto max-w-sm">{children}</div>
             </div>
         </>
     )

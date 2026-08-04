@@ -47,7 +47,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                 <Button
                     variant="neon"
                     size="sm"
-                    className="flex justify-center items-center gap-2 px-4"
+                    className="flex justify-center items-center gap-2 px-4 active:scale-90"
                     onClick={() => setShowForm(true)}
                 >
                     <Plus className="w-4 h-4" />
