@@ -6,6 +6,7 @@ type Props = {
     type?: "button" | "submit" | "reset"
     size?: "xs" | "sm" | "md" | "lg"
     variant?: "ghost" | "neon" | "danger" | "destructive"
+    disabled?: boolean
     className?: string
     onClick?: MouseEventHandler<HTMLButtonElement>
 }
@@ -15,18 +16,23 @@ export default function Button({
     type = "button",
     size = "md",
     variant,
+    disabled,
     className,
     onClick,
 }: Props) {
     return (
         <button
             type={type}
+            disabled={disabled}
             onClick={onClick}
             className={cn(
                 "rounded-lg transition-all cursor-pointer font-semibold",
                 variant === "ghost" && "text-text-muted",
                 variant === "neon" &&
-                    "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:bg-dark-cyan",
+                    "bg-neon-cyan rounded-2xl text-background",
+                !disabled &&
+                    variant === "neon" &&
+                    "shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:bg-dark-cyan",
                 variant === "danger" &&
                     "bg-neon-red shadow-[0_0_20px_rgba(255,77,109,0.3)]",
                 variant === "destructive" &&
@@ -34,6 +40,7 @@ export default function Button({
                 size === "xs" && "text-xs",
                 size === "sm" && "text-sm py-2",
                 size === "lg" && "text-sm py-3",
+                disabled && "cursor-not-allowed opacity-30",
                 className
             )}
         >

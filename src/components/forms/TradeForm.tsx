@@ -64,7 +64,7 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
         watch,
         reset,
         setError,
-        formState: { errors },
+        formState: { errors, isValid, isSubmitting },
     } = useForm<TradeInput>({
         resolver: zodResolver(TradeSchema),
         defaultValues: { direction: "Long" },
@@ -294,6 +294,7 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                     variant="neon"
                     size="sm"
                     className="flex justify-center items-center gap-2 px-4"
+                    disabled={!isValid || isSubmitting}
                 >
                     <Save className="w-4 h-4" />
                     Save Entry
@@ -301,7 +302,7 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                 <Button
                     type="button"
                     size="sm"
-                    className="bg-input px-4 py-2 rounded-2xl text-text-muted"
+                    className="bg-input px-4 py-2 rounded-2xl text-text-muted hover:opacity-80"
                     onClick={handleClose}
                 >
                     Cancel
