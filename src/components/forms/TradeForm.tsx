@@ -16,6 +16,7 @@ import { Input } from "../ui/Input"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
 import { calculatePnL } from "@/utils/calculatePnL"
+import { format } from "date-fns"
 
 type Props = {
     handleClose: () => void
@@ -76,7 +77,10 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
         formState: { errors, isValid, isSubmitting },
     } = useForm<TradeInput>({
         resolver: zodResolver(TradeSchema),
-        defaultValues: { direction: "Long" },
+        defaultValues: {
+            direction: "Long",
+            openedAt: format(new Date(), "yyyy-MM-dd"),
+        },
     })
 
     const direction = watch("direction")
