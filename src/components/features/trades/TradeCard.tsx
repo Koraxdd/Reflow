@@ -66,7 +66,7 @@ export default function TradeCard({ data }: Props) {
                             {symbol}
                         </span>
                         <div className="flex flex-col gap-1">
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
                                 <span className="font-semibold text-sm">
                                     {symbol}
                                 </span>

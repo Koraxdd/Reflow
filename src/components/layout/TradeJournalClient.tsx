@@ -17,11 +17,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
     const [showForm, setShowForm] = useState<boolean>(false)
     const queryClient = useQueryClient()
 
-    const {
-        data: trades,
-        isPending,
-        isError,
-    } = useQuery({
+    const { data: trades } = useQuery({
         queryKey: ["trades"],
         queryFn: getTrades,
         initialData: initialTrades,
