@@ -187,10 +187,10 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                         )}
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 items-center">
                     <div className="flex flex-col gap-2.5">
                         <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
-                            <DollarSign className="w-3 h-3" /> ENTRY PRICE (USD)
+                            <DollarSign className="w-3 h-3" /> ENTRY PRICE
                         </label>
                         <Input
                             {...register("entryPrice")}
@@ -206,9 +206,15 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                         )}
                     </div>
                     <div className="flex flex-col gap-2.5">
-                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
-                            <DollarSign className="w-3 h-3" /> EXIT PRICE (USD)
-                        </label>
+                        <div className="text-text-muted flex justify-between items-center gap-1">
+                            <label className="text-xs font-semibold flex items-center gap-1">
+                                <DollarSign className="w-3 h-3 shrink-0" /> EXIT
+                                PRICE
+                            </label>
+                            <span className="text-xs bg-input px-1.5 py-0.5 font-medium rounded">
+                                optional
+                            </span>
+                        </div>
                         <Input
                             {...register("exitPrice")}
                             type="number"
@@ -223,10 +229,10 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                         )}
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 items-center">
                     <div className="flex flex-col gap-2.5">
                         <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
-                            <Calendar className="w-3 h-3" /> OPENED AT
+                            <Calendar className="w-3 h-3" /> OPENED
                         </label>
                         <Input
                             {...register("openedAt")}
@@ -234,10 +240,15 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                             className="text-foreground font-normal"
                         />
                     </div>
-                    <div className="flex flex-col gap-2.5">
-                        <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
-                            <Calendar className="w-3 h-3" /> CLOSED AT
-                        </label>
+                    <div className="flex flex-col items gap-2.5">
+                        <div className="text-text-muted flex justify-between items-center gap-1">
+                            <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                                <Calendar className="w-3 h-3 shrink-0" /> CLOSED
+                            </label>
+                            <span className="text-xs bg-input px-1.5 py-0.5 font-medium rounded">
+                                optional
+                            </span>
+                        </div>
                         <Input
                             {...register("closedAt")}
                             type="date"
