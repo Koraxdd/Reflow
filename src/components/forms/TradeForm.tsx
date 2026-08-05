@@ -305,22 +305,19 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                     {tags.length > 0 && (
                         <div className="flex gap-2 flex-wrap">
                             {tags.map((tag) => (
-                                <div
+                                <Button
+                                    type="button"
+                                    onClick={() =>
+                                        setTags((prev) =>
+                                            prev.filter((t) => t !== tag)
+                                        )
+                                    }
                                     key={tag}
-                                    className="flex justify-center items-center gap-1 text-xs text-neon-cyan bg-neon-cyan/10 py-1 px-2.5 rounded-2xl"
+                                    className="flex justify-center items-center gap-1 text-xs text-neon-cyan bg-neon-cyan/10 py-1 px-2.5 rounded-2xl hover:opacity-70"
                                 >
                                     {tag}
-                                    <Button
-                                        type="button"
-                                        onClick={() =>
-                                            setTags((prev) =>
-                                                prev.filter((t) => t !== tag)
-                                            )
-                                        }
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </Button>
-                                </div>
+                                    <X className="w-3 h-3" />
+                                </Button>
                             ))}
                         </div>
                     )}
@@ -348,7 +345,7 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                 <Button
                     type="button"
                     size="xs"
-                    className="bg-input px-3 py-2 rounded-2xl text-text-muted font-medium self-end"
+                    className="bg-input px-3 py-2 rounded-2xl text-text-muted font-medium self-end hover:opacity-80"
                     onClick={handleAddTag}
                 >
                     Add
