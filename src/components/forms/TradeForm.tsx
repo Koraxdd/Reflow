@@ -1,12 +1,21 @@
 import { z } from "zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Calendar, DollarSign, Hash, Save, TrendingUp, X } from "lucide-react"
+import {
+    Calendar,
+    DollarSign,
+    FileText,
+    Hash,
+    Save,
+    TrendingDown,
+    TrendingUp,
+    X,
+} from "lucide-react"
 import Button from "../ui/Button"
 import { Input } from "../ui/Input"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
-import { submitTrade } from "@/actions/trades"
+import { calculatePnL } from "@/utils/calculatePnL"
 
 type Props = {
     handleClose: () => void
@@ -71,6 +80,14 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
     })
 
     const direction = watch("direction")
+    const entryPrice = watch("entryPrice") as number
+    const exitPrice = watch("exitPrice") as number
+    const amount = watch("amount") as number
+
+    const pnl =
+        entryPrice && exitPrice && amount
+            ? calculatePnL(direction, exitPrice, entryPrice, amount)
+            : null
 
     const onSubmit: SubmitHandler<TradeInput> = async (data) => {
         try {
@@ -89,7 +106,11 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
         >
             <div className="flex justify-between">
                 <h2 className="text-sm">New Trade Entry</h2>
-                <Button type="button" onClick={handleClose}>
+                <Button
+                    type="button"
+                    onClick={handleClose}
+                    className="hover:opacity-80"
+                >
                     <X className="w-4 h-4 text-text-muted" />
                 </Button>
             </div>
@@ -220,10 +241,55 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                         />
                     </div>
                 </div>
+                {pnl && (
+                    <div
+                        className={cn(
+                            "border flex gap-4 items-center p-3.5 rounded-2xl text-xs",
+                            pnl.pnlAmount >= 0
+                                ? "bg-neon-green/10 border-neon-green/20"
+                                : "bg-neon-red/10 border-neon-red/20"
+                        )}
+                    >
+                        <div className="flex items-center gap-2">
+                            {pnl.pnlAmount >= 0 ? (
+                                <TrendingUp className="w-3.5 h-3.5 text-neon-green" />
+                            ) : (
+                                <TrendingDown className="w-3.5 h-3.5 text-neon-red" />
+                            )}
+                            <span className="text-text-muted font-medium">
+                                Estimated P&L
+                            </span>
+                        </div>
+                        <span
+                            className={cn(
+                                "text-sm font-medium",
+                                pnl.pnlAmount >= 0
+                                    ? "text-neon-green"
+                                    : "text-neon-red"
+                            )}
+                        >
+                            {pnl.pnlAmount >= 0
+                                ? `+${pnl.pnlAmount}`
+                                : `${pnl.pnlAmount}`}
+                        </span>
+                        <span
+                            className={cn(
+                                "text-xs text-text-muted font-medium",
+                                pnl.pnlPercentage >= 0
+                                    ? "text-neon-green/70"
+                                    : "text-neon-red/70"
+                            )}
+                        >
+                            {pnl.pnlPercentage >= 0
+                                ? `(+${pnl.pnlPercentage}%)`
+                                : `(${pnl.pnlPercentage}%)`}
+                        </span>
+                    </div>
+                )}
             </div>
             <div className="flex flex-col gap-2">
-                <label className="font-semibold text-xs text-text-muted">
-                    TRADE REFLECTION
+                <label className="font-semibold text-xs text-text-muted flex items-center gap-1">
+                    <FileText className="w-3 h-3" /> TRADE REFLECTION
                 </label>
                 <textarea
                     {...register("reflection")}

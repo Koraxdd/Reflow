@@ -33,7 +33,15 @@ export default function TradeCard({ data }: Props) {
         id,
     } = data
 
-    const pnl = exitPrice ? calculatePnL(exitPrice, entryPrice, quantity) : null
+    const pnl =
+        exitPrice && quantity
+            ? calculatePnL(
+                  direction as "Long" | "Short",
+                  exitPrice,
+                  entryPrice,
+                  quantity
+              )
+            : null
 
     const { mutate: deleteTrade } = useMutation({
         mutationFn: removeTrade,
@@ -44,7 +52,7 @@ export default function TradeCard({ data }: Props) {
 
     return (
         <>
-            <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/15">
+            <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4 transition-all duration-200 hover:-translate-y-px hover:border-white/15">
                 <div className="flex justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <span
