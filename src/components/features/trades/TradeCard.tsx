@@ -102,7 +102,7 @@ export default function TradeCard({ data }: Props) {
                             </div>
                         </div>
                     </div>
-                    {pnl && (
+                    {pnl ? (
                         <div className="flex flex-col items-end">
                             <span
                                 className={cn(
@@ -129,6 +129,10 @@ export default function TradeCard({ data }: Props) {
                                     : `${pnl.pnlPercentage}%`}
                             </span>
                         </div>
+                    ) : (
+                        <span className="text-sm font-medium">
+                            {quantity} {symbol}
+                        </span>
                     )}
                 </div>
                 <div className="flex items-center flex-wrap gap-3">
