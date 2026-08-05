@@ -1,6 +1,11 @@
-import { type TradeOutput } from "@/components/forms/TradeForm"
-import { Trade } from "@/generated/prisma/client"
+import type { Trade } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
+import { type TradeOutput } from "@/schemas/trade.schema"
+
+export type EditTradeVariables = {
+    id: string
+    trade: TradeOutput
+}
 
 export async function createTrade(
     userId: string,
@@ -47,6 +52,26 @@ export async function deleteTradeById(id: string): Promise<Trade> {
     return await prisma.trade.delete({
         where: {
             id,
+        },
+    })
+}
+
+export async function editTradeById({
+    id,
+    trade,
+}: EditTradeVariables): Promise<Trade> {
+    return await prisma.trade.update({
+        where: { id },
+        data: {
+            symbol: trade.coin,
+            direction: trade.direction,
+            entryPrice: trade.entryPrice,
+            exitPrice: trade.exitPrice,
+            quantity: trade.amount,
+            notes: trade.reflection,
+            openedAt: trade.openedAt,
+            closedAt: trade.closedAt,
+            tags: trade.tags,
         },
     })
 }

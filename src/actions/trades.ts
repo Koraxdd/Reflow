@@ -1,8 +1,14 @@
 "use server"
 
-import { TradeOutput } from "@/components/forms/TradeForm"
 import { authOptions } from "@/lib/auth"
-import { createTrade, deleteTradeById, getTradesByUser } from "@/queries/trades"
+import {
+    createTrade,
+    deleteTradeById,
+    editTradeById,
+    EditTradeVariables,
+    getTradesByUser,
+} from "@/queries/trades"
+import { type TradeOutput } from "@/schemas/trade.schema"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
@@ -28,4 +34,8 @@ export async function getTrades() {
 
 export async function removeTrade(id: string) {
     return await deleteTradeById(id)
+}
+
+export async function updateTrade({ id, trade }: EditTradeVariables) {
+    return await editTradeById({ id, trade })
 }

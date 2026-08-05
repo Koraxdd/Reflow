@@ -14,9 +14,10 @@ import { calculatePnL } from "@/utils/calculatePnL"
 
 type Props = {
     data: Trade
+    onEdit: () => void
 }
 
-export default function TradeCard({ data }: Props) {
+export default function TradeCard({ data, onEdit }: Props) {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
     const queryClient = useQueryClient()
 
@@ -185,6 +186,7 @@ export default function TradeCard({ data }: Props) {
                         variant="ghost"
                         size="xs"
                         className="bg-input px-2.5 py-1.5 rounded-xl hover:opacity-80 active:scale-95"
+                        onClick={onEdit}
                     >
                         Edit
                     </Button>

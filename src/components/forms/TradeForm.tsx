@@ -1,4 +1,3 @@
-import { z } from "zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -17,56 +16,27 @@ import { cn } from "@/lib/utils"
 import { useState } from "react"
 import { calculatePnL } from "@/utils/calculatePnL"
 import { format } from "date-fns"
+import type { Trade } from "@/generated/prisma/client"
+import {
+    type TradeInput,
+    type TradeOutput,
+    TradeSchema,
+} from "@/schemas/trade.schema"
 
 type Props = {
     handleClose: () => void
     onAddTrade: (data: TradeOutput) => void
+    onEditTrade: (data: { id: string; trade: TradeOutput }) => void
+    existingTrade: Trade | null
 }
 
-const TradeSchema = z.object({
-    coin: z
-        .string()
-        .min(3, "Symbol must be 3 characters")
-        .max(3, "Symbol must be 3 characters"),
-    openedAt: z.coerce.date(),
-    closedAt: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce.date().optional()
-    ),
-    direction: z.enum(["Long", "Short"]),
-    amount: z.coerce.number().positive("Amount must be greater than 0"),
-    entryPrice: z.coerce
-        .number()
-        .positive("Entry price must be greater than 0"),
-    exitPrice: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce
-            .number()
-            .positive("Exit price must be greater than 0")
-            .optional()
-    ),
-    reflection: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-})
-
-type TradeInput = z.input<typeof TradeSchema>
-export type TradeOutput = z.infer<typeof TradeSchema>
-
-export default function TradeForm({ handleClose, onAddTrade }: Props) {
+export default function TradeForm({
+    handleClose,
+    onAddTrade,
+    onEditTrade,
+    existingTrade,
+}: Props) {
     const [tagValue, setTagValue] = useState<string>("")
-    const [tags, setTags] = useState<string[]>([])
-
-    const handleAddTag = () => {
-        const trimmed = tagValue.trim()
-        if (!trimmed) return
-        if (tags.includes(trimmed)) return
-
-        const updated = [...tags, trimmed]
-        setTags(updated)
-        setValue("tags", updated)
-        setTagValue("")
-    }
-
     const {
         register,
         handleSubmit,
@@ -77,25 +47,63 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
         formState: { errors, isValid, isSubmitting },
     } = useForm<TradeInput>({
         resolver: zodResolver(TradeSchema),
-        defaultValues: {
-            direction: "Long",
-            openedAt: format(new Date(), "yyyy-MM-dd"),
-        },
+        defaultValues: existingTrade
+            ? {
+                  coin: existingTrade.symbol,
+                  direction: existingTrade.direction as "Long" | "Short",
+                  amount: existingTrade.quantity,
+                  entryPrice: existingTrade.entryPrice,
+                  exitPrice: existingTrade.exitPrice ?? null,
+                  openedAt: format(existingTrade.openedAt, "yyyy-MM-dd"),
+                  closedAt: existingTrade.closedAt
+                      ? format(existingTrade.closedAt, "yyyy-MM-dd")
+                      : "",
+                  reflection: existingTrade.notes as string | undefined,
+                  tags: existingTrade.tags,
+              }
+            : {
+                  direction: "Long",
+                  openedAt: format(new Date(), "yyyy-MM-dd"),
+                  tags: [],
+              },
     })
 
+    const tags = watch("tags") ?? []
     const direction = watch("direction")
     const entryPrice = watch("entryPrice") as number
     const exitPrice = watch("exitPrice") as number
     const amount = watch("amount") as number
+
+    const handleAddTag = () => {
+        const trimmed = tagValue.trim()
+        if (!trimmed || tags.includes(trimmed)) return
+        setValue("tags", [...tags, trimmed], { shouldValidate: true })
+        setTagValue("")
+    }
+
+    const handleRemoveTag = (tag: string) => {
+        setValue(
+            "tags",
+            tags.filter((t) => t !== tag),
+            { shouldValidate: true }
+        )
+    }
 
     const pnl =
         entryPrice && exitPrice && amount
             ? calculatePnL(direction, exitPrice, entryPrice, amount)
             : null
 
-    const onSubmit: SubmitHandler<TradeInput> = async (data) => {
+    const onSubmit: SubmitHandler<TradeInput> = (data) => {
         try {
-            onAddTrade(TradeSchema.parse(data))
+            if (existingTrade) {
+                onEditTrade({
+                    id: existingTrade.id,
+                    trade: TradeSchema.parse(data),
+                })
+            } else {
+                onAddTrade(TradeSchema.parse(data))
+            }
             reset()
             handleClose()
         } catch (err) {
@@ -322,11 +330,7 @@ export default function TradeForm({ handleClose, onAddTrade }: Props) {
                             {tags.map((tag) => (
                                 <Button
                                     type="button"
-                                    onClick={() =>
-                                        setTags((prev) =>
-                                            prev.filter((t) => t !== tag)
-                                        )
-                                    }
+                                    onClick={() => handleRemoveTag(tag)}
                                     key={tag}
                                     className="flex justify-center items-center gap-1 text-xs text-neon-cyan bg-neon-cyan/10 py-1 px-2.5 rounded-2xl hover:opacity-70"
                                 >

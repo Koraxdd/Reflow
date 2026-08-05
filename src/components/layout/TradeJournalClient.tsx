@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Plus } from "lucide-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { getTrades, submitTrade } from "@/actions/trades"
+import { getTrades, submitTrade, updateTrade } from "@/actions/trades"
 import Button from "@/components/ui/Button"
 import TradeForm from "@/components/forms/TradeForm"
 import TradeCard from "@/components/features/trades/TradeCard"
@@ -15,6 +15,7 @@ type Props = {
 
 export default function TradeJournalClient({ initialTrades }: Props) {
     const [showForm, setShowForm] = useState<boolean>(false)
+    const [editingTrade, setEditingTrade] = useState<Trade | null>(null)
     const queryClient = useQueryClient()
 
     const { data: trades } = useQuery({
@@ -25,6 +26,13 @@ export default function TradeJournalClient({ initialTrades }: Props) {
 
     const { mutate: addTrade } = useMutation({
         mutationFn: submitTrade,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["trades"] })
+        },
+    })
+
+    const { mutate: editTrade } = useMutation({
+        mutationFn: updateTrade,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["trades"] })
         },
@@ -43,7 +51,10 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                     variant="neon"
                     size="sm"
                     className="flex justify-center items-center gap-2 px-4 active:scale-90"
-                    onClick={() => setShowForm(true)}
+                    onClick={() => {
+                        setShowForm(true)
+                        setEditingTrade(null)
+                    }}
                 >
                     <Plus className="w-4 h-4" />
                     New Entry
@@ -51,14 +62,27 @@ export default function TradeJournalClient({ initialTrades }: Props) {
             </div>
             {showForm && (
                 <TradeForm
-                    handleClose={() => setShowForm(false)}
+                    key={editingTrade ? editingTrade.id : "new-trade"}
+                    handleClose={() => {
+                        setShowForm(false)
+                        setEditingTrade(null)
+                    }}
                     onAddTrade={addTrade}
+                    onEditTrade={editTrade}
+                    existingTrade={editingTrade}
                 />
             )}
             <div className="flex flex-col gap-4">
                 {trades &&
                     trades.map((trade) => (
-                        <TradeCard key={trade.id} data={trade} />
+                        <TradeCard
+                            key={trade.id}
+                            data={trade}
+                            onEdit={() => {
+                                setShowForm(true)
+                                setEditingTrade(trade)
+                            }}
+                        />
                     ))}
             </div>
         </div>
