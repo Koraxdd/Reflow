@@ -142,6 +142,11 @@ export default function TradeForm({
                             type="text"
                             placeholder="BTC, ETH, SOL..."
                             className="text-foreground font-normal"
+                            onChange={(e) => {
+                                setValue("coin", e.target.value.toUpperCase(), {
+                                    shouldValidate: true,
+                                })
+                            }}
                         />
                         {errors.coin && (
                             <span className="text-neon-cyan text-xs">
