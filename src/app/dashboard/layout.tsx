@@ -8,8 +8,7 @@ type Props = {
 export default function DashboardLayout({ children }: Props) {
     return (
         <div className="min-h-screen">
-            <DashboardShell />
-            <main>{children}</main>
+            <DashboardShell>{children}</DashboardShell>
         </div>
     )
 }

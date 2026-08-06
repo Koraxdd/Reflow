@@ -14,9 +14,17 @@ type NavLink = {
 
 const navLinks: NavLink[] = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/trade-journal", label: "Trade Journal", icon: BookOpen },
-    { href: "/analytics", label: "Analytics", icon: ChartNoAxesColumn },
-    { href: "/settings", label: "Settings", icon: Settings },
+    {
+        href: "/dashboard/trade-journal",
+        label: "Trade Journal",
+        icon: BookOpen,
+    },
+    {
+        href: "/dashboard/analytics",
+        label: "Analytics",
+        icon: ChartNoAxesColumn,
+    },
+    { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ]
 
 export { navLinks }

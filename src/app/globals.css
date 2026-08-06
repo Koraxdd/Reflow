@@ -16,6 +16,7 @@
     --color-neon-green: #00e676;
     --color-neon-red: #ff4d6d;
     --color-neon-purple: #a855f7;
+    --color-neon-orange: #f59e0b;
     --color-sun: #f59e0b;
     --color-card: #111827;
     --color-link: rgba(226, 232, 240, 0.5);
@@ -86,4 +87,9 @@
         font-size: var(--text-base);
         font-weight: var(--font-weight-medium);
     }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }

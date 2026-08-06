@@ -5,7 +5,8 @@ type Props = {
     children: ReactNode
     type?: "button" | "submit" | "reset"
     size?: "xs" | "sm" | "md" | "lg"
-    variant?: "ghost" | "neon"
+    variant?: "ghost" | "neon" | "danger" | "destructive"
+    disabled?: boolean
     className?: string
     onClick?: MouseEventHandler<HTMLButtonElement>
 }
@@ -15,20 +16,29 @@ export default function Button({
     type = "button",
     size = "md",
     variant,
+    disabled,
     className,
     onClick,
 }: Props) {
     return (
         <button
             type={type}
+            disabled={disabled}
             onClick={onClick}
             className={cn(
-                "rounded-lg transition-colors cursor-pointer font-semibold",
+                "rounded-lg transition-all cursor-pointer font-semibold",
                 variant === "ghost" && "text-text-muted",
                 variant === "neon" &&
-                    "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:bg-dark-cyan",
+                    "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)]",
+                !disabled && variant === "neon" && "hover:bg-dark-cyan",
+                variant === "danger" &&
+                    "bg-neon-red shadow-[0_0_20px_rgba(255,77,109,0.3)]",
+                variant === "destructive" &&
+                    "bg-neon-red/10 border border-neon-red/15 text-neon-red hover:bg-neon-red/20 hover:border-neon-red/40",
+                size === "xs" && "text-xs",
                 size === "sm" && "text-sm py-2",
                 size === "lg" && "text-sm py-3",
+                disabled && "cursor-not-allowed opacity-30 shadow-none",
                 className
             )}
         >

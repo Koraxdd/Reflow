@@ -1,6 +1,5 @@
 "use client"
 
-import { z } from "zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { Lock, Mail, User } from "lucide-react"
 import { Input } from "../ui/Input"
@@ -11,19 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { signUp } from "@/actions/auth"
-
-const LoginSchema = z.object({
-    email: z.string().email(),
-    password: z.string(),
-})
-const RegisterSchema = z.object({
-    username: z.string().min(3, "Username must be at least 3 characters"),
-    email: z.string().email("Invalid email"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-})
-
-type LoginInput = z.infer<typeof LoginSchema>
-export type RegisterInput = z.infer<typeof RegisterSchema>
+import { LoginSchema, type LoginInput } from "@/schemas/login.schema"
+import { RegisterSchema, type RegisterInput } from "@/schemas/register.schema"
 
 export default function AuthForm() {
     const router = useRouter()

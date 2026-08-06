@@ -1,12 +1,20 @@
 import { Sun } from "lucide-react"
 import Button from "../ui/Button"
 import { motion } from "motion/react"
+import { usePathname } from "next/navigation"
 
 type Props = {
     isOpen: boolean
 }
 
 export default function DesktopHeader({ isOpen }: Props) {
+    const pathname = usePathname()
+
+    let title = "Dashboard"
+    if (pathname.endsWith("/trade-journal")) title = "Trade Journal"
+    if (pathname.endsWith("/analytics")) title = "Analytics"
+    if (pathname.endsWith("/settings")) title = "Settings"
+
     return (
         <motion.header
             animate={{ marginLeft: isOpen ? 240 : 80 }}
@@ -14,7 +22,7 @@ export default function DesktopHeader({ isOpen }: Props) {
             className="hidden md:flex px-6 py-4 justify-between items-center border-b border-border ml-60"
         >
             <span className="text-foreground/40 text-sm font-medium">
-                Dashboard
+                {title}
             </span>
             <div className="flex items-center gap-3.5">
                 <Button className="flex items-center text-xs rounded-2xl gap-2 bg-input px-3 py-1.5 font-medium text-foreground/70">
