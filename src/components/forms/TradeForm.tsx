@@ -26,7 +26,11 @@ import {
 type Props = {
     handleClose: () => void
     onAddTrade: (data: TradeOutput) => void
-    onEditTrade: (data: { id: string; trade: TradeOutput }) => void
+    onEditTrade: (data: {
+        id: string
+        userId: string
+        trade: TradeOutput
+    }) => void
     existingTrade: Trade | null
 }
 
@@ -99,6 +103,7 @@ export default function TradeForm({
             if (existingTrade) {
                 onEditTrade({
                     id: existingTrade.id,
+                    userId: existingTrade.userId,
                     trade: TradeSchema.parse(data),
                 })
             } else {

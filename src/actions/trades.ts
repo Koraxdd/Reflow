@@ -36,6 +36,6 @@ export async function removeTrade(id: string) {
     return await deleteTradeById(id)
 }
 
-export async function updateTrade({ id, trade }: EditTradeVariables) {
-    return await editTradeById({ id, trade })
+export async function updateTrade({ id, userId, trade }: EditTradeVariables) {
+    return await editTradeById({ id, userId, trade })
 }

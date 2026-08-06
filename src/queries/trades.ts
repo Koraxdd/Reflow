@@ -4,6 +4,7 @@ import { type TradeOutput } from "@/schemas/trade.schema"
 
 export type EditTradeVariables = {
     id: string
+    userId: string
     trade: TradeOutput
 }
 
@@ -58,10 +59,11 @@ export async function deleteTradeById(id: string): Promise<Trade> {
 
 export async function editTradeById({
     id,
+    userId,
     trade,
 }: EditTradeVariables): Promise<Trade> {
     return await prisma.trade.update({
-        where: { id },
+        where: { id, userId },
         data: {
             symbol: trade.coin,
             direction: trade.direction,
