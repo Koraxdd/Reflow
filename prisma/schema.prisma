@@ -24,7 +24,8 @@ model WatchlistItem {
   id      String   @id @default(uuid())
   userId  String   
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  symbol  String   
+  symbol  String
+  name    String   
   addedAt DateTime @default(now())
 
   @@unique([userId, symbol])

@@ -1,5 +1,6 @@
 import TradingViewChart from "@/components/charts/tradingview/TradingViewChart"
-import PortfolioOverviewCard from "@/components/features/portfolio/PortfolioOverviewCard"
+import PortfolioOverviewCard from "@/components/features/dashboard/PortfolioOverviewCard"
+import Watchlist from "@/components/features/dashboard/Watchlist"
 
 export default function DashboardPage() {
     return (
@@ -39,6 +40,7 @@ export default function DashboardPage() {
                 />
             </div>
             <TradingViewChart />
+            <Watchlist />
         </div>
     )
 }
