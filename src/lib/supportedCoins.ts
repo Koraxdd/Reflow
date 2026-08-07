@@ -73,22 +73,10 @@ export const supportedCoins: SupportedCoin[] = [
         logo: "https://coin-images.coingecko.com/coins/images/1094/large/photo_2026-04-13_09-59-16.png?1776048311",
     },
     {
-        symbol: "HYPE",
-        name: "Hyperliquid",
-        binanceSymbol: "hypeusdt",
-        logo: "https://coin-images.coingecko.com/coins/images/50882/large/hyperliquid.jpg?1729431300",
-    },
-    {
         symbol: "ZEC",
         name: "Zcash",
         binanceSymbol: "zecusdt",
         logo: "https://coin-images.coingecko.com/coins/images/486/large/Brandmark-Yellow_%281%29.png?1785810558",
-    },
-    {
-        symbol: "XMR",
-        name: "Monero",
-        binanceSymbol: "xmrusdt",
-        logo: "https://coin-images.coingecko.com/coins/images/69/large/monero_logo.png?1696501460",
     },
     {
         symbol: "XLM",
