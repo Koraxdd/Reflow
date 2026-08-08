@@ -24,9 +24,10 @@ export async function getWatchlistItemsByUser(
 }
 
 export async function deleteWatchlistItemById(
-    id: string
+    id: string,
+    userId: string
 ): Promise<WatchlistItem> {
     return await prisma.watchlistItem.delete({
-        where: { id },
+        where: { id, userId },
     })
 }

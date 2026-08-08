@@ -19,5 +19,6 @@ export async function getWatchlistItems() {
 }
 
 export async function removeWatchlistItem(id: string) {
-    return await deleteWatchlistItemById(id)
+    const userId = await getUserId()
+    return await deleteWatchlistItemById(id, userId)
 }

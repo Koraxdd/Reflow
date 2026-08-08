@@ -21,7 +21,8 @@ export async function getTrades() {
 }
 
 export async function removeTrade(id: string) {
-    return await deleteTradeById(id)
+    const userId = await getUserId()
+    return await deleteTradeById(id, userId)
 }
 
 export async function updateTrade({ id, userId, trade }: EditTradeVariables) {

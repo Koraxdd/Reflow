@@ -49,10 +49,14 @@ export async function getTradesByUser(userId: string): Promise<Trade[] | null> {
     })
 }
 
-export async function deleteTradeById(id: string): Promise<Trade> {
+export async function deleteTradeById(
+    id: string,
+    userId: string
+): Promise<Trade> {
     return await prisma.trade.delete({
         where: {
             id,
+            userId,
         },
     })
 }
