@@ -1,14 +1,58 @@
 "use client"
 
+import {
+    removeWatchlistItem,
+    getWatchlistItems,
+    submitWatchlistItem,
+} from "@/actions/watchlistItems"
+import WatchlistForm from "@/components/forms/WatchlistForm"
 import Button from "@/components/ui/Button"
+import { WatchlistItem } from "@/generated/prisma/client"
 import { useWatchlistPrices } from "@/hooks/useWatchlistPrices"
 import { supportedCoins } from "@/lib/supportedCoins"
 import { cn } from "@/lib/utils"
-import { Plus, TrendingDown, TrendingUp } from "lucide-react"
+import { deleteWatchlistItemById } from "@/queries/watchlistItems"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { Plus, TrendingDown, TrendingUp, X } from "lucide-react"
 import Image from "next/image"
+import { useState } from "react"
 
-export default function Watchlist() {
-    const symbols = supportedCoins.map((coin) => coin.binanceSymbol)
+type Props = {
+    initialCoins: WatchlistItem[]
+}
+
+export default function Watchlist({ initialCoins }: Props) {
+    const [showWatchlistForm, setShowWatchlistForm] = useState<boolean>(false)
+    const queryClient = useQueryClient()
+
+    const { data: watchlistItems } = useQuery({
+        queryKey: ["watchlistItems"],
+        queryFn: getWatchlistItems,
+        initialData: initialCoins,
+    })
+
+    const { mutate: addWatchlistItem } = useMutation({
+        mutationFn: submitWatchlistItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["watchlistItems"] })
+        },
+    })
+
+    const { mutate: deleteWatchlistItem } = useMutation({
+        mutationFn: removeWatchlistItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["watchlistItems"] })
+        },
+    })
+
+    const symbols = watchlistItems
+        .map(
+            (item) =>
+                supportedCoins.find((coin) => coin.symbol === item.symbol)
+                    ?.binanceSymbol
+        )
+        .filter((s): s is string => Boolean(s))
+
     const prices = useWatchlistPrices(symbols)
 
     return (
@@ -17,18 +61,37 @@ export default function Watchlist() {
                 <div className="flex items-center gap-2.5 font-medium">
                     <span className="text-sm">Watchlist</span>
                     <span className="bg-input rounded-full text-xs text-text-muted px-2 py-0.5">
-                        5
+                        {watchlistItems.length}
                     </span>
                 </div>
-                <Button
-                    variant="neon"
-                    size="xs"
-                    className="flex items-center justify-center gap-1.5 px-3 py-1.5"
-                >
-                    <Plus className="w-3.5 h-3.5" />
-                    Add Asset
-                </Button>
+                {!showWatchlistForm ? (
+                    <Button
+                        variant="neon"
+                        size="xs"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 active:scale-95"
+                        onClick={() => setShowWatchlistForm(true)}
+                    >
+                        <Plus className="w-3.5 h-3.5" />
+                        Add Asset
+                    </Button>
+                ) : (
+                    <Button
+                        variant="ghost"
+                        size="xs"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-input hover:opacity-80 active:scale-95 rounded-2xl"
+                        onClick={() => setShowWatchlistForm(false)}
+                    >
+                        <X className="w-3.5 h-3.5" />
+                        Cancel
+                    </Button>
+                )}
             </div>
+            {showWatchlistForm && (
+                <WatchlistForm
+                    handleClose={() => setShowWatchlistForm(false)}
+                    onAddWatchlistItem={addWatchlistItem}
+                />
+            )}
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>
@@ -49,13 +112,17 @@ export default function Watchlist() {
                         </tr>
                     </thead>
                     <tbody>
-                        {supportedCoins.map((coin) => {
+                        {watchlistItems.map((item) => {
+                            const coin = supportedCoins.find(
+                                (coin) => coin.symbol === item.symbol
+                            )
+                            if (!coin) return null
                             const live =
                                 prices[coin.binanceSymbol.toUpperCase()]
 
                             return (
                                 <tr
-                                    key={coin.symbol}
+                                    key={item.id}
                                     className="border-t border-border"
                                 >
                                     <td className="px-5 py-3.5">
@@ -76,8 +143,14 @@ export default function Watchlist() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-5 py-3.5 text-sm">
-                                        ${live ? live.price : "-"}
+                                    <td
+                                        className={cn(
+                                            "px-5 py-3.5 text-sm font-medium",
+                                            !live &&
+                                                "text-text-muted font-light"
+                                        )}
+                                    >
+                                        {live ? `$${live.price}` : "—"}
                                     </td>
                                     <td
                                         className={cn(
@@ -87,7 +160,13 @@ export default function Watchlist() {
                                                 : "text-neon-red"
                                         )}
                                     >
-                                        <div className="flex items-center gap-1">
+                                        <div
+                                            className={cn(
+                                                "flex items-center gap-1 font-medium",
+                                                !live &&
+                                                    "text-text-muted font-light"
+                                            )}
+                                        >
                                             {live &&
                                                 (live.changePercentage >= 0 ? (
                                                     <TrendingUp className="w-3.5 h-3.5" />
@@ -98,13 +177,27 @@ export default function Watchlist() {
                                                 ? `${live.changePercentage.toFixed(
                                                       2
                                                   )}%`
-                                                : "-"}
+                                                : "—"}
                                         </div>
                                     </td>
-                                    <td className="px-5 py-3.5 text-sm">
-                                        {live ? live.volume.toFixed(2) : "-"}
+                                    <td
+                                        className={cn(
+                                            "px-5 py-3.5 text-sm text-text-muted font-medium",
+                                            !live && "font-light"
+                                        )}
+                                    >
+                                        {live ? live.volume.toFixed(2) : "—"}
                                     </td>
-                                    <td className="px-5 py-3.5"></td>
+                                    <td className="px-5 py-3.5">
+                                        <Button
+                                            className="text-text-muted hover:bg-neon-red/10 hover:text-neon-red w-6 h-6 rounded-full flex justify-center items-center"
+                                            onClick={() =>
+                                                deleteWatchlistItem(item.id)
+                                            }
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </Button>
+                                    </td>
                                 </tr>
                             )
                         })}
