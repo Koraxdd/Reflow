@@ -112,95 +112,113 @@ export default function Watchlist({ initialCoins }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {watchlistItems.map((item) => {
-                            const coin = supportedCoins.find(
-                                (coin) => coin.symbol === item.symbol
-                            )
-                            if (!coin) return null
-                            const live =
-                                prices[coin.binanceSymbol.toUpperCase()]
+                        {watchlistItems.length > 0 ? (
+                            watchlistItems.map((item) => {
+                                const coin = supportedCoins.find(
+                                    (coin) => coin.symbol === item.symbol
+                                )
+                                if (!coin) return null
+                                const live =
+                                    prices[coin.binanceSymbol.toUpperCase()]
 
-                            return (
-                                <tr
-                                    key={item.id}
-                                    className="border-t border-border"
-                                >
-                                    <td className="px-5 py-3.5">
-                                        <div className="flex items-center gap-3">
-                                            <Image
-                                                src={coin.logo}
-                                                width={24}
-                                                height={24}
-                                                alt={`${coin.name} logo`}
-                                            />
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-medium">
-                                                    {coin.symbol}
-                                                </span>
-                                                <span className="text-xs text-text-muted">
-                                                    {coin.name}
-                                                </span>
+                                return (
+                                    <tr
+                                        key={item.id}
+                                        className="border-t border-border"
+                                    >
+                                        <td className="px-5 py-3.5">
+                                            <div className="flex items-center gap-3">
+                                                <Image
+                                                    src={coin.logo}
+                                                    width={24}
+                                                    height={24}
+                                                    alt={`${coin.name} logo`}
+                                                />
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm font-medium">
+                                                        {coin.symbol}
+                                                    </span>
+                                                    <span className="text-xs text-text-muted">
+                                                        {coin.name}
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td
-                                        className={cn(
-                                            "px-5 py-3.5 text-sm font-medium",
-                                            !live &&
-                                                "text-text-muted font-light"
-                                        )}
-                                    >
-                                        {live ? `$${live.price}` : "—"}
-                                    </td>
-                                    <td
-                                        className={cn(
-                                            "px-5 py-3.5 text-sm",
-                                            live && live.changePercentage >= 0
-                                                ? "text-neon-green"
-                                                : "text-neon-red"
-                                        )}
-                                    >
-                                        <div
+                                        </td>
+                                        <td
                                             className={cn(
-                                                "flex items-center gap-1 font-medium",
+                                                "px-5 py-3.5 text-sm font-medium",
                                                 !live &&
                                                     "text-text-muted font-light"
                                             )}
                                         >
-                                            {live &&
-                                                (live.changePercentage >= 0 ? (
-                                                    <TrendingUp className="w-3.5 h-3.5" />
-                                                ) : (
-                                                    <TrendingDown className="w-3.5 h-3.5" />
-                                                ))}
-                                            {live
-                                                ? `${live.changePercentage.toFixed(
-                                                      2
-                                                  )}%`
-                                                : "—"}
-                                        </div>
-                                    </td>
-                                    <td
-                                        className={cn(
-                                            "px-5 py-3.5 text-sm text-text-muted font-medium",
-                                            !live && "font-light"
-                                        )}
-                                    >
-                                        {live ? live.volume.toFixed(2) : "—"}
-                                    </td>
-                                    <td className="px-5 py-3.5">
-                                        <Button
-                                            className="text-text-muted hover:bg-neon-red/10 hover:text-neon-red w-6 h-6 rounded-full flex justify-center items-center"
-                                            onClick={() =>
-                                                deleteWatchlistItem(item.id)
-                                            }
+                                            {live ? `$${live.price}` : "—"}
+                                        </td>
+                                        <td
+                                            className={cn(
+                                                "px-5 py-3.5 text-sm",
+                                                live &&
+                                                    live.changePercentage >= 0
+                                                    ? "text-neon-green"
+                                                    : "text-neon-red"
+                                            )}
                                         >
-                                            <X className="w-3.5 h-3.5" />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            )
-                        })}
+                                            <div
+                                                className={cn(
+                                                    "flex items-center gap-1 font-medium",
+                                                    !live &&
+                                                        "text-text-muted font-light"
+                                                )}
+                                            >
+                                                {live &&
+                                                    (live.changePercentage >=
+                                                    0 ? (
+                                                        <TrendingUp className="w-3.5 h-3.5" />
+                                                    ) : (
+                                                        <TrendingDown className="w-3.5 h-3.5" />
+                                                    ))}
+                                                {live
+                                                    ? `${live.changePercentage.toFixed(
+                                                          2
+                                                      )}%`
+                                                    : "—"}
+                                            </div>
+                                        </td>
+                                        <td
+                                            className={cn(
+                                                "px-5 py-3.5 text-sm text-text-muted font-medium",
+                                                !live && "font-light"
+                                            )}
+                                        >
+                                            {live
+                                                ? live.volume.toFixed(2)
+                                                : "—"}
+                                        </td>
+                                        <td className="px-5 py-3.5">
+                                            <Button
+                                                className="text-text-muted hover:bg-neon-red/10 hover:text-neon-red w-6 h-6 rounded-full flex justify-center items-center"
+                                                onClick={() =>
+                                                    deleteWatchlistItem(item.id)
+                                                }
+                                            >
+                                                <X className="w-3.5 h-3.5" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={5}
+                                    className="px-5 py-10 text-center border-t border-border"
+                                >
+                                    <p className="text-sm text-text-muted font-medium">
+                                        Your watchlist is empty — add an asset
+                                        above.
+                                    </p>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
