@@ -3,7 +3,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 
 type Props = {
     title: string
-    value: number
+    value: string | number
     change: {
         value: number
         label: string

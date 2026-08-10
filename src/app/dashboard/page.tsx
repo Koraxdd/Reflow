@@ -1,10 +1,12 @@
+import { getTrades } from "@/actions/trades"
 import { getWatchlistItems } from "@/actions/watchlistItems"
 import TradingViewChart from "@/components/charts/tradingview/TradingViewChart"
-import PortfolioOverviewCard from "@/components/features/dashboard/PortfolioOverviewCard"
+import PortfolioCardList from "@/components/features/dashboard/PortfolioCardList"
 import Watchlist from "@/components/features/dashboard/Watchlist"
 
 export default async function DashboardPage() {
     const watchlistItems = await getWatchlistItems()
+    const trades = await getTrades()
 
     return (
         <div className="p-6 flex flex-col gap-6">
@@ -20,28 +22,7 @@ export default async function DashboardPage() {
                     <span>Markets Open</span>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <PortfolioOverviewCard
-                    title="TOTAL BALANCE"
-                    value={84231.5}
-                    change={{ value: 3.24, label: "today" }}
-                />
-                <PortfolioOverviewCard
-                    title="DAY P&L"
-                    value={84231.5}
-                    change={{ value: 3.24, label: "vs yesterday" }}
-                />
-                <PortfolioOverviewCard
-                    title="WEEK P&L"
-                    value={84231.5}
-                    change={{ value: 3.24, label: "this week" }}
-                />
-                <PortfolioOverviewCard
-                    title="ALL-TIME P&L"
-                    value={84231.5}
-                    change={{ value: 3.24, label: "total" }}
-                />
-            </div>
+            <PortfolioCardList trades={trades} />
             <TradingViewChart />
             <Watchlist initialCoins={watchlistItems} />
         </div>

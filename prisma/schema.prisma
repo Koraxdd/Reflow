@@ -17,7 +17,6 @@ model User {
   createdAt      DateTime @default(now())
   watchlistItems WatchlistItem[]
   trades         Trade[]
-  holdings       Holding[]
 } 
 
 model WatchlistItem {
@@ -45,16 +44,4 @@ model Trade {
   openedAt   DateTime
   closedAt   DateTime?
   createdAt  DateTime  @default(now())
-}
-
-model Holding {
-  id        String   @id @default(uuid())
-  userId    String   
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  symbol    String   
-  amount    Float
-  avgBuy    Float
-  createdAt DateTime @default(now())
-
-  @@unique([userId, symbol])
 }
