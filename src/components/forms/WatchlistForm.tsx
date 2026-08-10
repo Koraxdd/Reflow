@@ -2,7 +2,6 @@
 
 import { Search } from "lucide-react"
 import Button from "../ui/Button"
-import { Input } from "../ui/Input"
 import {
     type SubmitErrorHandler,
     useForm,
@@ -13,15 +12,19 @@ import {
     type WatchlistInput,
     WatchlistSchema,
 } from "@/schemas/watchlist.schema"
+import { supportedCoins } from "@/lib/supportedCoins"
+import type { WatchlistItem } from "@/generated/prisma/client"
 
 type Props = {
     handleClose: () => void
-    onAddWatchlistItem: (data: WatchlistInput) => void
+    onAddWatchlistItem: (data: { symbol: string; name: string }) => void
+    watchlistItems: WatchlistItem[]
 }
 
 export default function WatchlistForm({
     handleClose,
     onAddWatchlistItem,
+    watchlistItems,
 }: Props) {
     const {
         register,
@@ -35,7 +38,9 @@ export default function WatchlistForm({
 
     const onSubmit: SubmitHandler<WatchlistInput> = (data) => {
         try {
-            onAddWatchlistItem(data)
+            const coin = supportedCoins.find((c) => c.symbol === data.symbol)
+            if (!coin) return
+            onAddWatchlistItem({ symbol: coin.symbol, name: coin.name })
             reset()
             handleClose()
         } catch (err) {
@@ -45,7 +50,7 @@ export default function WatchlistForm({
 
     const onInvalid: SubmitErrorHandler<WatchlistInput> = (errors) => {
         setError("root", {
-            message: errors.symbol?.message || errors.name?.message,
+            message: errors.symbol?.message,
         })
     }
 
@@ -54,21 +59,25 @@ export default function WatchlistForm({
             onSubmit={handleSubmit(onSubmit, onInvalid)}
             className="border-b border-border px-5 py-4 bg-dark-blue flex flex-col gap-2.5"
         >
-            <div className="flex gap-3 items-end">
-                <Input
+            <div className="flex items-center gap-3 flex-1">
+                <select
                     {...register("symbol")}
-                    label="Ticker Symbol"
-                    type="text"
-                    placeholder="BTC"
-                    className="text-foreground h-8 text-xs font-normal"
-                />
-                <Input
-                    {...register("name")}
-                    label="Asset Name"
-                    type="text"
-                    placeholder="Bitcoin"
-                    className="text-foreground h-8 text-xs font-normal"
-                />
+                    className="border border-border bg-input rounded-2xl text-sm px-3 py-2 outline-none flex-1"
+                >
+                    <option value="">Select a coin...</option>
+                    {supportedCoins
+                        .filter(
+                            (coin) =>
+                                !watchlistItems.some(
+                                    (item) => item.symbol === coin.symbol
+                                )
+                        )
+                        .map((coin) => (
+                            <option key={coin.symbol} value={coin.symbol}>
+                                {coin.symbol} {coin.name}
+                            </option>
+                        ))}
+                </select>
                 <Button
                     type="submit"
                     variant="neon"

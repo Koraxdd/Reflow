@@ -1,10 +1,9 @@
 import { type WatchlistItem } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
-import { type WatchlistInput } from "@/schemas/watchlist.schema"
 
 export async function createWatchlistItem(
     userId: string,
-    data: WatchlistInput
+    data: { symbol: string; name: string }
 ): Promise<WatchlistItem> {
     return await prisma.watchlistItem.create({
         data: {

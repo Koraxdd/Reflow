@@ -7,11 +7,10 @@ import {
 } from "@/actions/watchlistItems"
 import WatchlistForm from "@/components/forms/WatchlistForm"
 import Button from "@/components/ui/Button"
-import { WatchlistItem } from "@/generated/prisma/client"
+import type { WatchlistItem } from "@/generated/prisma/client"
 import { useWatchlistPrices } from "@/hooks/useWatchlistPrices"
 import { supportedCoins } from "@/lib/supportedCoins"
 import { cn } from "@/lib/utils"
-import { deleteWatchlistItemById } from "@/queries/watchlistItems"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Plus, TrendingDown, TrendingUp, X } from "lucide-react"
 import Image from "next/image"
@@ -90,6 +89,7 @@ export default function Watchlist({ initialCoins }: Props) {
                 <WatchlistForm
                     handleClose={() => setShowWatchlistForm(false)}
                     onAddWatchlistItem={addWatchlistItem}
+                    watchlistItems={watchlistItems}
                 />
             )}
             <div className="overflow-x-auto">

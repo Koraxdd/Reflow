@@ -6,11 +6,16 @@ import {
     deleteWatchlistItemById,
     getWatchlistItemsByUser,
 } from "@/queries/watchlistItems"
-import type { WatchlistInput } from "@/schemas/watchlist.schema"
 
-export async function submitWatchlistItem(data: WatchlistInput) {
+export async function submitWatchlistItem(data: {
+    symbol: string
+    name: string
+}) {
     const userId = await getUserId()
-    return await createWatchlistItem(userId, data)
+    return await createWatchlistItem(userId, {
+        symbol: data.symbol,
+        name: data.name,
+    })
 }
 
 export async function getWatchlistItems() {
