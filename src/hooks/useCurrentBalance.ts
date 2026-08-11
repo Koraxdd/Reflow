@@ -6,11 +6,9 @@ import { getCurrentHoldings } from "@/lib/getCurrentHoldings"
 import { supportedCoins } from "@/lib/supportedCoins"
 import { useEffect, useMemo, useRef, useState } from "react"
 
-export function useCurrentBalance(
-    trades: Trade[],
-    intervalMs: number = 10000
-): string {
-    const [displayedBalance, setDisplayedBalance] = useState<string>("0.00")
+export function useCurrentBalance(trades: Trade[]): string {
+    const [balance, setBalance] = useState<string>("0.00")
+    const isCalculated = useRef(false)
 
     const holdings = useMemo(() => getCurrentHoldings(trades), [trades])
 
@@ -26,33 +24,23 @@ export function useCurrentBalance(
 
     const holdingPrices = useWatchlistPrices(holdingSymbols)
 
-    const pricesRef = useRef(holdingPrices)
-    pricesRef.current = holdingPrices
-
-    const holdingsRef = useRef(holdings)
-    holdingsRef.current = holdings
-
     useEffect(() => {
-        const calculateBalance = () => {
-            const currentPrices = pricesRef.current
-            const currentHoldings = holdingsRef.current
-            const totalBalance = Object.entries(currentHoldings).reduce(
-                (total, [symbol, amount]) => {
-                    const coin = supportedCoins.find((c) => c.symbol === symbol)
-                    const live =
-                        coin && currentPrices[coin.binanceSymbol.toUpperCase()]
-                    return total + (live ? amount * live.price : 0)
-                },
-                0
-            )
-            setDisplayedBalance(totalBalance.toFixed(2))
-        }
+        if (isCalculated.current) return
+        if (!holdingPrices || Object.keys(holdingPrices).length === 0) return
 
-        calculateBalance()
-        const interval = setInterval(calculateBalance, intervalMs)
+        const totalBalance = Object.entries(holdings).reduce(
+            (total, [symbol, amount]) => {
+                const coin = supportedCoins.find((c) => c.symbol === symbol)
+                const live =
+                    coin && holdingPrices[coin.binanceSymbol.toUpperCase()]
+                return total + (live ? amount * live.price : 0)
+            },
+            0
+        )
 
-        return () => clearInterval(interval)
-    }, [intervalMs])
+        setBalance(totalBalance.toFixed(2))
+        isCalculated.current = true
+    }, [holdings, holdingPrices])
 
-    return displayedBalance
+    return balance
 }
