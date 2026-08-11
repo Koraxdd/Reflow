@@ -22,6 +22,7 @@ import {
     type TradeOutput,
     TradeSchema,
 } from "@/schemas/trade.schema"
+import { formatSignedMoney } from "@/utils/formatMoney"
 
 type Props = {
     handleClose: () => void
@@ -301,9 +302,7 @@ export default function TradeForm({
                                     : "text-neon-red"
                             )}
                         >
-                            {pnl.pnlAmount >= 0
-                                ? `+${pnl.pnlAmount}`
-                                : `${pnl.pnlAmount}`}
+                            {formatSignedMoney(pnl.pnlAmount)}
                         </span>
                         <span
                             className={cn(
