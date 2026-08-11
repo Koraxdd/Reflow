@@ -3,10 +3,12 @@ import { getWatchlistItems } from "@/actions/watchlistItems"
 import TradingViewChart from "@/components/charts/tradingview/TradingViewChart"
 import PortfolioCardList from "@/components/features/dashboard/PortfolioCardList"
 import Watchlist from "@/components/features/dashboard/Watchlist"
+import { format } from "date-fns"
 
 export default async function DashboardPage() {
     const watchlistItems = await getWatchlistItems()
     const trades = await getTrades()
+    const now = new Date()
 
     return (
         <div className="p-6 flex flex-col gap-6">
@@ -14,7 +16,7 @@ export default async function DashboardPage() {
                 <div>
                     <h2 className="font-semibold">Portfolio Overview</h2>
                     <span className="text-text-muted text-sm font-medium">
-                        Last updated at:
+                        {`Last updated at: ${format(now, "HH:mm")}`}
                     </span>
                 </div>
                 <div className="bg-neon-green/10 border border-neon-green/20 rounded-full text-xs text-neon-green px-3 py-1.5 flex items-center justify-center gap-2">
