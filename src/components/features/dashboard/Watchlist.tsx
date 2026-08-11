@@ -11,6 +11,7 @@ import type { WatchlistItem } from "@/generated/prisma/client"
 import { useWatchlistPrices } from "@/hooks/useWatchlistPrices"
 import { supportedCoins } from "@/lib/supportedCoins"
 import { cn } from "@/lib/utils"
+import { formatMoney } from "@/utils/formatNumber"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Plus, TrendingDown, TrendingUp, X } from "lucide-react"
 import Image from "next/image"
@@ -151,7 +152,9 @@ export default function Watchlist({ initialCoins }: Props) {
                                                     "text-text-muted font-light"
                                             )}
                                         >
-                                            {live ? `$${live.price}` : "—"}
+                                            {live
+                                                ? `$${formatMoney(live.price)}`
+                                                : "—"}
                                         </td>
                                         <td
                                             className={cn(

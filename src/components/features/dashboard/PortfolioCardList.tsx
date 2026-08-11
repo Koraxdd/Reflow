@@ -3,6 +3,7 @@
 import PortfolioOverviewCard from "./PortfolioOverviewCard"
 import type { Trade } from "@/generated/prisma/client"
 import { useCurrentBalance } from "@/hooks/useCurrentBalance"
+import { formatMoney } from "@/utils/formatNumber"
 
 type Props = {
     trades: Trade[]
@@ -15,7 +16,7 @@ export default function PortfolioCardList({ trades }: Props) {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <PortfolioOverviewCard
                 title="TOTAL BALANCE"
-                value={currentBalance}
+                value={formatMoney(currentBalance)}
                 change={{ value: 3.24, label: "today" }}
             />
             <PortfolioOverviewCard
