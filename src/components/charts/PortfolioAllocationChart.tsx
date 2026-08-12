@@ -3,6 +3,7 @@
 import type { Trade } from "@/generated/prisma/client"
 import { usePortfolioAllocation } from "@/hooks/usePortfolioAllocation"
 import { Cell, Pie, PieChart, Tooltip } from "recharts"
+import CustomTooltip from "./CustomTooltip"
 
 type Props = {
     trades: Trade[]
@@ -22,8 +23,8 @@ export default function PortfolioAllocationChart({ trades }: Props) {
                     dataKey={"value"}
                     nameKey={"symbol"}
                     stroke="none"
-                    outerRadius={115}
-                    innerRadius={75}
+                    outerRadius={85}
+                    innerRadius={55}
                 >
                     {data.map((coin, index) => (
                         <Cell
@@ -32,11 +33,11 @@ export default function PortfolioAllocationChart({ trades }: Props) {
                         />
                     ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip content={<CustomTooltip />} />
             </PieChart>
             <div className="flex flex-col gap-2.5">
                 {data.map((coin, index) => (
-                    <div className="flex justify-between">
+                    <div key={coin.symbol} className="flex justify-between">
                         <div className="flex items-center gap-1.5">
                             <div
                                 className="w-2 h-2 rounded-full shrink-0"
