@@ -1,8 +1,9 @@
 import type { Trade } from "@/generated/prisma/client"
 import { getCurrentHoldings } from "@/lib/getCurrentHoldings"
 import { useMemo } from "react"
-import { useWatchlistPrices } from "./useWatchlistPrices"
 import { supportedCoins } from "@/lib/supportedCoins"
+import { useQuery } from "@tanstack/react-query"
+import { fetchCurrentPrices } from "@/actions/prices"
 
 type PortfolioAllocation = {
     symbol: string
@@ -23,12 +24,17 @@ export function usePortfolioAllocation(trades: Trade[]): PortfolioAllocation {
             .filter((s): s is string => Boolean(s))
     }, [holdings])
 
-    const holdingPrices = useWatchlistPrices(holdingSymbols)
+    const { data: prices } = useQuery({
+        queryKey: ["currentPrices"],
+        queryFn: () => fetchCurrentPrices(holdingSymbols),
+        refetchInterval: 300000,
+        enabled: holdingSymbols.length > 0,
+    })
 
-    const holdingValues = Object.entries(holdings).map(([symbol, quantity]) => {
+    const holdingValues = Object.entries(holdings).map(([symbol, amount]) => {
         const coin = supportedCoins.find((c) => c.symbol === symbol)
-        const live = coin && holdingPrices[coin.binanceSymbol.toUpperCase()]
-        const value = live ? quantity * live.price : 0
+        const price = coin && prices && prices[coin.binanceSymbol.toUpperCase()]
+        const value = price ? price * amount : 0
 
         return { symbol, value }
     })
