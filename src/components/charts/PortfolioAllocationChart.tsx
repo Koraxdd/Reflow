@@ -6,6 +6,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 import CustomTooltip from "./CustomTooltip"
 import { getCoinColour } from "@/utils/getCoinColour"
 import { cn } from "@/lib/utils"
+import Button from "../ui/Button"
 
 type Props = {
     trades: Trade[]
@@ -46,11 +47,19 @@ export default function PortfolioAllocationChart({ trades }: Props) {
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <div className="text-center text-text-muted text-sm font-medium">
+                    <div className="text-center text-text-muted text-sm font-medium flex flex-col items-center justify-center gap-3">
                         <span>
                             No active positions — Place a trade to view your
                             portfolio breakdown.
                         </span>
+                        <Button
+                            href="/dashboard/trade-journal"
+                            className="px-2"
+                            variant="neon"
+                            size="sm"
+                        >
+                            Open a Trade
+                        </Button>
                     </div>
                 )}
             </div>
