@@ -5,7 +5,7 @@ import type { WatchlistItem } from "@/generated/prisma/client"
 import { formatMoney } from "@/utils/formatMoney"
 import { useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Line,
     LineChart,
@@ -17,23 +17,46 @@ import {
 import Button from "../ui/Button"
 import { cn } from "@/lib/utils"
 import { getCoinColour } from "@/utils/getCoinColour"
+import { getWatchlistItems } from "@/actions/watchlistItems"
 
 type Props = {
-    watchlistItems: WatchlistItem[]
+    initialWatchlistItems: WatchlistItem[]
 }
 
-export default function PriceChart({ watchlistItems }: Props) {
-    const [selectedCoin, setSelectedCoin] = useState<WatchlistItem>(
-        watchlistItems[0] ?? null
+export default function PriceChart({ initialWatchlistItems }: Props) {
+    const { data: watchlistItems } = useQuery({
+        queryKey: ["watchlistItems"],
+        queryFn: getWatchlistItems,
+        initialData: initialWatchlistItems,
+    })
+
+    const [selectedSymbol, setSelectedSymbol] = useState<string>(
+        watchlistItems[0]?.symbol ?? ""
     )
 
-    const currentColour = getCoinColour(selectedCoin.symbol)
-
     const { data: prices } = useQuery({
-        queryKey: ["priceHistory", selectedCoin.symbol],
-        queryFn: () => fetchPriceHistory(selectedCoin),
-        enabled: !!selectedCoin.symbol,
+        queryKey: ["priceHistory", selectedSymbol],
+        queryFn: () => fetchPriceHistory(selectedSymbol),
+        enabled: !!selectedSymbol,
     })
+
+    useEffect(() => {
+        if (!watchlistItems.length) {
+            setSelectedSymbol("")
+            return
+        }
+
+        const symbolExists = watchlistItems.some(
+            (item) => item.symbol === selectedSymbol
+        )
+        if (!symbolExists) {
+            setSelectedSymbol(watchlistItems[0]?.symbol ?? "")
+        }
+    }, [watchlistItems, selectedSymbol])
+
+    const currentColour = selectedSymbol
+        ? getCoinColour(selectedSymbol)
+        : "#64748b"
 
     return (
         <div className="bg-card border border-border rounded-2xl p-5 md:col-span-2">
@@ -41,7 +64,7 @@ export default function PriceChart({ watchlistItems }: Props) {
                 <h3 className="text-sm font-medium">Price Chart</h3>
                 <div className="flex rounded-lg p-1 bg-input">
                     {watchlistItems.map((item) => {
-                        const isActive = selectedCoin.symbol === item.symbol
+                        const isActive = selectedSymbol === item.symbol
                         return (
                             <Button
                                 key={item.id}
@@ -51,7 +74,7 @@ export default function PriceChart({ watchlistItems }: Props) {
                                     "rounded-md px-3 py-1",
                                     isActive && "text-background"
                                 )}
-                                onClick={() => setSelectedCoin(item)}
+                                onClick={() => setSelectedSymbol(item.symbol)}
                                 style={
                                     isActive
                                         ? { backgroundColor: currentColour }

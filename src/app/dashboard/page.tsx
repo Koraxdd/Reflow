@@ -28,7 +28,7 @@ export default async function DashboardPage() {
             <PortfolioCardList trades={trades} />
             <TradingViewChart />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <PriceChart watchlistItems={watchlistItems} />
+                <PriceChart initialWatchlistItems={watchlistItems} />
                 <PortfolioAllocationChart trades={trades} />
             </div>
             <Watchlist initialCoins={watchlistItems} />

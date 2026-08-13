@@ -1,6 +1,5 @@
 "use server"
 
-import type { WatchlistItem } from "@/generated/prisma/client"
 import { supportedCoins } from "@/lib/supportedCoins"
 
 type CurrentPrices = {
@@ -37,9 +36,9 @@ export async function fetchCurrentPrices(
 }
 
 export async function fetchPriceHistory(
-    watchlistItem: WatchlistItem
+    symbol: string
 ): Promise<{ openTime: number; price: number }[]> {
-    const coin = supportedCoins.find((c) => c.symbol === watchlistItem.symbol)
+    const coin = supportedCoins.find((c) => c.symbol === symbol)
     if (!coin) return []
 
     const res = await fetch(
