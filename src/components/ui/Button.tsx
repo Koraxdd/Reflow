@@ -1,4 +1,4 @@
-import type { MouseEventHandler, ReactNode } from "react"
+import type { CSSProperties, MouseEventHandler, ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
     variant?: "ghost" | "neon" | "danger" | "destructive"
     disabled?: boolean
     className?: string
+    style?: CSSProperties
     onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
@@ -18,6 +19,7 @@ export default function Button({
     variant,
     disabled,
     className,
+    style,
     onClick,
 }: Props) {
     return (
@@ -41,6 +43,7 @@ export default function Button({
                 disabled && "cursor-not-allowed opacity-30 shadow-none",
                 className
             )}
+            style={style}
         >
             {children}
         </button>

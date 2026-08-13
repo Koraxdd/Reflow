@@ -25,9 +25,8 @@ export function usePortfolioAllocation(trades: Trade[]): PortfolioAllocation {
     }, [holdings])
 
     const { data: prices } = useQuery({
-        queryKey: ["currentPrices"],
+        queryKey: ["currentPrices", holdingSymbols],
         queryFn: () => fetchCurrentPrices(holdingSymbols),
-        refetchInterval: 300000,
         enabled: holdingSymbols.length > 0,
     })
 

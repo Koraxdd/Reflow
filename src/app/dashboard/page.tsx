@@ -1,6 +1,7 @@
 import { getTrades } from "@/actions/trades"
 import { getWatchlistItems } from "@/actions/watchlistItems"
 import PortfolioAllocationChart from "@/components/charts/PortfolioAllocationChart"
+import PriceChart from "@/components/charts/PriceChart"
 import TradingViewChart from "@/components/charts/tradingview/TradingViewChart"
 import PortfolioCardList from "@/components/features/dashboard/PortfolioCardList"
 import Watchlist from "@/components/features/dashboard/Watchlist"
@@ -27,6 +28,7 @@ export default async function DashboardPage() {
             <PortfolioCardList trades={trades} />
             <TradingViewChart />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <PriceChart watchlistItems={watchlistItems} />
                 <PortfolioAllocationChart trades={trades} />
             </div>
             <Watchlist initialCoins={watchlistItems} />
