@@ -18,6 +18,7 @@ import Button from "../ui/Button"
 import { cn } from "@/lib/utils"
 import { getCoinColour } from "@/utils/getCoinColour"
 import { getWatchlistItems } from "@/actions/watchlistItems"
+import Spinner from "../ui/Spinner"
 
 type Props = {
     initialWatchlistItems: WatchlistItem[]
@@ -34,7 +35,7 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
         watchlistItems[0]?.symbol ?? ""
     )
 
-    const { data: prices } = useQuery({
+    const { data: prices, isPending } = useQuery({
         queryKey: ["priceHistory", selectedSymbol],
         queryFn: () => fetchPriceHistory(selectedSymbol),
         enabled: !!selectedSymbol,
@@ -58,7 +59,8 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
         ? getCoinColour(selectedSymbol)
         : "#64748b"
 
-    const showChart = Boolean(selectedSymbol && prices && prices?.length > 0)
+    const isLoading = isPending && Boolean(selectedSymbol)
+    const showChart = Boolean(prices && prices?.length > 0)
 
     return (
         <div className="bg-card border border-border rounded-2xl p-5 md:col-span-2">
@@ -96,10 +98,13 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
             <div
                 className={cn(
                     "w-full h-55",
-                    !showChart && "flex items-center justify-center h-70"
+                    (isLoading || !showChart) &&
+                        "flex items-center justify-center h-70"
                 )}
             >
-                {showChart ? (
+                {isLoading ? (
+                    <Spinner className="w-25 h-25 border-8" />
+                ) : showChart ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             data={prices}
