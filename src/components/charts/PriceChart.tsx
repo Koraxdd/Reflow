@@ -140,7 +140,7 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
                     <div className="text-center text-text-muted text-sm font-medium">
                         <span>
                             No assets in the watchlist — add an asset to display
-                            its price history
+                            its price history.
                         </span>
                     </div>
                 )}
