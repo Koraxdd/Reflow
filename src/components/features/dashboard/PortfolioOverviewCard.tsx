@@ -30,8 +30,8 @@ export default function PortfolioOverviewCard({ title, value, change }: Props) {
                     )}
                 >
                     {change.value >= 0
-                        ? `+${change.value}%`
-                        : `${change.value}%`}
+                        ? `+${change.value.toFixed(1)}%`
+                        : `${change.value.toFixed(1)}%`}
                 </span>
                 <span className="text-xs text-text-muted font-medium">
                     {change.label}
