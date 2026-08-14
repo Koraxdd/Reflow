@@ -37,7 +37,7 @@ export default function DashboardShell({ children }: Props) {
             <motion.main
                 animate={isDesktop && { marginLeft: isOpen ? 240 : 80 }}
                 transition={{ type: "tween", duration: 0.2 }}
-                className="md:ml-60"
+                className="md:ml-60 mt-17 md:mt-16"
             >
                 {children}
             </motion.main>

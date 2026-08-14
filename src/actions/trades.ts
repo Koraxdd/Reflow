@@ -1,6 +1,6 @@
 "use server"
 
-import { authOptions } from "@/lib/auth"
+import { getUserId } from "@/lib/getUserId"
 import {
     createTrade,
     deleteTradeById,
@@ -9,31 +9,20 @@ import {
     getTradesByUser,
 } from "@/queries/trades"
 import { type TradeOutput } from "@/schemas/trade.schema"
-import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
 
 export async function submitTrade(data: TradeOutput) {
-    const session = await getServerSession(authOptions)
-    const userId = session?.user.id
-    if (!userId) {
-        redirect("/")
-    }
-
+    const userId = await getUserId()
     return await createTrade(userId, data)
 }
 
 export async function getTrades() {
-    const session = await getServerSession(authOptions)
-    const userId = session?.user.id
-    if (!userId) {
-        redirect("/")
-    }
-
+    const userId = await getUserId()
     return await getTradesByUser(userId)
 }
 
 export async function removeTrade(id: string) {
-    return await deleteTradeById(id)
+    const userId = await getUserId()
+    return await deleteTradeById(id, userId)
 }
 
 export async function updateTrade({ id, userId, trade }: EditTradeVariables) {

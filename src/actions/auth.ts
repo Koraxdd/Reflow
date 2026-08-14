@@ -1,8 +1,8 @@
 "use server"
 
-import type { RegisterInput } from "@/components/forms/AuthForm"
 import { EmailTakenError, UsernameTakenError } from "@/errors"
 import { createUser, getUserByEmail, getUserByUsername } from "@/queries/users"
+import type { RegisterInput } from "@/schemas/register.schema"
 import argon2 from "argon2"
 
 type SignUpResult =

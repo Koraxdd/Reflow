@@ -11,6 +11,7 @@ import { ArrowRight, BookOpen, Trash2, TriangleAlert } from "lucide-react"
 import { useState } from "react"
 import Pill from "@/components/ui/Pill"
 import { calculatePnL } from "@/utils/calculatePnL"
+import { formatMoney, formatSignedMoney } from "@/utils/formatMoney"
 
 type Props = {
     data: Trade
@@ -113,9 +114,7 @@ export default function TradeCard({ data, onEdit }: Props) {
                                         : "text-neon-red"
                                 )}
                             >
-                                {pnl.pnlAmount >= 0
-                                    ? `+${pnl.pnlAmount}`
-                                    : `${pnl.pnlAmount}`}
+                                {formatSignedMoney(pnl.pnlAmount)}
                             </span>
                             <span
                                 className={cn(
@@ -141,7 +140,9 @@ export default function TradeCard({ data, onEdit }: Props) {
                         <span className="text-text-muted font-medium">
                             Entry
                         </span>
-                        <span className="font-medium">${entryPrice}</span>
+                        <span className="font-medium">
+                            {formatMoney(entryPrice)}
+                        </span>
                     </Pill>
                     {exitPrice && (
                         <ArrowRight className="w-3 h-3 text-text-muted" />
@@ -151,7 +152,9 @@ export default function TradeCard({ data, onEdit }: Props) {
                             <span className="text-text-muted font-medium">
                                 Exit
                             </span>
-                            <span className="font-medium">${exitPrice}</span>
+                            <span className="font-medium">
+                                {formatMoney(exitPrice)}
+                            </span>
                         </Pill>
                     )}
                     <Pill>
