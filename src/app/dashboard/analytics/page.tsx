@@ -1,6 +1,9 @@
+import { getTrades } from "@/actions/trades"
 import AnalyticsCardList from "@/components/features/analytics/AnalyticsCardList"
 
-export default function AnalyticsPage() {
+export default async function AnalyticsPage() {
+    const trades = await getTrades()
+
     return (
         <div className="p-6 flex flex-col gap-6">
             <div className="flex flex-col">
@@ -9,7 +12,7 @@ export default function AnalyticsPage() {
                     Performance metrics & trade history
                 </span>
             </div>
-            <AnalyticsCardList />
+            <AnalyticsCardList trades={trades} />
         </div>
     )
 }
