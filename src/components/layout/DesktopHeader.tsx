@@ -19,7 +19,7 @@ export default function DesktopHeader({ isOpen }: Props) {
         <motion.header
             animate={{ marginLeft: isOpen ? 240 : 80 }}
             transition={{ type: "tween", duration: 0.2 }}
-            className="hidden md:flex px-6 py-4 justify-between items-center border-b border-border ml-60"
+            className="hidden md:flex px-6 py-4 justify-between items-center border-b bg-background border-border ml-60 fixed z-50 h-16 left-0 right-0"
         >
             <span className="text-foreground/40 text-sm font-medium">
                 {title}
