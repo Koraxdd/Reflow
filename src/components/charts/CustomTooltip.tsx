@@ -1,21 +1,65 @@
 import { formatMoney } from "@/utils/formatMoney"
+import { format } from "date-fns"
 
-type Props = {
-    active?: boolean
-    payload?: {
-        payload: { symbol: string; value: number }
-    }[]
+type PriceData = {
+    openTime: number
+    price: number
 }
 
-export default function CustomTooltip({ active, payload }: Props) {
-    if (!active || !payload || payload.length === 0) return null
+type PriceProps = {
+    variant: "price"
+    active?: boolean
+    symbol?: string
+    payload?: { payload: PriceData; color?: string }[]
+}
 
-    const data = payload[0].payload
+type AllocationData = {
+    symbol: string
+    value: number
+    percentage: number
+}
 
-    return (
-        <div className="bg-card border border-border rounded-2xl px-2.5 py-3 flex gap-2">
-            <span>{data.symbol}</span>
-            <span>{formatMoney(data.value)}</span>
-        </div>
-    )
+type AllocationProps = {
+    variant: "allocation"
+    active?: boolean
+    payload?: { payload: AllocationData; color?: string }[]
+}
+
+type CustomTooltipProps = PriceProps | AllocationProps
+
+export default function CustomTooltip(props: CustomTooltipProps) {
+    const { active, payload, variant } = props
+
+    if (!active || !payload?.length) return null
+
+    if (variant === "price") {
+        const { symbol } = props
+        const data = payload[0].payload
+        const colour = payload[0].color
+        return (
+            <div className="bg-card border border-border rounded-2xl px-2.5 py-3 flex flex-col gap-1.5">
+                <span className="text-xs text-text-muted">
+                    {format(data.openTime, "HH:mm")}
+                </span>
+                <span className="text-sm font-medium" style={{ color: colour }}>
+                    {symbol}: {formatMoney(data.price)}
+                </span>
+            </div>
+        )
+    }
+
+    if (variant === "allocation") {
+        const data = payload[0].payload
+        const colour = payload[0].color
+        return (
+            <div
+                className="bg-card border border-border rounded-xl px-2.5 py-3 text-sm font-medium"
+                style={{ color: colour }}
+            >
+                <span>
+                    {data.symbol}: {formatMoney(data.value)}
+                </span>
+            </div>
+        )
+    }
 }

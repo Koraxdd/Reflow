@@ -22,7 +22,7 @@ export default function PortfolioAllocationChart({ trades }: Props) {
             <div
                 className={cn(
                     "w-full h-55",
-                    !showChart && "flex items-center justify-center h-70"
+                    !showChart && "flex items-center justify-center"
                 )}
             >
                 {showChart ? (
@@ -43,7 +43,9 @@ export default function PortfolioAllocationChart({ trades }: Props) {
                                     />
                                 ))}
                             </Pie>
-                            <Tooltip content={<CustomTooltip />} />
+                            <Tooltip
+                                content={<CustomTooltip variant="allocation" />}
+                            />
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (

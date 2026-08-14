@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils"
 import { getCoinColour } from "@/utils/getCoinColour"
 import { getWatchlistItems } from "@/actions/watchlistItems"
 import Spinner from "../ui/Spinner"
+import CustomTooltip from "./CustomTooltip"
 
 type Props = {
     initialWatchlistItems: WatchlistItem[]
@@ -99,7 +100,7 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
                 className={cn(
                     "w-full h-55",
                     (isLoading || !showChart) &&
-                        "flex items-center justify-center h-70"
+                        "flex items-center justify-center"
                 )}
             >
                 {isLoading ? (
@@ -115,9 +116,7 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
                                 dataKey="openTime"
                                 axisLine={false}
                                 tickLine={false}
-                                tickFormatter={(tick) =>
-                                    format(new Date(tick), "HH:mm")
-                                }
+                                tickFormatter={(tick) => format(tick, "HH:mm")}
                                 fontSize={12}
                                 stroke="#64748b"
                             />
@@ -138,7 +137,14 @@ export default function PriceChart({ initialWatchlistItems }: Props) {
                                 dot={false}
                                 activeDot={{ r: 4.5 }}
                             />
-                            <Tooltip />
+                            <Tooltip
+                                content={
+                                    <CustomTooltip
+                                        variant="price"
+                                        symbol={selectedSymbol}
+                                    />
+                                }
+                            />
                         </LineChart>
                     </ResponsiveContainer>
                 ) : (
