@@ -25,7 +25,19 @@ type AllocationProps = {
     payload?: { payload: AllocationData; color?: string }[]
 }
 
-type CustomTooltipProps = PriceProps | AllocationProps
+type EquityData = {
+    cumulativePnl: number
+    date: string
+    tooltipDate: string
+}
+
+type EquityProps = {
+    variant: "equity"
+    active?: boolean
+    payload?: { payload: EquityData }[]
+}
+
+type CustomTooltipProps = PriceProps | AllocationProps | EquityProps
 
 export default function CustomTooltip(props: CustomTooltipProps) {
     const { active, payload, variant } = props
@@ -58,6 +70,20 @@ export default function CustomTooltip(props: CustomTooltipProps) {
             >
                 <span>
                     {data.symbol}: {formatMoney(data.value)}
+                </span>
+            </div>
+        )
+    }
+
+    if (variant === "equity") {
+        const data = payload[0].payload
+        return (
+            <div className="bg-card border border-border rounded-2xl px-2.5 py-3 flex flex-col gap-1.5">
+                <span className="text-xs text-text-muted">
+                    {data.tooltipDate}
+                </span>
+                <span className="text-sm font-medium">
+                    {formatMoney(data.cumulativePnl)}
                 </span>
             </div>
         )
