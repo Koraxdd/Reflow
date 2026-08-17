@@ -1,29 +1,18 @@
 "use client"
 
-import { type ReactNode, useEffect, useState } from "react"
+import { type ReactNode } from "react"
 import DesktopHeader from "./DesktopHeader"
 import MobileHeader from "./MobileHeader"
 import Sidebar from "./Sidebar"
 import { motion } from "motion/react"
+import { useDesktop } from "@/hooks/useDesktop"
 
 type Props = {
     children: ReactNode
 }
 
 export default function DashboardShell({ children }: Props) {
-    const [isDesktop, setIsDesktop] = useState<boolean>(false)
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-
-    useEffect(() => {
-        const check = () => {
-            const desktop = window.innerWidth >= 768
-            setIsDesktop(desktop)
-            setIsOpen(desktop)
-        }
-        check()
-        window.addEventListener("resize", check)
-        return () => window.removeEventListener("resize", check)
-    }, [])
+    const { isDesktop, isOpen, setIsOpen } = useDesktop()
 
     return (
         <>
@@ -35,9 +24,9 @@ export default function DashboardShell({ children }: Props) {
                 handleToggle={() => setIsOpen((prev) => !prev)}
             />
             <motion.main
-                animate={isDesktop && { marginLeft: isOpen ? 240 : 80 }}
+                animate={{ marginLeft: isDesktop ? (isOpen ? 240 : 80) : 0 }}
                 transition={{ type: "tween", duration: 0.2 }}
-                className="md:ml-60 mt-17 md:mt-16"
+                className="mt-17 md:mt-16"
             >
                 {children}
             </motion.main>
