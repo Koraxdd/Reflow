@@ -1,6 +1,7 @@
 import { getTrades } from "@/actions/trades"
 import EquityCurveChart from "@/components/charts/EquityCurveChart"
 import AnalyticsCardList from "@/components/features/analytics/AnalyticsCardList"
+import TradeHistoryTable from "@/components/features/analytics/TradeHistoryTable"
 
 export default async function AnalyticsPage() {
     const trades = await getTrades()
@@ -15,6 +16,7 @@ export default async function AnalyticsPage() {
             </div>
             <AnalyticsCardList trades={trades} />
             <EquityCurveChart trades={trades} />
+            <TradeHistoryTable trades={trades} />
         </div>
     )
 }

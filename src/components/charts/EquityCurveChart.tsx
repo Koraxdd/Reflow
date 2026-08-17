@@ -63,7 +63,9 @@ export default function EquityCurveChart({ trades }: Props) {
         timeframe === "All" ? lastItemPnl : lastItemPnl - firstItemPnl
     const percentChange =
         timeframe === "All"
-            ? 100
+            ? pnlChange >= 0
+                ? 100
+                : -100
             : calculatePercentageChange(lastItemPnl, firstItemPnl)
 
     return (
