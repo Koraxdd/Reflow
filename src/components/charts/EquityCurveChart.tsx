@@ -22,6 +22,7 @@ import type { Trade } from "@/generated/prisma/client"
 import { useEquityData } from "@/hooks/useEquityData"
 import CustomTooltip from "./CustomTooltip"
 import { calculatePercentageChange } from "@/utils/calculatePercentageChange"
+import { AnimatePresence, motion } from "motion/react"
 
 type Props = {
     trades: Trade[]
@@ -29,7 +30,12 @@ type Props = {
 
 export default function EquityCurveChart({ trades }: Props) {
     const [timeframe, setTimeframe] = useState<EquityCurveTimeframe>("1W")
+    const [isOpen, setIsOpen] = useState<boolean>(false)
     const data = useEquityData(trades, timeframe)
+
+    const filteredTimeframes = equityCurveTimeframes.filter(
+        (t) => t !== timeframe
+    )
 
     if (data.length === 0) {
         return (
@@ -93,7 +99,47 @@ export default function EquityCurveChart({ trades }: Props) {
                         </span>
                     </div>
                 </div>
-                <div className="flex rounded-lg p-1 bg-input">
+                <div className="relative flex flex-col items-center gap-2 rounded-lg p-1 bg-input md:hidden">
+                    <Button
+                        size="xs"
+                        variant="ghost"
+                        className="rounded-md px-3 py-1 text-background bg-neon-cyan"
+                        onClick={() => setIsOpen((prev) => !prev)}
+                    >
+                        {timeframe}
+                    </Button>
+                    <AnimatePresence>
+                        {isOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                transition={{
+                                    type: "tween",
+                                    duration: 0.2,
+                                    ease: "easeOut",
+                                }}
+                                className="flex flex-col gap-1 absolute top-8.5 z-50 rounded-lg p-1 bg-input origin-top border border-border"
+                            >
+                                {filteredTimeframes.map((t) => (
+                                    <Button
+                                        key={t}
+                                        size="xs"
+                                        variant="ghost"
+                                        className="rounded-md px-3 py-1"
+                                        onClick={() => {
+                                            setTimeframe(t)
+                                            setIsOpen(false)
+                                        }}
+                                    >
+                                        {t}
+                                    </Button>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+                <div className="rounded-lg p-1 bg-input hidden md:flex">
                     {equityCurveTimeframes.map((t) => {
                         const isActive = t === timeframe
                         return (
