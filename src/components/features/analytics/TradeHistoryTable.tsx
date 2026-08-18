@@ -12,12 +12,25 @@ type Props = {
 }
 
 export type TradeFilter = "All" | "Win" | "Loss"
+export type SortField = "date" | "asset" | "amount" | "pnl"
+export type SortOrder = "asc" | "desc"
 
 export default function TradeHistoryTable({ trades }: Props) {
     const [tradeFilter, setTradeFilter] = useState<TradeFilter>("All")
+    const [sortField, setSortField] = useState<SortField>("date")
+    const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
 
-    const filteredTrades = useMemo(() => {
-        return trades.filter((trade) => {
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+        } else {
+            setSortField(field)
+            setSortOrder("desc")
+        }
+    }
+
+    const sortedTrades = useMemo(() => {
+        const filteredTrades = trades.filter((trade) => {
             const isClosed = Boolean(trade.closedAt && trade.exitPrice)
             if (!isClosed) return false
 
@@ -32,18 +45,56 @@ export default function TradeHistoryTable({ trades }: Props) {
             if (tradeFilter === "Loss") return pnlAmount < 0
             return true
         })
-    }, [trades, tradeFilter])
+
+        return [...filteredTrades].sort((a, b) => {
+            let result = 0
+
+            switch (sortField) {
+                case "date":
+                    result = a.closedAt!.getTime() - b.closedAt!.getTime()
+                    break
+                case "asset":
+                    result = a.symbol.localeCompare(b.symbol)
+                    break
+                case "amount":
+                    result = a.quantity - b.quantity
+                    break
+                case "pnl":
+                    const pnlA = calculatePnL(
+                        a.direction as "Long" | "Short",
+                        a.exitPrice!,
+                        a.entryPrice,
+                        a.quantity
+                    )
+
+                    const pnlB = calculatePnL(
+                        b.direction as "Long" | "Short",
+                        b.exitPrice!,
+                        b.entryPrice,
+                        b.quantity
+                    )
+
+                    result = pnlA.pnlAmount - pnlB.pnlAmount
+                    break
+            }
+            return sortOrder === "asc" ? result : -result
+        })
+    }, [trades, tradeFilter, sortField, sortOrder])
 
     return (
         <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            <TradeHistoryToolbar
+                activeFilter={tradeFilter}
+                onFilterChange={setTradeFilter}
+            />
             <div className="overflow-x-auto">
-                <TradeHistoryToolbar
-                    activeFilter={tradeFilter}
-                    onFilterChange={setTradeFilter}
-                />
                 <table className="w-full">
-                    <TradeHistoryHeader />
-                    <TradeHistoryBody trades={filteredTrades} />
+                    <TradeHistoryHeader
+                        sortField={sortField}
+                        sortOrder={sortOrder}
+                        onSort={handleSort}
+                    />
+                    <TradeHistoryBody trades={sortedTrades} />
                 </table>
             </div>
         </div>

@@ -1,9 +1,31 @@
 "use client"
 
 import Button from "@/components/ui/Button"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
+import type { SortField, SortOrder } from "./TradeHistoryTable"
 
-export default function TradeHistoryHeader() {
+type Props = {
+    sortField: SortField
+    sortOrder: SortOrder
+    onSort: (field: SortField) => void
+}
+
+export default function TradeHistoryHeader({
+    sortField,
+    sortOrder,
+    onSort,
+}: Props) {
+    const renderSortIcon = (field: SortField) => {
+        if (sortField !== field) {
+            return <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
+        }
+        if (sortOrder === "desc") {
+            return <ArrowDown className="w-3.5 h-3.5 text-neon-cyan" />
+        } else {
+            return <ArrowUp className="w-3.5 h-3.5 text-neon-cyan" />
+        }
+    }
+
     return (
         <thead>
             <tr>
@@ -12,9 +34,10 @@ export default function TradeHistoryHeader() {
                         variant="ghost"
                         size="sm"
                         className="flex items-center text-base font-medium gap-1 hover:opacity-80"
+                        onClick={() => onSort("date")}
                     >
                         Date
-                        <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
+                        {renderSortIcon("date")}
                     </Button>
                 </th>
                 <th className="px-5 py-1 text-left">
@@ -22,9 +45,10 @@ export default function TradeHistoryHeader() {
                         variant="ghost"
                         size="sm"
                         className="flex items-center text-base font-medium gap-1 hover:opacity-80"
+                        onClick={() => onSort("asset")}
                     >
                         Asset
-                        <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
+                        {renderSortIcon("asset")}
                     </Button>
                 </th>
                 <th className="px-5 py-1 text-left text-base font-medium text-text-muted">
@@ -35,9 +59,10 @@ export default function TradeHistoryHeader() {
                         variant="ghost"
                         size="sm"
                         className="flex items-center text-base font-medium gap-1 hover:opacity-80"
+                        onClick={() => onSort("amount")}
                     >
                         Amount
-                        <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
+                        {renderSortIcon("amount")}
                     </Button>
                 </th>
                 <th className="px-5 py-1 text-left text-base font-medium text-text-muted">
@@ -48,9 +73,10 @@ export default function TradeHistoryHeader() {
                         variant="ghost"
                         size="sm"
                         className="flex items-center text-base font-medium gap-1 hover:opacity-80"
+                        onClick={() => onSort("pnl")}
                     >
                         P&L
-                        <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
+                        {renderSortIcon("pnl")}
                     </Button>
                 </th>
             </tr>
