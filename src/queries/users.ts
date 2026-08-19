@@ -50,3 +50,26 @@ export async function updateUserData(
         },
     })
 }
+
+export async function updateUserPassword(
+    userId: string,
+    password: string
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            password,
+        },
+    })
+}
+
+export async function getUserPassword(
+    userId: string
+): Promise<{ password: string } | null> {
+    return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            password: true,
+        },
+    })
+}

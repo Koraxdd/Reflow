@@ -11,7 +11,6 @@ import NotificationsTab from "../features/settings/NotificationsTab"
 import PreferencesTab from "../features/settings/PreferencesTab"
 
 type Props = {
-    userId: string
     username: string
     email: string
     timezone: string
@@ -19,7 +18,6 @@ type Props = {
 }
 
 export default function SettingsClient({
-    userId,
     username,
     email,
     timezone,
@@ -36,7 +34,7 @@ export default function SettingsClient({
                 </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="rounded-2xl p-3 border border-border bg-card space-y-2">
+                <div className="rounded-2xl p-3 border border-border bg-card space-y-2 h-fit">
                     <div className="flex flex-col items-center justify-center py-5 px-3 mb-2">
                         <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3 bg-linear-to-br from-neon-cyan/25 to-neon-purple/25 border-2 border-neon-cyan/20">
                             <span className="text-neon-cyan font-semibold text-2xl">
@@ -76,7 +74,6 @@ export default function SettingsClient({
                 <div className="md:col-span-3 rounded-2xl p-6 bg-card border border-border h-fit">
                     {activeTab === "Profile" && (
                         <ProfileTab
-                            userId={userId}
                             username={username}
                             email={email}
                             timezone={timezone}

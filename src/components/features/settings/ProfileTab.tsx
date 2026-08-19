@@ -4,19 +4,14 @@ import { baseCurrencies } from "@/lib/baseCurrencies"
 import Button from "../../ui/Button"
 import { Input } from "../../ui/Input"
 import { timezones } from "@/lib/timezones"
-import {
-    useForm,
-    type SubmitHandler,
-    type SubmitErrorHandler,
-} from "react-hook-form"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ProfileInput, ProfileSchema } from "@/schemas/profile.schema"
+import { type ProfileInput, ProfileSchema } from "@/schemas/profile.schema"
 import { updateUser } from "@/actions/users"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 type Props = {
-    userId: string
     username: string
     email: string
     timezone: string
@@ -24,7 +19,6 @@ type Props = {
 }
 
 export default function ProfileTab({
-    userId,
     username,
     email,
     timezone,
@@ -51,7 +45,7 @@ export default function ProfileTab({
 
     const onSubmit: SubmitHandler<ProfileInput> = async (data) => {
         try {
-            await updateUser(userId, data)
+            await updateUser(data)
             await update({
                 username: data.username,
                 email: data.email,

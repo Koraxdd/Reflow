@@ -1,3 +1,102 @@
+"use client"
+
+import { updatePassword } from "@/actions/users"
+import Button from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { type SecurityInput, SecuritySchema } from "@/schemas/security.schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm, type SubmitHandler } from "react-hook-form"
+
 export default function SecurityTab() {
-    return <form></form>
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setError,
+        formState: { errors },
+    } = useForm<SecurityInput>({
+        resolver: zodResolver(SecuritySchema),
+    })
+
+    const onSubmit: SubmitHandler<SecurityInput> = async (data) => {
+        try {
+            const res = await updatePassword(
+                data.currentPassword,
+                data.newPassword
+            )
+            if (res?.error) {
+                setError("currentPassword", { message: res.error })
+                return
+            }
+            reset()
+        } catch (err) {
+            setError("root", { message: "Failed to change password" })
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <h3 className="text-sm font-semibold mb-1">Change Password</h3>
+            <p className="text-xs text-text-muted font-medium mb-5">
+                Choose a strong password with at least 8 characters.
+            </p>
+            <div className="flex flex-col gap-2.5">
+                <Input
+                    {...register("currentPassword")}
+                    type="password"
+                    placeholder="••••••••"
+                    label="CURRENT PASSWORD"
+                    className="py-2 text-foreground"
+                />
+                {errors.currentPassword && (
+                    <span className="text-neon-cyan text-xs">
+                        {errors.currentPassword.message}
+                    </span>
+                )}
+            </div>
+            <div className="flex flex-col gap-2.5">
+                <Input
+                    {...register("newPassword")}
+                    type="password"
+                    placeholder="••••••••"
+                    label="NEW PASSWORD"
+                    className="py-2 text-foreground"
+                />
+                {errors.newPassword && (
+                    <span className="text-neon-cyan text-xs">
+                        {errors.newPassword.message}
+                    </span>
+                )}
+            </div>
+            <div className="flex flex-col gap-2.5">
+                <Input
+                    {...register("confirmPassword")}
+                    type="password"
+                    placeholder="••••••••"
+                    label="CONFIRM PASSWORD"
+                    className="py-2 text-foreground"
+                />
+                {errors.confirmPassword && (
+                    <span className="text-neon-cyan text-xs">
+                        {errors.confirmPassword.message}
+                    </span>
+                )}
+            </div>
+            <div className="flex flex-col gap-2.5">
+                {errors.root && (
+                    <span className="text-neon-cyan text-xs">
+                        {errors.root.message}
+                    </span>
+                )}
+                <Button
+                    type="submit"
+                    variant="neon"
+                    size="sm"
+                    className="px-4 self-start"
+                >
+                    Update Password
+                </Button>
+            </div>
+        </form>
+    )
 }

@@ -17,7 +17,6 @@ export default async function SettingsPage() {
 
     return (
         <SettingsClient
-            userId={session.user.id}
             username={session.user.name}
             email={session.user.email}
             timezone={user.timezone}
