@@ -32,3 +32,21 @@ export async function getUserByUsername(
         },
     })
 }
+
+export async function updateUserData(
+    userId: string,
+    username: string,
+    email: string,
+    timezone: string,
+    baseCurrency: string
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            username,
+            email,
+            timezone,
+            baseCurrency,
+        },
+    })
+}

@@ -5,20 +5,26 @@ import Button from "../ui/Button"
 import { useState } from "react"
 import { type ActiveTab, settingsTabs } from "@/lib/settingsTabs"
 import { cn } from "@/lib/utils"
-import ProfileSettingsForm from "../forms/ProfileSettingsForm"
-import SecuritySettingsForm from "../forms/SecuritySettingsForm"
-import NotificationsSettingsForm from "../forms/NotificationsSettingsForm"
-import PreferencesSettingsForm from "../forms/PreferencesSettingsForm"
+import ProfileTab from "../features/settings/ProfileTab"
+import SecurityTab from "../features/settings/SecurityTab"
+import NotificationsTab from "../features/settings/NotificationsTab"
+import PreferencesTab from "../features/settings/PreferencesTab"
 
 type Props = {
-    user: {
-        id: string
-        email: string
-        name: string
-    }
+    userId: string
+    username: string
+    email: string
+    timezone: string
+    baseCurrency: string
 }
 
-export default function SettingsClient({ user }: Props) {
+export default function SettingsClient({
+    userId,
+    username,
+    email,
+    timezone,
+    baseCurrency,
+}: Props) {
     const [activeTab, setActiveTab] = useState<ActiveTab>("Profile")
 
     return (
@@ -34,14 +40,14 @@ export default function SettingsClient({ user }: Props) {
                     <div className="flex flex-col items-center justify-center py-5 px-3 mb-2">
                         <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3 bg-linear-to-br from-neon-cyan/25 to-neon-purple/25 border-2 border-neon-cyan/20">
                             <span className="text-neon-cyan font-semibold text-2xl">
-                                {user.name[0].toUpperCase()}
+                                {username[0].toUpperCase()}
                             </span>
                         </div>
                         <span className="text-sm font-semibold">
-                            {user.name}
+                            {username}
                         </span>
                         <span className="text-text-muted text-xs font-medium mt-0.5">
-                            {user.email}
+                            {email}
                         </span>
                     </div>
                     {settingsTabs.map((tab) => {
@@ -67,13 +73,19 @@ export default function SettingsClient({ user }: Props) {
                         )
                     })}
                 </div>
-                <div className="md:col-span-3 rounded-2xl p-6 bg-card border border-border">
-                    {activeTab === "Profile" && <ProfileSettingsForm />}
-                    {activeTab === "Security" && <SecuritySettingsForm />}
-                    {activeTab === "Notifications" && (
-                        <NotificationsSettingsForm />
+                <div className="md:col-span-3 rounded-2xl p-6 bg-card border border-border h-fit">
+                    {activeTab === "Profile" && (
+                        <ProfileTab
+                            userId={userId}
+                            username={username}
+                            email={email}
+                            timezone={timezone}
+                            baseCurrency={baseCurrency}
+                        />
                     )}
-                    {activeTab === "Preferences" && <PreferencesSettingsForm />}
+                    {activeTab === "Security" && <SecurityTab />}
+                    {activeTab === "Notifications" && <NotificationsTab />}
+                    {activeTab === "Preferences" && <PreferencesTab />}
                 </div>
             </div>
         </div>

@@ -13,6 +13,7 @@ model User {
   username       String   @unique
   password       String   
   baseCurrency   String   @default("USD")
+  timezone       String   @default("UTC")
   theme          String   @default("dark")
   createdAt      DateTime @default(now())
   watchlistItems WatchlistItem[]
