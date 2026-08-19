@@ -63,27 +63,36 @@ export default function ProfileTab({
         }
     }
 
-    const onInvalid: SubmitErrorHandler<ProfileInput> = (errors) => {}
-
     return (
-        <form
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
-            className="space-y-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <h3 className="text-sm font-semibold mb-5">Profile Details</h3>
             <div className="grid grid-cols-2 gap-4">
-                <Input
-                    {...register("username")}
-                    type="text"
-                    label="USERNAME"
-                    className="py-2 text-foreground"
-                />
-                <Input
-                    {...register("email")}
-                    type="text"
-                    label="EMAIL"
-                    className="py-2 text-foreground"
-                />
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("username")}
+                        type="text"
+                        label="USERNAME"
+                        className="py-2 text-foreground"
+                    />
+                    {errors.username && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.username.message}
+                        </span>
+                    )}
+                </div>
+                <div className="flex flex-col gap-2.5">
+                    <Input
+                        {...register("email")}
+                        type="text"
+                        label="EMAIL"
+                        className="py-2 text-foreground"
+                    />
+                    {errors.email && (
+                        <span className="text-neon-cyan text-xs">
+                            {errors.email.message}
+                        </span>
+                    )}
+                </div>
                 <div className="flex flex-col gap-2">
                     <label className="text-text-muted font-semibold text-xs">
                         TIMEZONE
