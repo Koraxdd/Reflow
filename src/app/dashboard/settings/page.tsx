@@ -4,9 +4,18 @@ import { getUserByEmail } from "@/queries/users"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
+export type NotificationSettings = {
+    priceAlerts: boolean
+    tradeExecuted: boolean
+    dailySummary: boolean
+    cryptoNews: boolean
+    emailAlerts: boolean
+}
+
 export default async function SettingsPage() {
     const session = await getServerSession(authOptions)
-    if (!session?.user.id) {
+    const userId = session?.user.id
+    if (!userId) {
         redirect("/")
     }
 
@@ -15,8 +24,17 @@ export default async function SettingsPage() {
         redirect("/")
     }
 
+    const settings: NotificationSettings = {
+        priceAlerts: user.priceAlerts,
+        tradeExecuted: user.tradeExecuted,
+        dailySummary: user.dailySummary,
+        cryptoNews: user.cryptoNews,
+        emailAlerts: user.emailAlerts,
+    }
+
     return (
         <SettingsClient
+            initialSettings={settings}
             username={session.user.name}
             email={session.user.email}
             timezone={user.timezone}

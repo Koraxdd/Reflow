@@ -1,4 +1,5 @@
-import { User } from "@/generated/prisma/client"
+import type { NotificationSettings } from "@/app/dashboard/settings/page"
+import type { User } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
 
 export async function createUser(
@@ -70,6 +71,19 @@ export async function getUserPassword(
         where: { id: userId },
         select: {
             password: true,
+        },
+    })
+}
+
+export async function updateUserNotificationSettings(
+    userId: string,
+    key: keyof NotificationSettings,
+    value: boolean
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            [key]: value,
         },
     })
 }

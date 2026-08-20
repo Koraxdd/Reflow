@@ -1,10 +1,12 @@
 "use server"
 
+import type { NotificationSettings } from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
 import {
     getUserPassword,
     updateUserData,
+    updateUserNotificationSettings,
     updateUserPassword,
 } from "@/queries/users"
 import type { ProfileInput } from "@/schemas/profile.schema"
@@ -36,4 +38,12 @@ export async function updatePassword(
     await updateUserPassword(userId, hashedPassword)
 
     return { success: true }
+}
+
+export async function updateUserNotifications(
+    key: keyof NotificationSettings,
+    value: boolean
+): Promise<User> {
+    const userId = await getUserId()
+    return await updateUserNotificationSettings(userId, key, value)
 }

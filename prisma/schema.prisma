@@ -8,14 +8,19 @@ datasource db {
 }
 
 model User { 
-  id             String   @id @default(uuid())
-  email          String   @unique
-  username       String   @unique
+  id             String          @id @default(uuid())
+  email          String          @unique
+  username       String          @unique
   password       String   
-  baseCurrency   String   @default("USD")
-  timezone       String   @default("UTC")
-  theme          String   @default("dark")
-  createdAt      DateTime @default(now())
+  baseCurrency   String          @default("USD")
+  timezone       String          @default("UTC")
+  theme          String          @default("dark")
+  priceAlerts    Boolean         @default(true)
+  tradeExecuted  Boolean         @default(true)
+  dailySummary   Boolean         @default(false)
+  cryptoNews     Boolean         @default(false)
+  emailAlerts    Boolean         @default(true)
+  createdAt      DateTime        @default(now())
   watchlistItems WatchlistItem[]
   trades         Trade[]
 } 
