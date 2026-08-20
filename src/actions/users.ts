@@ -4,6 +4,7 @@ import type { NotificationSettings } from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
 import {
+    getUserNotificationSettings,
     getUserPassword,
     updateUserData,
     updateUserNotificationSettings,
@@ -46,4 +47,9 @@ export async function updateUserNotifications(
 ): Promise<User> {
     const userId = await getUserId()
     return await updateUserNotificationSettings(userId, key, value)
+}
+
+export async function getUserNotifications(): Promise<NotificationSettings | null> {
+    const userId = await getUserId()
+    return await getUserNotificationSettings(userId)
 }

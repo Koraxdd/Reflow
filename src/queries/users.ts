@@ -87,3 +87,18 @@ export async function updateUserNotificationSettings(
         },
     })
 }
+
+export async function getUserNotificationSettings(
+    userId: string
+): Promise<NotificationSettings | null> {
+    return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            priceAlerts: true,
+            tradeExecuted: true,
+            dailySummary: true,
+            cryptoNews: true,
+            emailAlerts: true,
+        },
+    })
+}

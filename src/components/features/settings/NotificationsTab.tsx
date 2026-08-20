@@ -1,30 +1,43 @@
 "use client"
 
-import { updateUserNotifications } from "@/actions/users"
+import { getUserNotifications, updateUserNotifications } from "@/actions/users"
 import type { NotificationSettings } from "@/app/dashboard/settings/page"
 import Switch from "@/components/ui/Switch"
-import { useState } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 type Props = {
     initialSettings: NotificationSettings
 }
 
 export default function NotificationsTab({ initialSettings }: Props) {
-    const [settings, setSettings] =
-        useState<NotificationSettings>(initialSettings)
+    const queryClient = useQueryClient()
+
+    const { data: settings } = useQuery({
+        queryKey: ["notificationSettings"],
+        queryFn: getUserNotifications,
+        initialData: initialSettings,
+    })
 
     const handleToggle = async (
         key: keyof NotificationSettings,
         value: boolean
     ) => {
-        setSettings((prev) => ({ ...prev, [key]: value }))
+        queryClient.setQueryData<NotificationSettings>(
+            ["notificationSettings"],
+            (prev) => (prev ? { ...prev, [key]: value } : prev)
+        )
 
         try {
             await updateUserNotifications(key, value)
         } catch (err) {
-            setSettings((prev) => ({ ...prev, [key]: !value }))
+            queryClient.setQueryData<NotificationSettings>(
+                ["notificationSettings"],
+                (prev) => (prev ? { ...prev, [key]: !value } : prev)
+            )
         }
     }
+
+    if (!settings) return null
 
     return (
         <div>
