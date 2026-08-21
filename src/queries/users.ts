@@ -1,4 +1,7 @@
-import type { NotificationSettings } from "@/app/dashboard/settings/page"
+import type {
+    NotificationSettings,
+    UserPreferences,
+} from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
 
@@ -99,6 +102,32 @@ export async function getUserNotificationSettings(
             dailySummary: true,
             cryptoNews: true,
             emailAlerts: true,
+        },
+    })
+}
+
+export async function getUserPreferenceSettings(
+    userId: string
+): Promise<UserPreferences | null> {
+    return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            theme: true,
+            defaultChart: true,
+            compactView: true,
+        },
+    })
+}
+
+export async function updateUserPreferenceSettings(
+    userId: string,
+    key: keyof UserPreferences,
+    value: string | boolean
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            [key]: value,
         },
     })
 }

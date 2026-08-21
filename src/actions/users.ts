@@ -1,14 +1,19 @@
 "use server"
 
-import type { NotificationSettings } from "@/app/dashboard/settings/page"
+import type {
+    NotificationSettings,
+    UserPreferences,
+} from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
 import {
     getUserNotificationSettings,
     getUserPassword,
+    getUserPreferenceSettings,
     updateUserData,
     updateUserNotificationSettings,
     updateUserPassword,
+    updateUserPreferenceSettings,
 } from "@/queries/users"
 import type { ProfileInput } from "@/schemas/profile.schema"
 import argon2 from "argon2"
@@ -52,4 +57,17 @@ export async function updateUserNotifications(
 export async function getUserNotifications(): Promise<NotificationSettings | null> {
     const userId = await getUserId()
     return await getUserNotificationSettings(userId)
+}
+
+export async function getUserPreferences(): Promise<UserPreferences | null> {
+    const userId = await getUserId()
+    return await getUserPreferenceSettings(userId)
+}
+
+export async function updateUserPreferences(
+    key: keyof UserPreferences,
+    value: string | boolean
+): Promise<User> {
+    const userId = await getUserId()
+    return await updateUserPreferenceSettings(userId, key, value)
 }

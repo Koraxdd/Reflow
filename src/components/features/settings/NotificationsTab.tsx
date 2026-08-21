@@ -3,7 +3,7 @@
 import { getUserNotifications, updateUserNotifications } from "@/actions/users"
 import type { NotificationSettings } from "@/app/dashboard/settings/page"
 import Switch from "@/components/ui/Switch"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 type Props = {
     initialSettings: NotificationSettings
@@ -18,32 +18,49 @@ export default function NotificationsTab({ initialSettings }: Props) {
         initialData: initialSettings,
     })
 
-    const handleToggle = async (
-        key: keyof NotificationSettings,
-        value: boolean
-    ) => {
-        queryClient.setQueryData<NotificationSettings>(
-            ["notificationSettings"],
-            (prev) => (prev ? { ...prev, [key]: value } : prev)
-        )
+    const { mutate: toggleNotification } = useMutation({
+        mutationFn: ({
+            key,
+            value,
+        }: {
+            key: keyof NotificationSettings
+            value: boolean
+        }) => updateUserNotifications(key, value),
+        onMutate: async ({ key, value }) => {
+            await queryClient.cancelQueries({
+                queryKey: ["notificationSettings"],
+            })
+            const previous = queryClient.getQueryData<NotificationSettings>([
+                "notificationSettings",
+            ])
 
-        try {
-            await updateUserNotifications(key, value)
-        } catch (err) {
             queryClient.setQueryData<NotificationSettings>(
                 ["notificationSettings"],
-                (prev) => (prev ? { ...prev, [key]: !value } : prev)
+                (prev) => (prev ? { ...prev, [key]: value } : prev)
             )
-        }
-    }
+
+            return { previous }
+        },
+        onError(error, variables, onMutateResult) {
+            if (onMutateResult?.previous) {
+                queryClient.setQueryData<NotificationSettings>(
+                    ["notificationSettings"],
+                    onMutateResult.previous
+                )
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["notificationSettings"],
+            })
+        },
+    })
 
     if (!settings) return null
 
     return (
-        <div>
-            <h3 className="text-sm font-semibold mb-6">
-                Notification Preferences
-            </h3>
+        <div className="space-y-5">
+            <h3 className="text-sm font-semibold">Notification Preferences</h3>
             <div className="space-y-4">
                 <div className="flex items-center justify-between py-3 border-b border-border">
                     <div>
@@ -55,7 +72,10 @@ export default function NotificationsTab({ initialSettings }: Props) {
                     <Switch
                         checked={settings.priceAlerts}
                         onChange={(checked) =>
-                            handleToggle("priceAlerts", checked)
+                            toggleNotification({
+                                key: "priceAlerts",
+                                value: checked,
+                            })
                         }
                     />
                 </div>
@@ -69,7 +89,10 @@ export default function NotificationsTab({ initialSettings }: Props) {
                     <Switch
                         checked={settings.tradeExecuted}
                         onChange={(checked) =>
-                            handleToggle("tradeExecuted", checked)
+                            toggleNotification({
+                                key: "tradeExecuted",
+                                value: checked,
+                            })
                         }
                     />
                 </div>
@@ -85,7 +108,10 @@ export default function NotificationsTab({ initialSettings }: Props) {
                     <Switch
                         checked={settings.dailySummary}
                         onChange={(checked) =>
-                            handleToggle("dailySummary", checked)
+                            toggleNotification({
+                                key: "dailySummary",
+                                value: checked,
+                            })
                         }
                     />
                 </div>
@@ -101,7 +127,10 @@ export default function NotificationsTab({ initialSettings }: Props) {
                     <Switch
                         checked={settings.cryptoNews}
                         onChange={(checked) =>
-                            handleToggle("cryptoNews", checked)
+                            toggleNotification({
+                                key: "cryptoNews",
+                                value: checked,
+                            })
                         }
                     />
                 </div>
@@ -115,7 +144,10 @@ export default function NotificationsTab({ initialSettings }: Props) {
                     <Switch
                         checked={settings.emailAlerts}
                         onChange={(checked) =>
-                            handleToggle("emailAlerts", checked)
+                            toggleNotification({
+                                key: "emailAlerts",
+                                value: checked,
+                            })
                         }
                     />
                 </div>

@@ -12,6 +12,12 @@ export type NotificationSettings = {
     emailAlerts: boolean
 }
 
+export type UserPreferences = {
+    theme: string
+    defaultChart: string
+    compactView: boolean
+}
+
 export default async function SettingsPage() {
     const session = await getServerSession(authOptions)
     const userId = session?.user.id
@@ -32,9 +38,16 @@ export default async function SettingsPage() {
         emailAlerts: user.emailAlerts,
     }
 
+    const preferences: UserPreferences = {
+        theme: user.theme,
+        defaultChart: user.defaultChart,
+        compactView: user.compactView,
+    }
+
     return (
         <SettingsClient
             initialSettings={settings}
+            initialPreferences={preferences}
             username={session.user.name}
             email={session.user.email}
             timezone={user.timezone}

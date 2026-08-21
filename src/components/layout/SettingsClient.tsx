@@ -9,10 +9,14 @@ import ProfileTab from "../features/settings/ProfileTab"
 import SecurityTab from "../features/settings/SecurityTab"
 import NotificationsTab from "../features/settings/NotificationsTab"
 import PreferencesTab from "../features/settings/PreferencesTab"
-import type { NotificationSettings } from "@/app/dashboard/settings/page"
+import type {
+    NotificationSettings,
+    UserPreferences,
+} from "@/app/dashboard/settings/page"
 
 type Props = {
     initialSettings: NotificationSettings
+    initialPreferences: UserPreferences
     username: string
     email: string
     timezone: string
@@ -21,6 +25,7 @@ type Props = {
 
 export default function SettingsClient({
     initialSettings,
+    initialPreferences,
     username,
     email,
     timezone,
@@ -87,7 +92,11 @@ export default function SettingsClient({
                     {activeTab === "Notifications" && (
                         <NotificationsTab initialSettings={initialSettings} />
                     )}
-                    {activeTab === "Preferences" && <PreferencesTab />}
+                    {activeTab === "Preferences" && (
+                        <PreferencesTab
+                            initialPreferences={initialPreferences}
+                        />
+                    )}
                 </div>
             </div>
         </div>
