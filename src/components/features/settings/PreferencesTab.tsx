@@ -4,6 +4,8 @@ import { getUserPreferences, updateUserPreferences } from "@/actions/users"
 import type { UserPreferences } from "@/app/dashboard/settings/page"
 import Button from "@/components/ui/Button"
 import Switch from "@/components/ui/Switch"
+import { chartOptions } from "@/lib/chartOptions"
+import { cn } from "@/lib/utils"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Moon } from "lucide-react"
 
@@ -26,12 +28,8 @@ export default function PreferencesTab({ initialPreferences }: Props) {
             value,
         }: {
             key: keyof UserPreferences
-            value: boolean
-        }) => {
-            const preferenceValue =
-                key === "theme" ? (value ? "dark" : "light") : value
-            await updateUserPreferences(key, preferenceValue)
-        },
+            value: UserPreferences[keyof UserPreferences]
+        }) => updateUserPreferences(key, value),
         onMutate: async ({ key, value }) => {
             await queryClient.cancelQueries({ queryKey: ["preferences"] })
             const previous = queryClient.getQueryData<UserPreferences>([
@@ -74,9 +72,12 @@ export default function PreferencesTab({ initialPreferences }: Props) {
                     </div>
                 </div>
                 <Switch
-                    checked={preferences.theme === "dark" ? true : false}
+                    checked={preferences.theme === "dark"}
                     onChange={(checked) =>
-                        togglePreferences({ key: "theme", value: checked })
+                        togglePreferences({
+                            key: "theme",
+                            value: checked ? "dark" : "light",
+                        })
                     }
                 />
             </div>
@@ -100,27 +101,30 @@ export default function PreferencesTab({ initialPreferences }: Props) {
             <div className="space-y-2">
                 <h4 className="text-sm font-medium">Default Chart Type</h4>
                 <div className="flex gap-2">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-input px-4 rounded-2xl"
-                    >
-                        Line
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-input px-4 rounded-2xl"
-                    >
-                        Candle
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-input px-4 rounded-2xl"
-                    >
-                        Bar
-                    </Button>
+                    {chartOptions.map((option) => {
+                        const isActive =
+                            option.value === preferences.defaultChart
+                        return (
+                            <Button
+                                key={option.label}
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "bg-input px-4 rounded-2xl hover:opacity-80",
+                                    isActive &&
+                                        "border border-neon-cyan/20 bg-neon-cyan/10 text-neon-cyan"
+                                )}
+                                onClick={() =>
+                                    togglePreferences({
+                                        key: "defaultChart",
+                                        value: option.value,
+                                    })
+                                }
+                            >
+                                {option.label}
+                            </Button>
+                        )
+                    })}
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@ model User {
   baseCurrency   String          @default("USD")
   timezone       String          @default("UTC")
   theme          String          @default("dark")
-  defaultChart   String          @default("candlestick")
+  defaultChart   String          @default("CANDLESTICK")
   compactView    Boolean         @default(false)
   priceAlerts    Boolean         @default(true)
   tradeExecuted  Boolean         @default(true)
