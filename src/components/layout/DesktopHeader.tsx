@@ -7,7 +7,11 @@ import { usePathname } from "next/navigation"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { UserPreferences } from "@/app/dashboard/settings/page"
 import { useTheme } from "next-themes"
-import { getUserPreferences, updateUserPreferences } from "@/actions/users"
+import {
+    getUsername,
+    getUserPreferences,
+    updateUserPreferences,
+} from "@/actions/users"
 
 type Props = {
     isOpen: boolean
@@ -17,6 +21,11 @@ export default function DesktopHeader({ isOpen }: Props) {
     const queryClient = useQueryClient()
     const { setTheme } = useTheme()
     const pathname = usePathname()
+
+    const { data: username } = useQuery({
+        queryKey: ["username"],
+        queryFn: getUsername,
+    })
 
     const { data: preferences } = useQuery({
         queryKey: ["preferences"],
@@ -87,7 +96,7 @@ export default function DesktopHeader({ isOpen }: Props) {
                     href="/dashboard/settings"
                     className="bg-linear-to-br from-neon-cyan/25 to-neon-purple/25 text-neon-cyan text-sm border border-neon-cyan/20 w-8 h-8 rounded-full flex justify-center items-center"
                 >
-                    A
+                    {username ? username[0].toUpperCase() : "?"}
                 </Button>
             </div>
         </motion.header>

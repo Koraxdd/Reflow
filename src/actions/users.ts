@@ -7,6 +7,7 @@ import type {
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
 import {
+    getUsernameById,
     getUserNotificationSettings,
     getUserPassword,
     getUserPreferenceSettings,
@@ -70,4 +71,9 @@ export async function updateUserPreferences(
 ): Promise<User> {
     const userId = await getUserId()
     return await updateUserPreferenceSettings(userId, key, value)
+}
+
+export async function getUsername(): Promise<string | undefined> {
+    const userId = await getUserId()
+    return await getUsernameById(userId)
 }

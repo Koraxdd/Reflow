@@ -132,3 +132,16 @@ export async function updateUserPreferenceSettings(
         },
     })
 }
+
+export async function getUsernameById(
+    userId: string
+): Promise<string | undefined> {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            username: true,
+        },
+    })
+
+    return user?.username
+}
