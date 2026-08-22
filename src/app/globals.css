@@ -4,6 +4,8 @@
     --font-weight-medium: 500;
     --font-weight-normal: 400;
     --text-dark: #0a0e1a;
+    --dark-blue: #0d1525;
+    --dark-cyan: #05bde2;
 }
 
 .light {
@@ -43,7 +45,6 @@
     --neon-red: #ff4d6d;
     --neon-purple: #a855f7;
     --neon-orange: #f59e0b;
-    --dark-blue: #0d1525;
     --sun: #f59e0b;
     --switch: #374151;
 }
