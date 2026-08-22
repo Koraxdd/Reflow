@@ -1,4 +1,3 @@
-import Button from "@/components/ui/Button"
 import type { WatchlistItem } from "@/generated/prisma/client"
 import type { TickerData } from "@/hooks/useWatchlistPrices"
 import { supportedCoins } from "@/lib/supportedCoins"
