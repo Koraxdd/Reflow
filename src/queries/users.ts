@@ -115,6 +115,7 @@ export async function getUserPreferenceSettings(
             theme: true,
             defaultChart: true,
             compactView: true,
+            timezone: true,
         },
     })
 }
