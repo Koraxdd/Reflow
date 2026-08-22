@@ -22,7 +22,11 @@ export default async function RootLayout({
     const session = await getServerSession(authOptions)
 
     return (
-        <html lang="en" className={`${inter.variable} h-full antialiased`}>
+        <html
+            lang="en"
+            className={`${inter.variable} h-full antialiased`}
+            suppressHydrationWarning
+        >
             <body className="min-h-full flex flex-col">
                 <Providers session={session}>{children}</Providers>
             </body>

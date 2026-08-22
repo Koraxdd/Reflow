@@ -28,12 +28,14 @@ export default function Sidebar({ isDesktop, isOpen, handleToggle }: Props) {
                         : { x: isOpen ? 0 : -300, width: 220 }
                 }
                 transition={{ type: "tween", duration: 0.2 }}
-                className="bg-header border-r border-border min-h-screen fixed z-100 top-0 flex flex-col"
+                className="bg-header border-r border-sidebar-border min-h-screen fixed z-100 top-0 flex flex-col"
             >
-                <div className="flex items-center gap-3 border-b border-border py-5 px-4">
+                <div className="flex items-center gap-3 border-b border-sidebar-border py-5 px-4">
                     <TrendingUp className="bg-neon-cyan/20 text-neon-cyan w-8 h-8 p-2 rounded-xl" />
                     {isOpen && (
-                        <h2 className="text-base font-semibold">Reflow</h2>
+                        <h2 className="text-base font-semibold text-white">
+                            Reflow
+                        </h2>
                     )}
                 </div>
                 <SidebarButton onClick={handleToggle} isOpen={isOpen} />
@@ -52,7 +54,7 @@ export default function Sidebar({ isDesktop, isOpen, handleToggle }: Props) {
                         )
                     })}
                 </nav>
-                <div className="py-5 px-4 border-t border-border mt-auto">
+                <div className="py-5 px-4 border-t border-sidebar-border mt-auto">
                     <CustomLink
                         href="/alerts"
                         className="w-full flex items-center gap-3"

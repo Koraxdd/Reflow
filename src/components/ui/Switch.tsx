@@ -12,7 +12,7 @@ export default function Switch({ checked, onChange }: Props) {
     return (
         <Button
             className={cn(
-                "relative w-11 h-6 bg-[#374151] rounded-full duration-200 shrink-0",
+                "relative w-11 h-6 bg-switch rounded-full duration-200 shrink-0",
                 checked && "bg-neon-cyan"
             )}
             onClick={() => onChange(!checked)}

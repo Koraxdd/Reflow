@@ -66,7 +66,7 @@ export async function getUserPreferences(): Promise<UserPreferences | null> {
 
 export async function updateUserPreferences(
     key: keyof UserPreferences,
-    value: string | boolean
+    value: UserPreferences[keyof UserPreferences]
 ): Promise<User> {
     const userId = await getUserId()
     return await updateUserPreferenceSettings(userId, key, value)

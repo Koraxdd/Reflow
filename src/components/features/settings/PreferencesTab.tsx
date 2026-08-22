@@ -7,7 +7,8 @@ import Switch from "@/components/ui/Switch"
 import { chartOptions } from "@/lib/chartOptions"
 import { cn } from "@/lib/utils"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Moon } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
 
 type Props = {
     initialPreferences: UserPreferences
@@ -15,6 +16,7 @@ type Props = {
 
 export default function PreferencesTab({ initialPreferences }: Props) {
     const queryClient = useQueryClient()
+    const { setTheme } = useTheme()
 
     const { data: preferences } = useQuery({
         queryKey: ["preferences"],
@@ -43,7 +45,7 @@ export default function PreferencesTab({ initialPreferences }: Props) {
 
             return { previous }
         },
-        onError(error, variables, onMutateResult) {
+        onError(_error, _variables, onMutateResult) {
             if (onMutateResult?.previous) {
                 queryClient.setQueryData<UserPreferences>(
                     ["preferences"],
@@ -63,7 +65,11 @@ export default function PreferencesTab({ initialPreferences }: Props) {
             <h3 className="text-sm font-semibold">Appearance & Preferences</h3>
             <div className="flex items-center justify-between border-b border-border py-3">
                 <div className="flex items-center gap-3">
-                    <Moon className="w-4 h-4 text-neon-cyan" />
+                    {preferences.theme === "dark" ? (
+                        <Moon className="w-4 h-4 text-neon-cyan" />
+                    ) : (
+                        <Sun className="w-4 h-4 text-sun" />
+                    )}
                     <div>
                         <h4 className="text-sm font-medium">Dark Mode</h4>
                         <p className="text-xs text-text-muted">
@@ -73,12 +79,14 @@ export default function PreferencesTab({ initialPreferences }: Props) {
                 </div>
                 <Switch
                     checked={preferences.theme === "dark"}
-                    onChange={(checked) =>
+                    onChange={(checked) => {
+                        const theme = checked ? "dark" : "light"
                         togglePreferences({
                             key: "theme",
-                            value: checked ? "dark" : "light",
+                            value: theme,
                         })
-                    }
+                        setTheme(theme)
+                    }}
                 />
             </div>
             <div className="flex items-center justify-between border-b border-border py-3">
@@ -110,9 +118,9 @@ export default function PreferencesTab({ initialPreferences }: Props) {
                                 variant="ghost"
                                 size="sm"
                                 className={cn(
-                                    "bg-input px-4 rounded-2xl hover:opacity-80",
+                                    "bg-input px-4 rounded-2xl border border-transparent hover:opacity-80",
                                     isActive &&
-                                        "border border-neon-cyan/20 bg-neon-cyan/10 text-neon-cyan"
+                                        "border-neon-cyan/20 bg-neon-cyan/10 text-neon-cyan"
                                 )}
                                 onClick={() =>
                                     togglePreferences({

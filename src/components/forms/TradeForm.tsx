@@ -167,7 +167,7 @@ export default function TradeForm({
                                 className={cn(
                                     "py-2 rounded-xl",
                                     direction === "Long" &&
-                                        "bg-neon-green text-background"
+                                        "bg-neon-green text-text-dark"
                                 )}
                                 onClick={() => setValue("direction", "Long")}
                             >
@@ -180,7 +180,7 @@ export default function TradeForm({
                                 className={cn(
                                     "py-2 rounded-xl",
                                     direction === "Short" &&
-                                        "bg-neon-red text-background"
+                                        "bg-neon-red text-text-dark"
                                 )}
                                 onClick={() => setValue("direction", "Short")}
                             >

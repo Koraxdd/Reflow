@@ -122,7 +122,7 @@ export async function getUserPreferenceSettings(
 export async function updateUserPreferenceSettings(
     userId: string,
     key: keyof UserPreferences,
-    value: string | boolean
+    value: UserPreferences[keyof UserPreferences]
 ): Promise<User> {
     return await prisma.user.update({
         where: { id: userId },

@@ -66,7 +66,7 @@ export default function ProfileTab({
                         {...register("username")}
                         type="text"
                         label="USERNAME"
-                        className="py-2 text-foreground"
+                        className="py-2 text-foreground font-normal"
                     />
                     {errors.username && (
                         <span className="text-neon-cyan text-xs">
@@ -79,7 +79,7 @@ export default function ProfileTab({
                         {...register("email")}
                         type="text"
                         label="EMAIL"
-                        className="py-2 text-foreground"
+                        className="py-2 text-foreground font-normal"
                     />
                     {errors.email && (
                         <span className="text-neon-cyan text-xs">
@@ -93,7 +93,7 @@ export default function ProfileTab({
                     </label>
                     <select
                         {...register("timezone")}
-                        className="bg-input border border-border rounded-2xl px-3 py-2 text-sm font-light outline-none"
+                        className="bg-input border border-border rounded-2xl px-3 py-2 text-sm font-normal outline-none"
                     >
                         {timezones.map((timezone) => (
                             <option key={timezone.value} value={timezone.value}>
@@ -108,7 +108,7 @@ export default function ProfileTab({
                     </label>
                     <select
                         {...register("baseCurrency")}
-                        className="bg-input border border-border rounded-2xl px-3 py-2 text-sm font-light outline-none"
+                        className="bg-input border border-border rounded-2xl px-3 py-2 text-sm font-normal outline-none"
                     >
                         {baseCurrencies.map((currency) => (
                             <option key={currency} value={currency}>

@@ -41,7 +41,7 @@ export default function NotificationsTab({ initialSettings }: Props) {
 
             return { previous }
         },
-        onError(error, variables, onMutateResult) {
+        onError(_error, _variables, onMutateResult) {
             if (onMutateResult?.previous) {
                 queryClient.setQueryData<NotificationSettings>(
                     ["notificationSettings"],

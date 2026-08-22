@@ -26,13 +26,13 @@ export default function Button({
     onClick,
 }: Props) {
     const buttonClasses = cn(
-        "rounded-lg transition-all cursor-pointer font-semibold",
+        "rounded-lg transition-all cursor-pointer font-medium",
         variant === "ghost" && "text-text-muted",
         variant === "neon" &&
-            "bg-neon-cyan rounded-2xl text-background shadow-[0_0_20px_rgba(0,212,255,0.3)]",
-        !disabled && variant === "neon" && "hover:bg-dark-cyan",
+            "bg-neon-cyan rounded-2xl text-text-dark shadow-[0_0_20px_rgba(0,212,255,0.3)]",
+        !disabled && variant === "neon" && "hover:bg-neon-cyan/80",
         variant === "danger" &&
-            "bg-neon-red shadow-[0_0_20px_rgba(255,77,109,0.3)]",
+            "bg-neon-red text-white shadow-[0_0_20px_rgba(255,77,109,0.3)]",
         variant === "destructive" &&
             "bg-neon-red/10 border border-neon-red/15 text-neon-red hover:bg-neon-red/20 hover:border-neon-red/40",
         size === "xs" && "text-xs",

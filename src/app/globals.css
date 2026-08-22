@@ -1,30 +1,75 @@
 @import "tailwindcss";
 
 :root {
-    --background: #0a0e1a;
-    --foreground: #e2e8f0;
     --font-weight-medium: 500;
     --font-weight-normal: 400;
+    --text-dark: #0a0e1a;
+}
+
+.light {
+    --background: #f0f4f8;
+    --foreground: #0d1117;
+    --header: rgb(30, 36, 53);
+    --card: #ffffff;
+    --link: rgba(226, 232, 240, 0.5);
+    --text-muted: rgb(100, 116, 139);
+    --input: #f0f4f8;
+    --dark-input: rgb(226, 232, 240);
+    --border: rgba(0, 0, 0, 0.08);
+    --sidebar-border: rgba(255, 255, 255, 0.07);
+    --neon-cyan: rgb(0, 212, 255);
+    --neon-green: rgb(0, 230, 118);
+    --neon-red: rgb(255, 77, 109);
+    --neon-purple: rgb(168, 85, 247);
+    --neon-orange: rgb(245, 158, 11);
+    --sun: #f59e0b;
+    --switch: rgb(209, 213, 219);
+}
+
+.dark {
+    --background: #0a0e1a;
+    --foreground: #e2e8f0;
+    --header: #0d1220;
+    --card: #111827;
+    --link: rgba(226, 232, 240, 0.5);
+    --text-muted: #64748b;
+    --input: #1e2435;
+    --dark-input: #1e2435;
+    --placeholder: #e2e8f0;
+    --border: rgba(255, 255, 255, 0.07);
+    --sidebar-border: rgba(255, 255, 255, 0.07);
+    --neon-cyan: #00d4ff;
+    --neon-green: #00e676;
+    --neon-red: #ff4d6d;
+    --neon-purple: #a855f7;
+    --neon-orange: #f59e0b;
+    --dark-blue: #0d1525;
+    --sun: #f59e0b;
+    --switch: #374151;
 }
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --color-header: #0d1220;
-    --color-neon-cyan: #00d4ff;
-    --color-dark-cyan: #00bfe8;
-    --color-neon-green: #00e676;
-    --color-neon-red: #ff4d6d;
-    --color-neon-purple: #a855f7;
-    --color-neon-orange: #f59e0b;
-    --color-dark-blue: #0d1525;
-    --color-sun: #f59e0b;
-    --color-card: #111827;
-    --color-link: rgba(226, 232, 240, 0.5);
-    --color-text-muted: #64748b;
-    --color-input: #1e2435;
-    --color-placeholder: #e2e8f0;
-    --color-border: rgba(255, 255, 255, 0.07);
+    --color-header: var(--header);
+    --color-neon-cyan: var(--neon-cyan);
+    --color-dark-cyan: var(--dark-cyan);
+    --color-neon-green: var(--neon-green);
+    --color-neon-red: var(--neon-red);
+    --color-neon-purple: var(--neon-purple);
+    --color-neon-orange: var(--neon-orange);
+    --color-dark-blue: var(--dark-blue);
+    --color-sun: var(--sun);
+    --color-card: var(--card);
+    --color-link: var(--link);
+    --color-text-muted: var(--text-muted);
+    --color-text-dark: var(--text-dark);
+    --color-input: var(--input);
+    --color-dark-input: var(--dark-input);
+    --color-placeholder: var(--placeholder);
+    --color-border: var(--border);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-switch: var(--switch);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
 }
@@ -91,7 +136,6 @@
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
     cursor: pointer;
 }
 
