@@ -4,6 +4,7 @@ import "./globals.css"
 import Providers from "./providers"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { Toaster } from "sonner"
 
 const inter = Inter({
     subsets: ["latin"],
@@ -28,7 +29,10 @@ export default async function RootLayout({
             suppressHydrationWarning
         >
             <body className="min-h-full flex flex-col">
-                <Providers session={session}>{children}</Providers>
+                <Providers session={session}>
+                    {children}
+                    <Toaster position="top-right" richColors theme="system" />
+                </Providers>
             </body>
         </html>
     )

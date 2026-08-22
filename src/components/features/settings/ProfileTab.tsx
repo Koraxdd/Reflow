@@ -10,6 +10,7 @@ import { type ProfileInput, ProfileSchema } from "@/schemas/profile.schema"
 import { updateUser } from "@/actions/users"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 type Props = {
     username: string
@@ -52,8 +53,10 @@ export default function ProfileTab({
             })
             reset(data)
             router.refresh()
+            toast.success("Profile settings updated successfully")
         } catch (err) {
             setError("root", { message: "Failed to update data" })
+            toast.error("Failed to update profile settings")
         }
     }
 
