@@ -83,7 +83,10 @@ export default function DesktopHeader({ isOpen }: Props) {
                     )}
                     {preferences?.theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </Button>
-                <Button className="bg-linear-to-br from-neon-cyan/25 to-neon-purple/25 text-neon-cyan text-sm border border-neon-cyan/20 w-8 h-8 rounded-full flex justify-center items-center">
+                <Button
+                    href="/dashboard/settings"
+                    className="bg-linear-to-br from-neon-cyan/25 to-neon-purple/25 text-neon-cyan text-sm border border-neon-cyan/20 w-8 h-8 rounded-full flex justify-center items-center"
+                >
                     A
                 </Button>
             </div>
