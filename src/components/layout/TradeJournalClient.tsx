@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Plus } from "lucide-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getTrades, submitTrade, updateTrade } from "@/actions/trades"
@@ -17,6 +17,12 @@ export default function TradeJournalClient({ initialTrades }: Props) {
     const [showForm, setShowForm] = useState<boolean>(false)
     const [editingTrade, setEditingTrade] = useState<Trade | null>(null)
     const queryClient = useQueryClient()
+
+    const formRef = useRef<HTMLFormElement>(null)
+
+    const scrollToForm = () => {
+        formRef.current?.scrollIntoView()
+    }
 
     const { data: trades } = useQuery({
         queryKey: ["trades"],
@@ -70,6 +76,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                     onAddTrade={addTrade}
                     onEditTrade={editTrade}
                     existingTrade={editingTrade}
+                    ref={formRef}
                 />
             )}
             <div className="flex flex-col gap-4">
@@ -81,6 +88,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                             onEdit={() => {
                                 setShowForm(true)
                                 setEditingTrade(trade)
+                                scrollToForm()
                             }}
                         />
                     ))}
