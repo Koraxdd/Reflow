@@ -37,27 +37,11 @@ export default function EquityCurveChart({ trades }: Props) {
         (t) => t !== timeframe
     )
 
-    if (data.length <= 1) {
-        return (
-            <div className="bg-card border border-border rounded-2xl p-5 text-center text-text-muted text-sm font-medium flex flex-col items-center justify-center gap-3 h-75">
-                <span>
-                    At least 2 completed trades are needed to plot your equity
-                    curve.
-                </span>
-                <Button
-                    href="/dashboard/trade-journal"
-                    className="px-2"
-                    variant="neon"
-                    size="sm"
-                >
-                    Open a Trade
-                </Button>
-            </div>
-        )
-    }
+    const hasEnoughTrades = trades.length > 1
+    const hasEnoughData = data.length > 1
 
-    const firstItemPnl = data[0].cumulativePnl
-    const lastItemPnl = data[data.length - 1].cumulativePnl
+    const firstItemPnl = data[0]?.cumulativePnl
+    const lastItemPnl = data[data.length - 1]?.cumulativePnl
 
     const pnlChange =
         timeframe === "All" ? lastItemPnl : lastItemPnl - firstItemPnl
@@ -73,33 +57,35 @@ export default function EquityCurveChart({ trades }: Props) {
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                     <h3 className="text-sm font-medium">Equity Curve</h3>
-                    <div className="flex gap-2 text-xs font-medium">
-                        <span
-                            className={cn(
-                                pnlChange >= 0
-                                    ? "text-neon-green"
-                                    : "text-neon-red"
-                            )}
-                        >
-                            {formatSignedMoney(pnlChange)}
-                        </span>
-                        <span
-                            className={cn(
-                                percentChange >= 0
-                                    ? "text-neon-green"
-                                    : "text-neon-red"
-                            )}
-                        >
-                            {percentChange >= 0
-                                ? `(+${percentChange.toFixed(1)}%)`
-                                : `(${percentChange.toFixed(1)}%)`}
-                        </span>
-                        <span className="text-text-muted">
-                            {timeframe !== "All"
-                                ? `last ${timeframe}`
-                                : "all time"}
-                        </span>
-                    </div>
+                    {hasEnoughData && (
+                        <div className="flex gap-2 text-xs font-medium">
+                            <span
+                                className={cn(
+                                    pnlChange >= 0
+                                        ? "text-neon-green"
+                                        : "text-neon-red"
+                                )}
+                            >
+                                {formatSignedMoney(pnlChange)}
+                            </span>
+                            <span
+                                className={cn(
+                                    percentChange >= 0
+                                        ? "text-neon-green"
+                                        : "text-neon-red"
+                                )}
+                            >
+                                {percentChange >= 0
+                                    ? `(+${percentChange.toFixed(1)}%)`
+                                    : `(${percentChange.toFixed(1)}%)`}
+                            </span>
+                            <span className="text-text-muted">
+                                {timeframe !== "All"
+                                    ? `last ${timeframe}`
+                                    : "all time"}
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <div className="relative flex flex-col items-center gap-2 rounded-lg p-1 bg-input md:hidden">
                     <Button
@@ -161,67 +147,96 @@ export default function EquityCurveChart({ trades }: Props) {
                     })}
                 </div>
             </div>
-            <div className="w-full h-55">
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        data={data}
-                        accessibilityLayer={false}
-                        margin={{ top: 30, left: 30 }}
-                    >
-                        <defs>
-                            <linearGradient
-                                id="equityGradient"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
+            {!hasEnoughData ? (
+                <div className="flex flex-col items-center text-text-muted font-medium text-center text-sm justify-center gap-3 h-75">
+                    {!hasEnoughTrades ? (
+                        <>
+                            <span>
+                                At least 2 completed trades are needed to plot
+                                your equity curve.
+                            </span>
+                            <Button
+                                href="/dashboard/trade-journal"
+                                className="px-2"
+                                variant="neon"
+                                size="sm"
                             >
-                                <stop
-                                    offset="0%"
-                                    stopColor="#00d4ff"
-                                    stopOpacity={0.3}
-                                />
-                                <stop
-                                    offset="100%"
-                                    stopColor="#00d4ff"
-                                    stopOpacity={0}
-                                />
-                            </linearGradient>
-                        </defs>
-                        <XAxis
-                            dataKey="date"
-                            axisLine={false}
-                            tickLine={false}
-                            minTickGap={30}
-                            fontSize={12}
-                            stroke="#64748b"
-                        />
-                        <YAxis
-                            dataKey="cumulativePnl"
-                            axisLine={false}
-                            tickLine={false}
-                            tickFormatter={(tick) => formatMoney(tick)}
-                            fontSize={12}
-                            stroke="#64748b"
-                            domain={["auto", "auto"]}
-                        />
-                        <Area
-                            dataKey="cumulativePnl"
-                            stroke="none"
-                            fill="url(#equityGradient)"
-                        />
-                        <Line
-                            dataKey="cumulativePnl"
-                            stroke="#00d4ff"
-                            strokeWidth={3}
-                            dot={false}
-                            activeDot={{ r: 4.5 }}
-                        />
-                        <CartesianGrid strokeWidth={0.2} stroke="#64748b" />
-                        <Tooltip content={<CustomTooltip variant="equity" />} />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </div>
+                                Open a Trade
+                            </Button>
+                        </>
+                    ) : (
+                        <span>
+                            Not enough data to group by {timeframe}. Try
+                            switching to a shorter timeframe (like 1D) to view
+                            daily trade performance.
+                        </span>
+                    )}
+                </div>
+            ) : (
+                <div className="w-full h-55">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                            data={data}
+                            accessibilityLayer={false}
+                            margin={{ top: 30, left: 30 }}
+                        >
+                            <defs>
+                                <linearGradient
+                                    id="equityGradient"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                >
+                                    <stop
+                                        offset="0%"
+                                        stopColor="#00d4ff"
+                                        stopOpacity={0.3}
+                                    />
+                                    <stop
+                                        offset="100%"
+                                        stopColor="#00d4ff"
+                                        stopOpacity={0}
+                                    />
+                                </linearGradient>
+                            </defs>
+                            <XAxis
+                                dataKey="date"
+                                axisLine={false}
+                                tickLine={false}
+                                minTickGap={30}
+                                fontSize={12}
+                                stroke="#64748b"
+                            />
+                            <YAxis
+                                dataKey="cumulativePnl"
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(tick) => formatMoney(tick)}
+                                fontSize={12}
+                                stroke="#64748b"
+                                domain={["auto", "auto"]}
+                            />
+                            <Area
+                                dataKey="cumulativePnl"
+                                stroke="none"
+                                fill="url(#equityGradient)"
+                            />
+                            <Line
+                                dataKey="cumulativePnl"
+                                stroke="#00d4ff"
+                                strokeWidth={3}
+                                dot={false}
+                                activeDot={{ r: 4.5 }}
+                            />
+                            <CartesianGrid strokeWidth={0.2} stroke="#64748b" />
+                            <Tooltip
+                                content={<CustomTooltip variant="equity" />}
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+            )}
         </div>
     )
 }
