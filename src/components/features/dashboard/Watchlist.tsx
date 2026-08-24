@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import WatchlistHeader from "./WatchlistHeader"
 import WatchlistTable from "./WatchlistTable"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
 
 type Props = {
     initialCoins: WatchlistItem[]
@@ -23,10 +24,7 @@ export default function Watchlist({ initialCoins }: Props) {
     const [showForm, setShowForm] = useState<boolean>(false)
     const queryClient = useQueryClient()
 
-    const { data: preferences } = useQuery({
-        queryKey: ["preferences"],
-        queryFn: getUserPreferences,
-    })
+    const preferences = useUserPreferences()
 
     const isCompact = Boolean(preferences?.compactView)
 

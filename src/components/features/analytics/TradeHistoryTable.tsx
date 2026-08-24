@@ -8,6 +8,8 @@ import { calculatePnL } from "@/utils/calculatePnL"
 import TradeHistoryToolbar from "./TradeHistoryToolbar"
 import { useQuery } from "@tanstack/react-query"
 import { getUserPreferences } from "@/actions/users"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
+import { useExchangeRate } from "@/hooks/useExchangeRate"
 
 type Props = {
     trades: Trade[]
@@ -22,10 +24,9 @@ export default function TradeHistoryTable({ trades }: Props) {
     const [sortField, setSortField] = useState<SortField>("date")
     const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
 
-    const { data: preferences } = useQuery({
-        queryKey: ["preferences"],
-        queryFn: getUserPreferences,
-    })
+    const preferences = useUserPreferences()
+    const currency = preferences?.baseCurrency ?? "USD"
+    const rate = useExchangeRate(currency)
 
     const isCompact = Boolean(preferences?.compactView)
 
@@ -108,6 +109,8 @@ export default function TradeHistoryTable({ trades }: Props) {
                     <TradeHistoryBody
                         trades={sortedTrades}
                         tradeFilter={tradeFilter}
+                        currency={currency}
+                        rate={rate}
                         isCompact={isCompact}
                     />
                 </table>

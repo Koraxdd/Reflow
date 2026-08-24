@@ -1,16 +1,11 @@
 "use client"
 
-import { getUserPreferences } from "@/actions/users"
-import { useQuery } from "@tanstack/react-query"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
 import { useEffect, useRef, memo } from "react"
 
 function TradingViewWidget() {
     const container = useRef<HTMLDivElement>(null)
-
-    const { data: preferences } = useQuery({
-        queryKey: ["preferences"],
-        queryFn: getUserPreferences,
-    })
+    const preferences = useUserPreferences()
 
     const isDark = preferences?.theme === "dark"
 

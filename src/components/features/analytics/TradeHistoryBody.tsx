@@ -9,6 +9,8 @@ import type { TradeFilter } from "./TradeHistoryTable"
 type Props = {
     trades: Trade[]
     tradeFilter: TradeFilter
+    currency: string
+    rate: number
     isCompact: boolean
 }
 
@@ -21,6 +23,8 @@ const emptyStateMessages: Record<TradeFilter, string> = {
 export default function TradeHistoryBody({
     trades,
     tradeFilter,
+    currency,
+    rate,
     isCompact,
 }: Props) {
     return (
@@ -113,7 +117,11 @@ export default function TradeHistoryBody({
                                             : "text-neon-red"
                                     )}
                                 >
-                                    {formatSignedMoney(pnlAmount)}
+                                    {formatSignedMoney(
+                                        pnlAmount,
+                                        currency,
+                                        rate
+                                    )}
                                 </span>
                                 <span
                                     className={cn(
@@ -124,8 +132,8 @@ export default function TradeHistoryBody({
                                     )}
                                 >
                                     {pnlPercentage >= 0
-                                        ? `(+${pnlPercentage.toFixed(2)})`
-                                        : `(${pnlPercentage.toFixed(2)})`}
+                                        ? `(+${pnlPercentage.toFixed(2)}%)`
+                                        : `(${pnlPercentage.toFixed(2)}%)`}
                                 </span>
                             </td>
                         </tr>

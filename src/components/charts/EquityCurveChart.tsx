@@ -23,6 +23,8 @@ import { useEquityData } from "@/hooks/useEquityData"
 import CustomTooltip from "./CustomTooltip"
 import { calculatePercentageChange } from "@/utils/calculatePercentageChange"
 import { AnimatePresence, motion } from "motion/react"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
+import { useExchangeRate } from "@/hooks/useExchangeRate"
 
 type Props = {
     trades: Trade[]
@@ -31,6 +33,9 @@ type Props = {
 export default function EquityCurveChart({ trades }: Props) {
     const [timeframe, setTimeframe] = useState<EquityCurveTimeframe>("1W")
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const preferences = useUserPreferences()
+    const currency = preferences?.baseCurrency ?? "USD"
+    const rate = useExchangeRate(currency)
     const data = useEquityData(trades, timeframe)
 
     const filteredTimeframes = equityCurveTimeframes.filter(
@@ -66,7 +71,7 @@ export default function EquityCurveChart({ trades }: Props) {
                                         : "text-neon-red"
                                 )}
                             >
-                                {formatSignedMoney(pnlChange)}
+                                {formatSignedMoney(pnlChange, currency, rate)}
                             </span>
                             <span
                                 className={cn(
@@ -173,7 +178,7 @@ export default function EquityCurveChart({ trades }: Props) {
                     )}
                 </div>
             ) : (
-                <div className="w-full h-55">
+                <div className="w-full h-70">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                             data={data}
@@ -212,7 +217,9 @@ export default function EquityCurveChart({ trades }: Props) {
                                 dataKey="cumulativePnl"
                                 axisLine={false}
                                 tickLine={false}
-                                tickFormatter={(tick) => formatMoney(tick)}
+                                tickFormatter={(tick) =>
+                                    formatMoney(tick, currency, rate)
+                                }
                                 fontSize={12}
                                 stroke="#64748b"
                                 domain={["auto", "auto"]}
@@ -231,7 +238,13 @@ export default function EquityCurveChart({ trades }: Props) {
                             />
                             <CartesianGrid strokeWidth={0.2} stroke="#64748b" />
                             <Tooltip
-                                content={<CustomTooltip variant="equity" />}
+                                content={
+                                    <CustomTooltip
+                                        variant="equity"
+                                        currency={currency}
+                                        rate={rate}
+                                    />
+                                }
                             />
                         </AreaChart>
                     </ResponsiveContainer>

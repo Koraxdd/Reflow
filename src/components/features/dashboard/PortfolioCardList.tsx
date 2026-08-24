@@ -3,6 +3,8 @@
 import PortfolioOverviewCard from "./PortfolioOverviewCard"
 import type { Trade } from "@/generated/prisma/client"
 import { useCurrentBalance } from "@/hooks/useCurrentBalance"
+import { useExchangeRate } from "@/hooks/useExchangeRate"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
 import { calculatePercentageChange } from "@/utils/calculatePercentageChange"
 import { calculateRealisedPnL } from "@/utils/calculateRealisedPnL"
 import { formatMoney, formatSignedMoney } from "@/utils/formatMoney"
@@ -12,6 +14,10 @@ type Props = {
 }
 
 export default function PortfolioCardList({ trades }: Props) {
+    const preferences = useUserPreferences()
+    const currency = preferences?.baseCurrency ?? "USD"
+    const rate = useExchangeRate(currency)
+
     const currentBalance = useCurrentBalance(trades)
     const { day, week, allTime } = calculateRealisedPnL(trades)
 
@@ -41,22 +47,22 @@ export default function PortfolioCardList({ trades }: Props) {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <PortfolioOverviewCard
                 title="TOTAL BALANCE"
-                value={formatMoney(Number(currentBalance))}
+                value={formatMoney(Number(currentBalance), currency, rate)}
                 change={{ value: totalBalancePercent, label: "today" }}
             />
             <PortfolioOverviewCard
                 title="DAY P&L"
-                value={formatSignedMoney(day)}
+                value={formatSignedMoney(day, currency, rate)}
                 change={{ value: dayPercent, label: "vs yesterday" }}
             />
             <PortfolioOverviewCard
                 title="WEEK P&L"
-                value={formatSignedMoney(week)}
+                value={formatSignedMoney(week, currency, rate)}
                 change={{ value: weekPercent, label: "this week" }}
             />
             <PortfolioOverviewCard
                 title="ALL-TIME P&L"
-                value={formatSignedMoney(allTime)}
+                value={formatSignedMoney(allTime, currency, rate)}
                 change={{ value: allTimePercent, label: "total" }}
             />
         </div>

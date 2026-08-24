@@ -17,6 +17,7 @@ export type UserPreferences = {
     defaultChart: string
     compactView: boolean
     timezone: string
+    baseCurrency: string
 }
 
 export default async function SettingsPage() {
@@ -44,6 +45,7 @@ export default async function SettingsPage() {
         defaultChart: user.defaultChart,
         compactView: user.compactView,
         timezone: user.timezone,
+        baseCurrency: user.baseCurrency,
     }
 
     return (
