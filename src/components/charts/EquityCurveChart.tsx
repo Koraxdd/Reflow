@@ -37,12 +37,12 @@ export default function EquityCurveChart({ trades }: Props) {
         (t) => t !== timeframe
     )
 
-    if (data.length === 0) {
+    if (data.length <= 1) {
         return (
             <div className="bg-card border border-border rounded-2xl p-5 text-center text-text-muted text-sm font-medium flex flex-col items-center justify-center gap-3 h-75">
                 <span>
-                    No closed trades found — log your completed trades to start
-                    tracking your equity curve.
+                    At least 2 completed trades are needed to plot your equity
+                    curve.
                 </span>
                 <Button
                     href="/dashboard/trade-journal"
