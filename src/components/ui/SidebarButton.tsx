@@ -10,7 +10,7 @@ type Props = {
 export default function SidebarButton({ onClick, isOpen }: Props) {
     return (
         <Button
-            className="bg-header border border-border rounded-full w-6 h-6 flex items-center justify-center p-1 absolute top-20 -right-3"
+            className="bg-header border border-sidebar-border rounded-full w-6 h-6 flex items-center justify-center p-1 absolute top-20 -right-3"
             onClick={onClick}
         >
             {isOpen ? (

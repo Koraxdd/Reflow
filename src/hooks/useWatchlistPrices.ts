@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 
-type TickerData = {
+export type TickerData = {
     symbol: string
     price: number
     changePercentage: number

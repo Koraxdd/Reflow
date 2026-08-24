@@ -166,7 +166,12 @@ export default function AuthForm() {
                         Forgot password?
                     </Button>
                 )}
-                <Button type="submit" variant="neon" size="lg">
+                <Button
+                    type="submit"
+                    variant="neon"
+                    size="lg"
+                    className="text-background hover:bg-dark-cyan"
+                >
                     {isLogin ? "Sign In" : "Create Account"}
                 </Button>
                 <div className="flex gap-2 items-center justify-center">

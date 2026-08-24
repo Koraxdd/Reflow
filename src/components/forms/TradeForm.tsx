@@ -1,3 +1,5 @@
+"use client"
+
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -23,6 +25,8 @@ import {
     TradeSchema,
 } from "@/schemas/trade.schema"
 import { formatSignedMoney } from "@/utils/formatMoney"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
+import { useExchangeRate } from "@/hooks/useExchangeRate"
 
 type Props = {
     handleClose: () => void
@@ -72,6 +76,10 @@ export default function TradeForm({
                   tags: [],
               },
     })
+
+    const preferences = useUserPreferences()
+    const currency = preferences?.baseCurrency ?? "USD"
+    const rate = useExchangeRate(currency)
 
     const tags = watch("tags") ?? []
     const direction = watch("direction")
@@ -167,7 +175,7 @@ export default function TradeForm({
                                 className={cn(
                                     "py-2 rounded-xl",
                                     direction === "Long" &&
-                                        "bg-neon-green text-background"
+                                        "bg-neon-green text-text-dark"
                                 )}
                                 onClick={() => setValue("direction", "Long")}
                             >
@@ -180,7 +188,7 @@ export default function TradeForm({
                                 className={cn(
                                     "py-2 rounded-xl",
                                     direction === "Short" &&
-                                        "bg-neon-red text-background"
+                                        "bg-neon-red text-text-dark"
                                 )}
                                 onClick={() => setValue("direction", "Short")}
                             >
@@ -302,7 +310,7 @@ export default function TradeForm({
                                     : "text-neon-red"
                             )}
                         >
-                            {formatSignedMoney(pnl.pnlAmount)}
+                            {formatSignedMoney(pnl.pnlAmount, currency, rate)}
                         </span>
                         <span
                             className={cn(
