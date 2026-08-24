@@ -107,6 +107,7 @@ export default function TradeHistoryTable({ trades }: Props) {
                     />
                     <TradeHistoryBody
                         trades={sortedTrades}
+                        tradeFilter={tradeFilter}
                         isCompact={isCompact}
                     />
                 </table>

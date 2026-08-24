@@ -4,118 +4,146 @@ import { calculatePnL } from "@/utils/calculatePnL"
 import { formatMoney, formatSignedMoney } from "@/utils/formatMoney"
 import { format } from "date-fns"
 import { LucideArrowRight } from "lucide-react"
+import type { TradeFilter } from "./TradeHistoryTable"
 
 type Props = {
     trades: Trade[]
+    tradeFilter: TradeFilter
     isCompact: boolean
 }
 
-export default function TradeHistoryBody({ trades, isCompact }: Props) {
+const emptyStateMessages: Record<TradeFilter, string> = {
+    All: "No trade history found — completed trades will appear here once you close them.",
+    Win: "No winning trades found — trades with positive PnL will show up here.",
+    Loss: "No losing trades logged — zero losses so far!",
+}
+
+export default function TradeHistoryBody({
+    trades,
+    tradeFilter,
+    isCompact,
+}: Props) {
     return (
         <tbody>
-            {trades.map((trade) => {
-                const { pnlAmount, pnlPercentage } = calculatePnL(
-                    trade.direction as "Long" | "Short",
-                    trade.exitPrice!,
-                    trade.entryPrice,
-                    trade.quantity
-                )
+            {trades.length > 0 ? (
+                trades.map((trade) => {
+                    const { pnlAmount, pnlPercentage } = calculatePnL(
+                        trade.direction as "Long" | "Short",
+                        trade.exitPrice!,
+                        trade.entryPrice,
+                        trade.quantity
+                    )
 
-                return (
-                    <tr key={trade.id} className="border-t border-border">
-                        <td
-                            className={cn(
-                                "text-text-muted font-medium",
-                                isCompact
-                                    ? "px-3 py-1.5 text-xs"
-                                    : "px-5 py-3.5 text-sm"
-                            )}
-                        >
-                            {format(trade.closedAt!, "MMM d")}
-                        </td>
-                        <td
-                            className={cn(
-                                "font-semibold",
-                                isCompact
-                                    ? "px-3 py-1.5 text-xs"
-                                    : "px-5 py-3.5 text-sm"
-                            )}
-                        >
-                            {trade.symbol}
-                        </td>
-                        <td
-                            className={
-                                isCompact ? "px-3 py-1.5" : "px-5 py-3.5"
-                            }
-                        >
-                            <span
+                    return (
+                        <tr key={trade.id} className="border-t border-border">
+                            <td
                                 className={cn(
-                                    "rounded-full text-xs font-medium",
-                                    isCompact ? "px-1.5 py-px" : "px-2 py-0.5",
-                                    trade.direction === "Long"
-                                        ? "bg-neon-green/10 text-neon-green"
-                                        : "bg-neon-red/10 text-neon-red"
+                                    "text-text-muted font-medium",
+                                    isCompact
+                                        ? "px-3 py-1.5 text-xs"
+                                        : "px-5 py-3.5 text-sm"
                                 )}
                             >
-                                {trade.direction}
-                            </span>
-                        </td>
-                        <td
-                            className={cn(
-                                "font-semibold",
-                                isCompact
-                                    ? "px-3 py-1.5 text-xs"
-                                    : "px-5 py-3.5 text-sm"
-                            )}
-                        >
-                            {trade.quantity} {trade.symbol}
-                        </td>
-                        <td
-                            className={cn(
-                                "font-medium text-text-muted",
-                                isCompact
-                                    ? "px-3 py-1.5 text-xs"
-                                    : "px-5 py-3.5 text-sm"
-                            )}
-                        >
-                            <div className="flex items-center gap-1.5">
-                                {formatMoney(trade.entryPrice)}
-                                <LucideArrowRight className="w-2.75 h-2.75" />
-                                {formatMoney(trade.exitPrice!)}
-                            </div>
-                        </td>
-                        <td
-                            className={
-                                isCompact ? "px-3 py-1.5" : "px-5 py-3.5"
-                            }
-                        >
-                            <span
+                                {format(trade.closedAt!, "MMM d")}
+                            </td>
+                            <td
                                 className={cn(
                                     "font-semibold",
-                                    isCompact ? "text-xs" : "text-sm",
-                                    pnlAmount >= 0
-                                        ? "text-neon-green"
-                                        : "text-neon-red"
+                                    isCompact
+                                        ? "px-3 py-1.5 text-xs"
+                                        : "px-5 py-3.5 text-sm"
                                 )}
                             >
-                                {formatSignedMoney(pnlAmount)}
-                            </span>
-                            <span
+                                {trade.symbol}
+                            </td>
+                            <td
+                                className={
+                                    isCompact ? "px-3 py-1.5" : "px-5 py-3.5"
+                                }
+                            >
+                                <span
+                                    className={cn(
+                                        "rounded-full text-xs font-medium",
+                                        isCompact
+                                            ? "px-1.5 py-px"
+                                            : "px-2 py-0.5",
+                                        trade.direction === "Long"
+                                            ? "bg-neon-green/10 text-neon-green"
+                                            : "bg-neon-red/10 text-neon-red"
+                                    )}
+                                >
+                                    {trade.direction}
+                                </span>
+                            </td>
+                            <td
                                 className={cn(
-                                    "text-xs font-medium ml-1.5",
-                                    pnlPercentage >= 0
-                                        ? "text-neon-green/70"
-                                        : "text-neon-red/70"
+                                    "font-semibold",
+                                    isCompact
+                                        ? "px-3 py-1.5 text-xs"
+                                        : "px-5 py-3.5 text-sm"
                                 )}
                             >
-                                {pnlPercentage >= 0
-                                    ? `(+${pnlPercentage.toFixed(2)})`
-                                    : `(${pnlPercentage.toFixed(2)})`}
-                            </span>
-                        </td>
-                    </tr>
-                )
-            })}
+                                {trade.quantity} {trade.symbol}
+                            </td>
+                            <td
+                                className={cn(
+                                    "font-medium text-text-muted",
+                                    isCompact
+                                        ? "px-3 py-1.5 text-xs"
+                                        : "px-5 py-3.5 text-sm"
+                                )}
+                            >
+                                <div className="flex items-center gap-1.5">
+                                    {formatMoney(trade.entryPrice)}
+                                    <LucideArrowRight className="w-2.75 h-2.75" />
+                                    {formatMoney(trade.exitPrice!)}
+                                </div>
+                            </td>
+                            <td
+                                className={
+                                    isCompact ? "px-3 py-1.5" : "px-5 py-3.5"
+                                }
+                            >
+                                <span
+                                    className={cn(
+                                        "font-semibold",
+                                        isCompact ? "text-xs" : "text-sm",
+                                        pnlAmount >= 0
+                                            ? "text-neon-green"
+                                            : "text-neon-red"
+                                    )}
+                                >
+                                    {formatSignedMoney(pnlAmount)}
+                                </span>
+                                <span
+                                    className={cn(
+                                        "text-xs font-medium ml-1.5",
+                                        pnlPercentage >= 0
+                                            ? "text-neon-green/70"
+                                            : "text-neon-red/70"
+                                    )}
+                                >
+                                    {pnlPercentage >= 0
+                                        ? `(+${pnlPercentage.toFixed(2)})`
+                                        : `(${pnlPercentage.toFixed(2)})`}
+                                </span>
+                            </td>
+                        </tr>
+                    )
+                })
+            ) : (
+                <tr>
+                    <td
+                        colSpan={6}
+                        className="px-5 py-10 text-center border-t border-border"
+                    >
+                        <p className="text-text-muted text-sm font-medium">
+                            {emptyStateMessages[tradeFilter] ??
+                                emptyStateMessages.All}
+                        </p>
+                    </td>
+                </tr>
+            )}
         </tbody>
     )
 }
