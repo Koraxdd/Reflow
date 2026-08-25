@@ -42,11 +42,31 @@ export async function createTrade(
 
 export async function getTradesByUser(userId: string): Promise<Trade[]> {
     return await prisma.trade.findMany({
-        where: {
-            userId,
-        },
+        where: { userId },
         orderBy: { openedAt: "desc" },
     })
+}
+
+export async function getPaginatedTradesByUser(
+    userId: string,
+    page: number,
+    pageSize: number
+): Promise<{ trades: Trade[]; totalPages: number; totalCount: number }> {
+    const [trades, totalCount] = await Promise.all([
+        prisma.trade.findMany({
+            where: {
+                userId,
+            },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            orderBy: { openedAt: "desc" },
+        }),
+        prisma.trade.count({ where: { userId } }),
+    ])
+
+    const totalPages = Math.ceil(totalCount / pageSize)
+
+    return { trades, totalPages, totalCount }
 }
 
 export async function deleteTradeById(
