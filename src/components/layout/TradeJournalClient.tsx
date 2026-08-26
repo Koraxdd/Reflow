@@ -2,19 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import {
-    getPaginatedTrades,
-    getTrades,
-    submitTrade,
-    updateTrade,
-} from "@/actions/trades"
 import Button from "@/components/ui/Button"
 import TradeForm from "@/components/forms/TradeForm"
 import TradeCard from "@/components/features/trades/TradeCard"
-import { Trade } from "@/generated/prisma/client"
+import type { Trade } from "@/generated/prisma/client"
 import { cn } from "@/lib/utils"
 import { useTrades } from "@/hooks/useTrades"
+import { getPaginatedTrades } from "@/actions/trades"
 
 type Props = {
     initialTrades: Trade[] | null
@@ -26,7 +20,8 @@ export default function TradeJournalClient({ initialTrades }: Props) {
     const [page, setPage] = useState<number>(1)
     const { trades, totalPages, totalCount, addTrade, editTrade } = useTrades(
         page,
-        initialTrades
+        initialTrades,
+        getPaginatedTrades
     )
 
     const formRef = useRef<HTMLFormElement>(null)

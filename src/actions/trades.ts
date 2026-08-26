@@ -7,8 +7,11 @@ import {
     deleteTradeById,
     editTradeById,
     EditTradeVariables,
+    getPaginatedTradeHistoryByUser,
     getPaginatedTradesByUser,
     getTradesByUser,
+    type TradeQueryOptions,
+    type PaginatedTrades,
 } from "@/queries/trades"
 import { type TradeOutput } from "@/schemas/trade.schema"
 
@@ -25,9 +28,23 @@ export async function getTrades(): Promise<Trade[]> {
 export async function getPaginatedTrades(
     page: number,
     pageSize: number
-): Promise<{ trades: Trade[]; totalPages: number; totalCount: number }> {
+): Promise<PaginatedTrades> {
     const userId = await getUserId()
     return await getPaginatedTradesByUser(userId, page, pageSize)
+}
+
+export async function getPaginatedTradeHistory(
+    page: number,
+    pageSize: number,
+    options?: TradeQueryOptions
+): Promise<PaginatedTrades> {
+    const userId = await getUserId()
+    return await getPaginatedTradeHistoryByUser(
+        userId,
+        page,
+        pageSize,
+        options ?? { tradeFilter: "All", sortField: "date", sortOrder: "desc" }
+    )
 }
 
 export async function removeTrade(id: string): Promise<Trade> {

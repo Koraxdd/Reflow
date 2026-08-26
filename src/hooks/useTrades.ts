@@ -1,23 +1,49 @@
 "use client"
 
-import { getPaginatedTrades, submitTrade, updateTrade } from "@/actions/trades"
+import { submitTrade, updateTrade } from "@/actions/trades"
+import type {
+    SortField,
+    SortOrder,
+    TradeFilter,
+} from "@/components/features/analytics/TradeHistoryTable"
 import type { Trade } from "@/generated/prisma/client"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { PaginatedTrades, TradeQueryOptions } from "@/queries/trades"
+import {
+    keepPreviousData,
+    useMutation,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query"
 
-export function useTrades(page: number, initialTrades: Trade[] | null) {
+export type TradesOptions = {
+    filter?: TradeFilter
+    sortField?: SortField
+    sortOrder?: SortOrder
+}
+
+export function useTrades(
+    page: number,
+    initialTrades: Trade[] | null,
+    fetchTrades: (
+        page: number,
+        pageSize: number,
+        options?: TradeQueryOptions
+    ) => Promise<PaginatedTrades>,
+    options?: TradeQueryOptions
+) {
     const queryClient = useQueryClient()
 
     const { data: tradeData } = useQuery({
-        queryKey: ["trades", page],
-        queryFn: () => getPaginatedTrades(page, 10),
-        initialData: {
-            trades: initialTrades ?? [],
-            totalPages: 1,
-            totalCount: 0,
-        },
+        queryKey: ["trades", fetchTrades.name, page, options],
+        queryFn: () => fetchTrades(page, 10, options),
+        placeholderData: keepPreviousData,
     })
 
-    const { trades, totalPages, totalCount } = tradeData
+    const { trades, totalPages, totalCount } = tradeData ?? {
+        trades: initialTrades ?? [],
+        totalPages: 1,
+        totalCount: 0,
+    }
 
     const { mutate: addTrade } = useMutation({
         mutationFn: submitTrade,
