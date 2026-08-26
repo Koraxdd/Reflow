@@ -1,10 +1,11 @@
-import { getTrades } from "@/actions/trades"
+import { getPaginatedTrades, getTrades } from "@/actions/trades"
 import EquityCurveChart from "@/components/charts/EquityCurveChart"
 import AnalyticsCardList from "@/components/features/analytics/AnalyticsCardList"
 import TradeHistoryTable from "@/components/features/analytics/TradeHistoryTable"
 
 export default async function AnalyticsPage() {
     const trades = await getTrades()
+    const paginatedTrades = await getPaginatedTrades(1, 10)
 
     return (
         <div className="p-6 flex flex-col gap-6">
@@ -16,7 +17,7 @@ export default async function AnalyticsPage() {
             </div>
             <AnalyticsCardList trades={trades} />
             <EquityCurveChart trades={trades} />
-            <TradeHistoryTable trades={trades} />
+            <TradeHistoryTable initialTrades={paginatedTrades.trades} />
         </div>
     )
 }

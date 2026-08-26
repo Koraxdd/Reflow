@@ -1,13 +1,14 @@
 "use client"
 
-import { useState } from "react"
-import { Plus } from "lucide-react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { getTrades, submitTrade, updateTrade } from "@/actions/trades"
+import { useEffect, useRef, useState } from "react"
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import Button from "@/components/ui/Button"
 import TradeForm from "@/components/forms/TradeForm"
 import TradeCard from "@/components/features/trades/TradeCard"
-import { Trade } from "@/generated/prisma/client"
+import type { Trade } from "@/generated/prisma/client"
+import { cn } from "@/lib/utils"
+import { useTrades } from "@/hooks/useTrades"
+import { getPaginatedTrades } from "@/actions/trades"
 
 type Props = {
     initialTrades: Trade[] | null
@@ -16,27 +17,19 @@ type Props = {
 export default function TradeJournalClient({ initialTrades }: Props) {
     const [showForm, setShowForm] = useState<boolean>(false)
     const [editingTrade, setEditingTrade] = useState<Trade | null>(null)
-    const queryClient = useQueryClient()
+    const [page, setPage] = useState<number>(1)
+    const { trades, totalPages, totalCount, addTrade, editTrade } = useTrades(
+        page,
+        initialTrades,
+        getPaginatedTrades
+    )
 
-    const { data: trades } = useQuery({
-        queryKey: ["trades"],
-        queryFn: getTrades,
-        initialData: initialTrades,
-    })
-
-    const { mutate: addTrade } = useMutation({
-        mutationFn: submitTrade,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["trades"] })
-        },
-    })
-
-    const { mutate: editTrade } = useMutation({
-        mutationFn: updateTrade,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["trades"] })
-        },
-    })
+    const formRef = useRef<HTMLFormElement>(null)
+    useEffect(() => {
+        if (showForm && formRef.current) {
+            formRef.current?.scrollIntoView()
+        }
+    }, [showForm, editingTrade])
 
     return (
         <div className="p-6 flex flex-col gap-6">
@@ -44,7 +37,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                 <div>
                     <h2 className="font-semibold">Trade Journal</h2>
                     <span className="text-text-muted text-sm font-medium">
-                        {trades?.length} entries logged
+                        {totalCount} entries logged
                     </span>
                 </div>
                 <Button
@@ -70,6 +63,7 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                     onAddTrade={addTrade}
                     onEditTrade={editTrade}
                     existingTrade={editingTrade}
+                    ref={formRef}
                 />
             )}
             <div className="flex flex-col gap-4">
@@ -84,6 +78,45 @@ export default function TradeJournalClient({ initialTrades }: Props) {
                             }}
                         />
                     ))}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between border-t border-border gap-2 pt-4 mt-2">
+                        <span className="text-sm text-text-muted font-medium">
+                            Page {page} of {totalPages}
+                        </span>
+                        <div className="flex items-center gap-10 text-text-muted">
+                            <Button
+                                size="sm"
+                                disabled={page === 1}
+                                onClick={() => {
+                                    setShowForm(false)
+                                    setPage((prev) => prev - 1)
+                                }}
+                                className={cn(
+                                    "flex items-center gap-1",
+                                    page !== 1 && "hover:opacity-80"
+                                )}
+                            >
+                                <ChevronLeft className="w-4.5 h-4.5" />
+                                Previous
+                            </Button>
+                            <Button
+                                size="sm"
+                                disabled={page === totalPages}
+                                onClick={() => {
+                                    setShowForm(false)
+                                    setPage((prev) => prev + 1)
+                                }}
+                                className={cn(
+                                    "flex items-center gap-1",
+                                    page !== totalPages && "hover:opacity-80"
+                                )}
+                            >
+                                Next
+                                <ChevronRight className="w-4.5 h-4.5" />
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -228,6 +228,7 @@ export default function EquityCurveChart({ trades }: Props) {
                                 dataKey="cumulativePnl"
                                 stroke="none"
                                 fill="url(#equityGradient)"
+                                baseValue="dataMin"
                             />
                             <Line
                                 dataKey="cumulativePnl"

@@ -47,6 +47,7 @@ model Trade {
   entryPrice Float
   exitPrice  Float?
   quantity   Float
+  pnl        Float
   notes      String?
   tags       String[]  @default([])
   openedAt   DateTime

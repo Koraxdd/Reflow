@@ -12,6 +12,8 @@ import { useState } from "react"
 import Pill from "@/components/ui/Pill"
 import { calculatePnL } from "@/utils/calculatePnL"
 import { formatMoney, formatSignedMoney } from "@/utils/formatMoney"
+import { useUserPreferences } from "@/hooks/useUserPreferences"
+import { useExchangeRate } from "@/hooks/useExchangeRate"
 
 type Props = {
     data: Trade
@@ -21,6 +23,9 @@ type Props = {
 export default function TradeCard({ data, onEdit }: Props) {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
     const queryClient = useQueryClient()
+    const preferences = useUserPreferences()
+    const currency = preferences?.baseCurrency ?? "USD"
+    const rate = useExchangeRate(currency)
 
     const {
         quantity,
@@ -114,7 +119,11 @@ export default function TradeCard({ data, onEdit }: Props) {
                                         : "text-neon-red"
                                 )}
                             >
-                                {formatSignedMoney(pnl.pnlAmount)}
+                                {formatSignedMoney(
+                                    pnl.pnlAmount,
+                                    currency,
+                                    rate
+                                )}
                             </span>
                             <span
                                 className={cn(

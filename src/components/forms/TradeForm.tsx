@@ -15,7 +15,7 @@ import {
 import Button from "../ui/Button"
 import { Input } from "../ui/Input"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { type Ref, useState } from "react"
 import { calculatePnL } from "@/utils/calculatePnL"
 import { format } from "date-fns"
 import type { Trade } from "@/generated/prisma/client"
@@ -37,6 +37,7 @@ type Props = {
         trade: TradeOutput
     }) => void
     existingTrade: Trade | null
+    ref: Ref<HTMLFormElement>
 }
 
 export default function TradeForm({
@@ -44,6 +45,7 @@ export default function TradeForm({
     onAddTrade,
     onEditTrade,
     existingTrade,
+    ref,
 }: Props) {
     const [tagValue, setTagValue] = useState<string>("")
     const {
@@ -128,6 +130,7 @@ export default function TradeForm({
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
+            ref={ref}
             className="bg-card border border-neon-cyan/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,212,255,0.1)] flex flex-col gap-5"
         >
             <div className="flex justify-between">
