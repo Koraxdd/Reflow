@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import { signUp } from "@/actions/auth"
 import { LoginSchema, type LoginInput } from "@/schemas/login.schema"
 import { RegisterSchema, type RegisterInput } from "@/schemas/register.schema"
+import { toast } from "sonner"
 
 export default function AuthForm() {
     const router = useRouter()
@@ -38,7 +39,9 @@ export default function AuthForm() {
                     redirect: false,
                 })
                 if (res?.error) {
-                    setError("root", { message: "Invalid email or password" })
+                    setError("root", {
+                        message: "Invalid credentials or unverified email",
+                    })
                 } else {
                     router.push("/dashboard")
                 }
@@ -58,18 +61,8 @@ export default function AuthForm() {
                         setError("email", { message: result.emailError })
                     }
                 } else {
-                    const res = await signIn("credentials", {
-                        email,
-                        password,
-                        redirect: false,
-                    })
-                    if (res?.error) {
-                        setError("root", {
-                            message: "Invalid email or password",
-                        })
-                    } else {
-                        router.push("/dashboard")
-                    }
+                    reset()
+                    toast.success("Check your email to verify your account")
                 }
             }
         } catch (err) {
@@ -154,7 +147,7 @@ export default function AuthForm() {
                     </span>
                 )}
                 {errors.root && (
-                    <span className="text-neon-cyan text-xs">
+                    <span className="text-neon-cyan text-xs -my-2">
                         {errors.root.message}
                     </span>
                 )}

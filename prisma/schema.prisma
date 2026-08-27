@@ -8,24 +8,36 @@ datasource db {
 }
 
 model User { 
-  id             String          @id @default(uuid())
-  email          String          @unique
-  username       String          @unique
-  password       String   
-  baseCurrency   String          @default("USD")
-  timezone       String          @default("UTC")
-  theme          String          @default("dark")
-  defaultChart   String          @default("CANDLESTICK")
-  compactView    Boolean         @default(false)
-  priceAlerts    Boolean         @default(true)
-  tradeExecuted  Boolean         @default(true)
-  dailySummary   Boolean         @default(false)
-  cryptoNews     Boolean         @default(false)
-  emailAlerts    Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  watchlistItems WatchlistItem[]
-  trades         Trade[]
+  id                String             @id @default(uuid())
+  email             String             @unique
+  username          String             @unique
+  password          String   
+  baseCurrency      String             @default("USD")
+  timezone          String             @default("UTC")
+  theme             String             @default("dark")
+  defaultChart      String             @default("CANDLESTICK")
+  compactView       Boolean            @default(false)
+  priceAlerts       Boolean            @default(true)
+  tradeExecuted     Boolean            @default(true)
+  dailySummary      Boolean            @default(false)
+  cryptoNews        Boolean            @default(false)
+  emailAlerts       Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  pendingEmail      String?
+  emailVerified     DateTime?
+  watchlistItems    WatchlistItem[]
+  trades            Trade[]
+  verificationToken VerificationToken?
 } 
+
+model VerificationToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
 
 model WatchlistItem {
   id      String   @id @default(uuid())

@@ -19,6 +19,12 @@ export async function createUser(
     })
 }
 
+export async function getUserById(userId: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+        where: { id: userId },
+    })
+}
+
 export async function getUserByEmail(email: string): Promise<User | null> {
     return await prisma.user.findUnique({
         where: {
@@ -37,10 +43,29 @@ export async function getUserByUsername(
     })
 }
 
+export async function updateUserEmail(
+    userId: string,
+    email: string
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: { email, pendingEmail: null, emailVerified: new Date() },
+    })
+}
+
+export async function updateUserPendingEmail(
+    userId: string,
+    email: string
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: { pendingEmail: email },
+    })
+}
+
 export async function updateUserData(
     userId: string,
     username: string,
-    email: string,
     timezone: string,
     baseCurrency: string
 ): Promise<User> {
@@ -48,7 +73,6 @@ export async function updateUserData(
         where: { id: userId },
         data: {
             username,
-            email,
             timezone,
             baseCurrency,
         },
@@ -145,4 +169,13 @@ export async function getUsernameById(
     })
 
     return user?.username
+}
+
+export async function verifyUser(userId: string): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            emailVerified: new Date(),
+        },
+    })
 }
