@@ -6,7 +6,9 @@ import type {
 } from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
+import { sendVerificationEmail } from "@/lib/sendVerificationEmail"
 import {
+    getUserById,
     getUsernameById,
     getUserNotificationSettings,
     getUserPassword,
@@ -14,16 +16,26 @@ import {
     updateUserData,
     updateUserNotificationSettings,
     updateUserPassword,
+    updateUserPendingEmail,
     updateUserPreferenceSettings,
 } from "@/queries/users"
 import type { ProfileInput } from "@/schemas/profile.schema"
 import argon2 from "argon2"
 
-export async function updateUser(data: ProfileInput): Promise<User> {
+export async function updateUser(
+    data: ProfileInput
+): Promise<User | undefined> {
     const { username, email, timezone, baseCurrency } = data
     const userId = await getUserId()
+    const user = await getUserById(userId)
+    if (!user) return
 
-    return await updateUserData(userId, username, email, timezone, baseCurrency)
+    if (email !== user.email) {
+        await updateUserPendingEmail(userId, email)
+        await sendVerificationEmail(userId, email)
+    }
+
+    return await updateUserData(userId, username, timezone, baseCurrency)
 }
 
 export async function updatePassword(

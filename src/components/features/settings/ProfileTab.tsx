@@ -49,11 +49,16 @@ export default function ProfileTab({
             await updateUser(data)
             await update({
                 username: data.username,
-                email: data.email,
             })
             reset(data)
             router.refresh()
-            toast.success("Profile settings updated successfully")
+            if (data.email !== email) {
+                toast.success(
+                    "Profile updated. Check your new email to confirm the change."
+                )
+            } else {
+                toast.success("Profile settings updated successfully")
+            }
         } catch (err) {
             setError("root", { message: "Failed to update data" })
             toast.error("Failed to update profile settings")
@@ -121,14 +126,21 @@ export default function ProfileTab({
                     </select>
                 </div>
             </div>
-            {errors.root && (
-                <span className="text-neon-cyan text-xs">
-                    {errors.root.message}
-                </span>
-            )}
-            <Button type="submit" variant="neon" size="sm" className="px-4">
-                Save Changes
-            </Button>
+            <div className="flex flex-col gap-2.5">
+                {errors.root && (
+                    <span className="text-neon-cyan text-xs">
+                        {errors.root.message}
+                    </span>
+                )}
+                <Button
+                    type="submit"
+                    variant="neon"
+                    size="sm"
+                    className="px-4 self-start"
+                >
+                    Save Changes
+                </Button>
+            </div>
         </form>
     )
 }

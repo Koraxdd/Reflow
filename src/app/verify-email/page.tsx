@@ -1,4 +1,4 @@
-import { verifyUser } from "@/queries/users"
+import { getUserById, updateUserEmail, verifyUser } from "@/queries/users"
 import {
     deleteVerificationToken,
     getVerificationToken,
@@ -27,7 +27,14 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
         )
     }
 
-    await verifyUser(verificationToken.userId)
+    const user = await getUserById(verificationToken.userId)
+    if (!user) return
+
+    if (user.pendingEmail) {
+        await updateUserEmail(user.id, user.pendingEmail)
+    } else {
+        await verifyUser(verificationToken.userId)
+    }
     await deleteVerificationToken(token)
 
     redirect("/?verified=true")

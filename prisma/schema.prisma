@@ -23,6 +23,7 @@ model User {
   cryptoNews        Boolean            @default(false)
   emailAlerts       Boolean            @default(true)
   createdAt         DateTime           @default(now())
+  pendingEmail      String?
   emailVerified     DateTime?
   watchlistItems    WatchlistItem[]
   trades            Trade[]

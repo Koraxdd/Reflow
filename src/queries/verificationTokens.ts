@@ -6,8 +6,10 @@ export async function createVerificationToken(
     token: string,
     expiresAt: Date
 ): Promise<VerificationToken> {
-    return await prisma.verificationToken.create({
-        data: { userId, token, expiresAt },
+    return await prisma.verificationToken.upsert({
+        where: { userId },
+        create: { userId, token, expiresAt },
+        update: { token, expiresAt, createdAt: new Date() },
     })
 }
 
