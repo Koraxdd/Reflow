@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input"
 import { type SecurityInput, SecuritySchema } from "@/schemas/security.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
+import { toast } from "sonner"
 
 export default function SecurityTab() {
     const {
@@ -29,8 +30,10 @@ export default function SecurityTab() {
                 return
             }
             reset()
+            toast.success("Password updated successfully")
         } catch (err) {
             setError("root", { message: "Failed to change password" })
+            toast.error("Failed to change password")
         }
     }
 
