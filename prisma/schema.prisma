@@ -25,6 +25,8 @@ model User {
   createdAt         DateTime           @default(now())
   pendingEmail      String?
   emailVerified     DateTime?
+  twoFactorSecret   String?
+  twoFactorEnabled  Boolean            @default(false)
   watchlistItems    WatchlistItem[]
   trades            Trade[]
   verificationToken VerificationToken?

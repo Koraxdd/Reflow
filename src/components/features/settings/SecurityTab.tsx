@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { type SecurityInput, SecuritySchema } from "@/schemas/security.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Shield } from "lucide-react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -99,6 +100,31 @@ export default function SecurityTab() {
                 >
                     Update Password
                 </Button>
+            </div>
+            <div className="pt-4 border-t border-border">
+                <h3 className="text-sm font-semibold mb-4">
+                    Two-Factor Authentication
+                </h3>
+                <div className="bg-input p-4 border border-border rounded-2xl flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Shield className="text-neon-green w-5 h-5" />
+                        <div>
+                            <h4 className="text-sm font-medium">
+                                Authenticator App
+                            </h4>
+                            <p className="text-xs text-text-muted">
+                                Not configured
+                            </p>
+                        </div>
+                    </div>
+                    <Button
+                        type="button"
+                        size="xs"
+                        className="text-neon-cyan bg-neon-cyan/10 px-3 py-1.5 rounded-xl"
+                    >
+                        Enable
+                    </Button>
+                </div>
             </div>
         </form>
     )
