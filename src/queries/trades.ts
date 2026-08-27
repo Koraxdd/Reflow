@@ -4,7 +4,7 @@ import type {
     TradeFilter,
 } from "@/components/features/analytics/TradeHistoryTable"
 import type { Trade } from "@/generated/prisma/client"
-import {
+import type {
     TradeOrderByWithRelationInput,
     TradeWhereInput,
 } from "@/generated/prisma/models"
@@ -46,7 +46,7 @@ export async function createTrade(
         tags,
     } = data
 
-    const pnl = calculatePnL(
+    const { pnlAmount } = calculatePnL(
         direction as "Long" | "Short",
         exitPrice!,
         entryPrice,
@@ -62,7 +62,7 @@ export async function createTrade(
             exitPrice,
             quantity: amount,
             notes: reflection,
-            pnl: pnl.pnlAmount,
+            pnl: pnlAmount,
             openedAt,
             closedAt,
             tags,

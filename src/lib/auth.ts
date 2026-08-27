@@ -25,6 +25,8 @@ export const authOptions: NextAuthOptions = {
                 )
                 if (!validPassword) return null
 
+                if (!user.emailVerified) return null
+
                 return { id: user.id, email: user.email, name: user.username }
             },
         }),

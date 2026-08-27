@@ -146,3 +146,12 @@ export async function getUsernameById(
 
     return user?.username
 }
+
+export async function verifyUser(userId: string): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: {
+            emailVerified: new Date(),
+        },
+    })
+}

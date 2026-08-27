@@ -1,6 +1,7 @@
 "use server"
 
 import { EmailTakenError, UsernameTakenError } from "@/errors"
+import { sendVerificationEmail } from "@/lib/sendVerificationEmail"
 import { createUser, getUserByEmail, getUserByUsername } from "@/queries/users"
 import type { RegisterInput } from "@/schemas/register.schema"
 import argon2 from "argon2"
@@ -21,7 +22,8 @@ export async function signUp(data: RegisterInput): Promise<SignUpResult> {
             throw new UsernameTakenError("Username already in use")
 
         const hashedPassword = await argon2.hash(password)
-        await createUser(username, email, hashedPassword)
+        const user = await createUser(username, email, hashedPassword)
+        await sendVerificationEmail(user.id, email)
 
         return { success: true }
     } catch (err) {
