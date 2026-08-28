@@ -4,6 +4,12 @@ import { getUserId } from "@/lib/getUserId"
 import { getUserById, updateUser2FA } from "@/queries/users"
 import { generateSecret, generateURI, verify } from "otplib"
 import QRCode from "qrcode"
+import argon2 from "argon2"
+
+type TwoFactorResponse = {
+    success: boolean
+    error?: string
+}
 
 export async function generate2FASecret(): Promise<{
     secret: string
@@ -28,7 +34,7 @@ export async function generate2FASecret(): Promise<{
 export async function enable2FA(
     secret: string,
     token: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<TwoFactorResponse> {
     const userId = await getUserId()
     const { valid } = await verify({ secret, token })
 
@@ -36,7 +42,32 @@ export async function enable2FA(
         return { success: false, error: "Invalid verification code" }
     }
 
-    await updateUser2FA(userId, secret)
+    await updateUser2FA(userId, secret, true)
 
     return { success: true }
+}
+
+export async function disable2FA(password: string): Promise<TwoFactorResponse> {
+    const userId = await getUserId()
+    const user = await getUserById(userId)
+
+    if (!user) {
+        return { success: false, error: "User not found" }
+    }
+
+    const isPasswordValid = await argon2.verify(user.password, password)
+    if (!isPasswordValid) {
+        return { success: false, error: "Invalid password" }
+    }
+
+    await updateUser2FA(userId, null, false)
+
+    return { success: true }
+}
+
+export async function get2FAStatus(): Promise<boolean> {
+    const userId = await getUserId()
+    const user = await getUserById(userId)
+
+    return user?.twoFactorEnabled ?? false
 }
