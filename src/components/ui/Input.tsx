@@ -14,6 +14,7 @@ type Props = {
     placeholder?: string
     className?: string
     value?: string
+    maxLength?: number
     onChange?: ChangeEventHandler<HTMLInputElement>
     onKeyDown?: KeyboardEventHandler<HTMLInputElement>
 }
@@ -28,6 +29,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
             placeholder,
             className,
             value,
+            maxLength,
             onChange,
             ...props
         },
@@ -52,6 +54,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
                         step={step}
                         placeholder={placeholder}
                         ref={ref}
+                        maxLength={maxLength}
                         className={cn(
                             "bg-input border border-border text-placeholder/30 text-sm rounded-2xl py-2.5 w-full font-light",
                             "outline-none focus:ring-[0.5px] focus:ring-neon-cyan transition-shadow duration-200",
