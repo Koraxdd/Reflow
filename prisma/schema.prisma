@@ -30,7 +30,21 @@ model User {
   watchlistItems    WatchlistItem[]
   trades            Trade[]
   verificationToken VerificationToken?
+  notifications     Notification[]
 } 
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
 
 model VerificationToken {
   id        String   @id @default(uuid())
