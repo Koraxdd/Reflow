@@ -4,14 +4,21 @@ import { navLinks } from "@/lib/navLinks"
 import LogoutButton from "../ui/LogoutButton"
 import SidebarButton from "../ui/SidebarButton"
 import { motion } from "motion/react"
+import Button from "../ui/Button"
 
 type Props = {
     isDesktop: boolean
     isOpen: boolean
     handleToggle: () => void
+    handleAlertsToggle: () => void
 }
 
-export default function Sidebar({ isDesktop, isOpen, handleToggle }: Props) {
+export default function Sidebar({
+    isDesktop,
+    isOpen,
+    handleToggle,
+    handleAlertsToggle,
+}: Props) {
     return (
         <>
             {isOpen && (
@@ -55,13 +62,13 @@ export default function Sidebar({ isDesktop, isOpen, handleToggle }: Props) {
                     })}
                 </nav>
                 <div className="py-5 px-4 border-t border-sidebar-border mt-auto">
-                    <CustomLink
-                        href="/alerts"
-                        className="w-full flex items-center gap-3"
+                    <Button
+                        className="w-full flex items-center gap-3 font-medium text-sm text-link px-3 py-2 rounded-2xl overflow-hidden whitespace-nowrap"
+                        onClick={handleAlertsToggle}
                     >
                         <Bell className="w-3.5 h-3.5" />
                         {isOpen && "Alerts"}
-                    </CustomLink>
+                    </Button>
                     <LogoutButton
                         size="sm"
                         className="w-full flex items-center gap-3 px-3 py-2 text-link font-medium rounded-2xl hover:bg-red-500/10"
