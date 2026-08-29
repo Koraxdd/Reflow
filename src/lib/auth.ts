@@ -36,13 +36,8 @@ export const authOptions: NextAuthOptions = {
                         secret: user.twoFactorSecret!,
                         token: credentials.twoFactorCode,
                     })
-                    if (!valid) return null
 
-                    return {
-                        id: user.id,
-                        email: user.email,
-                        name: user.username,
-                    }
+                    if (!valid) return null
                 }
 
                 return { id: user.id, email: user.email, name: user.username }
