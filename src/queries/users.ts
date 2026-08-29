@@ -179,3 +179,14 @@ export async function verifyUser(userId: string): Promise<User> {
         },
     })
 }
+
+export async function updateUser2FA(
+    userId: string,
+    secret: string | null,
+    enabled: boolean
+): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data: { twoFactorSecret: secret, twoFactorEnabled: enabled },
+    })
+}
