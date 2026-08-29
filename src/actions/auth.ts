@@ -36,3 +36,20 @@ export async function signUp(data: RegisterInput): Promise<SignUpResult> {
         throw new Error(`Unexpected error: ${err}`)
     }
 }
+
+export async function checkCredentials(
+    email: string,
+    password: string
+): Promise<{ valid: boolean; requires2FA?: boolean }> {
+    const user = await getUserByEmail(email)
+    if (!user) {
+        return { valid: false }
+    }
+
+    const isPasswordValid = await argon2.verify(user.password, password)
+    if (!isPasswordValid) {
+        return { valid: false }
+    }
+
+    return { valid: true, requires2FA: user.twoFactorEnabled }
+}
