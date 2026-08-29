@@ -33,3 +33,10 @@ export async function updateNotificationReadStatus(
         data: { read: true },
     })
 }
+
+export async function updateAllNotificationsReadStatus(userId: string) {
+    return await prisma.notification.updateMany({
+        where: { userId },
+        data: { read: true },
+    })
+}

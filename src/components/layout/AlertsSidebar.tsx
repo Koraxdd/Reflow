@@ -14,7 +14,7 @@ type Props = {
 }
 
 export default function AlertsSidebar({ isOpen, handleToggle }: Props) {
-    const { notifications, markAsRead } = useNotifications()
+    const { notifications, markAsRead, markAllAsRead } = useNotifications()
 
     const unreadAmount =
         useMemo(
@@ -67,7 +67,10 @@ export default function AlertsSidebar({ isOpen, handleToggle }: Props) {
                         )}
                     </div>
                     <div className="flex items-center gap-2">
-                        <Button className="bg-neon-cyan/10 text-neon-cyan text-xs flex items-center justify-center gap-1 px-2 py-1 rounded-lg hover:opacity-80">
+                        <Button
+                            className="bg-neon-cyan/10 text-neon-cyan text-xs flex items-center justify-center gap-1 px-2 py-1 rounded-lg hover:opacity-80"
+                            onClick={() => markAllAsRead()}
+                        >
                             <CheckCheck className="w-3 h-3" />
                             Mark all read
                         </Button>
