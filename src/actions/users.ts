@@ -6,6 +6,7 @@ import type {
 } from "@/app/dashboard/settings/page"
 import type { User } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
+import { emailRateLimit, passwordRateLimit } from "@/lib/ratelimit"
 import { sendVerificationEmail } from "@/lib/sendVerificationEmail"
 import {
     getUserById,
@@ -22,15 +23,24 @@ import {
 import type { ProfileInput } from "@/schemas/profile.schema"
 import argon2 from "argon2"
 
+type UpdateUserResult = User | { success: boolean; error: string } | undefined
+
 export async function updateUser(
     data: ProfileInput
-): Promise<User | undefined> {
+): Promise<UpdateUserResult> {
     const { username, email, timezone, baseCurrency } = data
     const userId = await getUserId()
     const user = await getUserById(userId)
-    if (!user) return
+    if (!user) return { success: false, error: "User not found" }
 
     if (email !== user.email) {
+        const { success } = await emailRateLimit.limit(userId)
+        if (!success) {
+            return {
+                success: false,
+                error: "Too many attempts. Try again later.",
+            }
+        }
         await updateUserPendingEmail(userId, email)
         await sendVerificationEmail(userId, email)
     }
@@ -43,6 +53,11 @@ export async function updatePassword(
     newPassword: string
 ): Promise<{ success?: boolean; error?: string }> {
     const userId = await getUserId()
+    const { success } = await passwordRateLimit.limit(userId)
+    if (!success) {
+        return { success: false, error: "Too many attempts. Try again later." }
+    }
+
     const result = await getUserPassword(userId)
     if (!result) {
         return { error: "User not found" }

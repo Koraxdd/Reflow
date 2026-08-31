@@ -46,12 +46,21 @@ export default function ProfileTab({
 
     const onSubmit: SubmitHandler<ProfileInput> = async (data) => {
         try {
-            await updateUser(data)
+            const res = await updateUser(data)
+
+            if (!res) return
+
+            if ("error" in res) {
+                toast.error(res.error)
+                return
+            }
+
             await update({
                 username: data.username,
             })
             reset(data)
             router.refresh()
+
             if (data.email !== email) {
                 toast.success(
                     "Profile updated. Check your new email to confirm the change."

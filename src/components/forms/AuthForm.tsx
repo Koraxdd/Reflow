@@ -42,6 +42,11 @@ export default function AuthForm() {
             if (isLogin) {
                 const check = await checkCredentials(email, password)
 
+                if (!check.valid && check.error) {
+                    toast.error(check.error)
+                    return
+                }
+
                 if (!check.valid) {
                     setError("root", { message: "Invalid email or password" })
                     return

@@ -1,10 +1,16 @@
 "use server"
 
 import { EmailTakenError, UsernameTakenError } from "@/errors"
+import { getClientIp } from "@/lib/getClientIp"
+import { loginRateLimit, signUpRateLimit } from "@/lib/ratelimit"
 import { sendVerificationEmail } from "@/lib/sendVerificationEmail"
 import { createUser, getUserByEmail, getUserByUsername } from "@/queries/users"
 import type { RegisterInput } from "@/schemas/register.schema"
 import argon2 from "argon2"
+import { toast } from "sonner"
+
+type CheckCredentialsResult =
+    { valid: false; error?: string } | { valid: true; requires2FA: boolean }
 
 type SignUpResult =
     | { success: true }
@@ -12,6 +18,13 @@ type SignUpResult =
 
 export async function signUp(data: RegisterInput): Promise<SignUpResult> {
     try {
+        const ip = await getClientIp()
+        const { success } = await signUpRateLimit.limit(ip)
+        if (!success) {
+            toast.error("Too many attempts. Try again later.")
+            return { success: false }
+        }
+
         const { username, email, password } = data
 
         const emailExists = await getUserByEmail(email)
@@ -40,7 +53,12 @@ export async function signUp(data: RegisterInput): Promise<SignUpResult> {
 export async function checkCredentials(
     email: string,
     password: string
-): Promise<{ valid: boolean; requires2FA?: boolean }> {
+): Promise<CheckCredentialsResult> {
+    const { success } = await loginRateLimit.limit(email)
+    if (!success) {
+        return { valid: false, error: "Too many attempts. Try again later." }
+    }
+
     const user = await getUserByEmail(email)
     if (!user) {
         return { valid: false }
