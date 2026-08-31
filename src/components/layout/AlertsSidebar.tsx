@@ -9,11 +9,16 @@ import { useNotifications } from "@/hooks/useNotifications"
 import { cn } from "@/lib/utils"
 
 type Props = {
+    isDesktop: boolean
     isOpen: boolean
     handleToggle: () => void
 }
 
-export default function AlertsSidebar({ isOpen, handleToggle }: Props) {
+export default function AlertsSidebar({
+    isDesktop,
+    isOpen,
+    handleToggle,
+}: Props) {
     const { notifications, markAsRead, markAllAsRead } = useNotifications()
 
     const unreadAmount =
@@ -51,8 +56,12 @@ export default function AlertsSidebar({ isOpen, handleToggle }: Props) {
                 />
             )}
             <motion.aside
-                initial={{ x: 0 }}
-                animate={{ width: isOpen ? 340 : 0 }}
+                initial={isDesktop ? { x: 340 } : { x: 300 }}
+                animate={
+                    isDesktop
+                        ? { x: isOpen ? 0 : 340, width: 340 }
+                        : { x: isOpen ? 0 : 300, width: 300 }
+                }
                 transition={{ type: "tween", duration: 0.2, ease: "easeOut" }}
                 className="bg-header border-l border-border min-h-screen fixed z-110 top-0 right-0 flex flex-col"
             >

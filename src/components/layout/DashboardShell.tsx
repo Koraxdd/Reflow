@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import DesktopHeader from "./DesktopHeader"
 import MobileHeader from "./MobileHeader"
 import Sidebar from "./Sidebar"
@@ -15,6 +15,12 @@ type Props = {
 export default function DashboardShell({ children }: Props) {
     const { isDesktop, isOpen, setIsOpen } = useDesktop()
     const [isAlertsOpen, setIsAlertsOpen] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (!isDesktop && isAlertsOpen) {
+            setIsOpen(false)
+        }
+    }, [isAlertsOpen, isDesktop])
 
     return (
         <>
@@ -34,6 +40,7 @@ export default function DashboardShell({ children }: Props) {
                 {children}
             </motion.main>
             <AlertsSidebar
+                isDesktop={isDesktop}
                 isOpen={isAlertsOpen}
                 handleToggle={() => setIsAlertsOpen((prev) => !prev)}
             />
