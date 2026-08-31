@@ -40,6 +40,10 @@ export default function SecurityTab() {
                 data.currentPassword,
                 data.newPassword
             )
+            if (res.success === false && res.error) {
+                toast.error(res.error)
+                return
+            }
             if (res?.error) {
                 setError("currentPassword", { message: res.error })
                 return
