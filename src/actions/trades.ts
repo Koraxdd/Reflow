@@ -16,6 +16,7 @@ import {
 } from "@/queries/trades"
 import { getUserById } from "@/queries/users"
 import { type TradeOutput } from "@/schemas/trade.schema"
+import { formatMoney } from "@/utils/formatMoney"
 
 export async function submitTrade(data: TradeOutput) {
     const userId = await getUserId()
@@ -25,7 +26,7 @@ export async function submitTrade(data: TradeOutput) {
     const { direction, amount, coin, entryPrice } = data
 
     const title = "Trade Executed"
-    const message = `${direction} ${amount} ${coin} @ ${entryPrice}`
+    const message = `${direction} ${amount} ${coin} @ ${formatMoney(entryPrice)}`
 
     await createTrade(userId, data)
     await sendTradeNotification(userId, user.email, title, message)

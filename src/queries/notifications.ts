@@ -22,6 +22,7 @@ export async function getUserNotifications(
 ): Promise<Notification[]> {
     return await prisma.notification.findMany({
         where: { userId },
+        orderBy: { createdAt: "desc" },
     })
 }
 
