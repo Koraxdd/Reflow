@@ -1,11 +1,12 @@
 "use client"
 
-import { type ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import DesktopHeader from "./DesktopHeader"
 import MobileHeader from "./MobileHeader"
 import Sidebar from "./Sidebar"
 import { motion } from "motion/react"
 import { useDesktop } from "@/hooks/useDesktop"
+import AlertsSidebar from "./AlertsSidebar"
 
 type Props = {
     children: ReactNode
@@ -13,6 +14,13 @@ type Props = {
 
 export default function DashboardShell({ children }: Props) {
     const { isDesktop, isOpen, setIsOpen } = useDesktop()
+    const [isAlertsOpen, setIsAlertsOpen] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (!isDesktop && isAlertsOpen) {
+            setIsOpen(false)
+        }
+    }, [isAlertsOpen, isDesktop])
 
     return (
         <>
@@ -21,6 +29,7 @@ export default function DashboardShell({ children }: Props) {
             <Sidebar
                 isDesktop={isDesktop}
                 isOpen={isOpen}
+                handleAlertsToggle={() => setIsAlertsOpen((prev) => !prev)}
                 handleToggle={() => setIsOpen((prev) => !prev)}
             />
             <motion.main
@@ -30,6 +39,11 @@ export default function DashboardShell({ children }: Props) {
             >
                 {children}
             </motion.main>
+            <AlertsSidebar
+                isDesktop={isDesktop}
+                isOpen={isAlertsOpen}
+                handleToggle={() => setIsAlertsOpen((prev) => !prev)}
+            />
         </>
     )
 }

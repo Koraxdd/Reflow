@@ -2,6 +2,7 @@
 
 import type { Trade } from "@/generated/prisma/client"
 import { getUserId } from "@/lib/getUserId"
+import { sendTradeNotification } from "@/lib/notifications"
 import {
     createTrade,
     deleteTradeById,
@@ -13,11 +14,22 @@ import {
     type TradeQueryOptions,
     type PaginatedTrades,
 } from "@/queries/trades"
+import { getUserById } from "@/queries/users"
 import { type TradeOutput } from "@/schemas/trade.schema"
+import { formatMoney } from "@/utils/formatMoney"
 
-export async function submitTrade(data: TradeOutput): Promise<Trade> {
+export async function submitTrade(data: TradeOutput) {
     const userId = await getUserId()
-    return await createTrade(userId, data)
+    const user = await getUserById(userId)
+    if (!user) return
+
+    const { direction, amount, coin, entryPrice } = data
+
+    const title = "Trade Executed"
+    const message = `${direction} ${amount} ${coin} @ ${formatMoney(entryPrice)}`
+
+    await createTrade(userId, data)
+    await sendTradeNotification(userId, user.email, title, message)
 }
 
 export async function getTrades(): Promise<Trade[]> {
