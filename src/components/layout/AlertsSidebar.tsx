@@ -132,14 +132,6 @@ export default function AlertsSidebar({ isOpen, handleToggle }: Props) {
                             )
                         })}
                 </div>
-                <div className="border-t border-border px-5 py-4">
-                    <Button
-                        variant="ghost"
-                        className="bg-white/5 border border-border w-full rounded-2xl py-2.5 text-xs font-semibold hover:opacity-80"
-                    >
-                        View all activity
-                    </Button>
-                </div>
             </motion.aside>
         </>
     )
