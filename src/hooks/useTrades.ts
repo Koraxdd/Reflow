@@ -49,6 +49,7 @@ export function useTrades(
         mutationFn: submitTrade,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["trades"] })
+            queryClient.invalidateQueries({ queryKey: ["notifications"] })
         },
     })
 
