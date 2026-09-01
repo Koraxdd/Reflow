@@ -147,7 +147,7 @@ A few choices worth calling out, since they came from real tradeoffs rather than
 
 **2FA**
 
-<p align="center"> <img src="images/2FA.png" alt="Two-factor authentication" width="500"> </p>
+<p align="center"> <img src="images/2FA.png" alt="Two-factor authentication" width="900"> </p>
 
 **Landing Page**
 
