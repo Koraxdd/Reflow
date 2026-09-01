@@ -1,4 +1,5 @@
 import AuthForm from "@/components/forms/AuthForm"
+import DemoButton from "@/components/ui/DemoButton"
 import { TrendingUp } from "lucide-react"
 
 export default function LandingPage() {
@@ -20,6 +21,7 @@ export default function LandingPage() {
                     </span>
                 </div>
                 <AuthForm />
+                <DemoButton />
             </div>
         </>
     )
