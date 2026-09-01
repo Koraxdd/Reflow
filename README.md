@@ -135,24 +135,24 @@ A few choices worth calling out, since they came from real tradeoffs rather than
 
 **Dashboard**
 
-![Dashboard](images/dashboard.png)
+<p align="center"> <img src="images/dashboard.png" alt="Dashboard" width="900"> </p>
 
 **Trade Journal**
 
-![Journal](images/journal.png)
+<p align="center"> <img src="images/journal.png" alt="Trade Journal" width="900"> </p>
 
 **Analytics**
 
-![Analytics](images/analytics.png)
+<p align="center"> <img src="images/analytics.png" alt="Analytics" width="900"> </p>
 
 **2FA**
 
-![2FA](images/2FA.png)
+<p align="center"> <img src="images/2FA.png" alt="Two-factor authentication" width="500"> </p>
 
 **Landing Page**
 
-![Landing](images/landing.png)
+<p align="center"> <img src="images/landing.png" alt="Landing Page" width="900"> </p>
 
 **Mobile**
 
-![Mobile](images/mobile.png)
+<p align="center"> <img src="images/mobile.png" alt="Mobile view" width="350"> </p>
