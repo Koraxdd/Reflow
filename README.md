@@ -5,13 +5,13 @@ A full-stack crypto trading journal with real-time market data, portfolio analyt
 **Live demo:** [reflow-bice.vercel.app](https://reflow-bice.vercel.app/)
 **Repo:** [github.com/Koraxdd/Reflow](https://github.com/Koraxdd/Reflow)
 
-> Try it instantly with the **Demo Login** button on the landing page — no signup required. (Note: the demo account is shared and public; please don't change its password. Use your own email to sign up if you want a private account.)
+> Try it instantly with the **Demo Login** button on the landing page — no signup required.
 
 ---
 
 ## TL;DR
 
-Reflow lets traders log crypto trades, track live prices via WebSocket, and analyze performance through an equity curve, win-rate stats, and portfolio allocation charts. Auth is built from scratch with NextAuth, including email verification (Resend), TOTP two-factor authentication (QR-code enrollment), and rate limiting on sensitive endpoints (Upstash Redis).
+Reflow lets traders log crypto trades, track live prices via WebSocket, and analyse performance through an equity curve, win-rate stats, and portfolio allocation charts. Auth is built from scratch with NextAuth, including email verification (Resend), TOTP two-factor authentication (QR-code enrollment), and rate limiting on sensitive endpoints (Upstash Redis).
 
 **Core stack:** Next.js (App Router) · TypeScript · Prisma · PostgreSQL (Neon) · TanStack Query · Tailwind CSS · Recharts · Motion
 
@@ -42,7 +42,7 @@ Full CRUD for trade entries — symbol, direction (long/short), entry/exit price
 ### Analytics
 
 - Win rate, best/worst trade, realized P&L breakdowns
-- Equity curve with selectable timeframes (1W / 1M / 3M / All)
+- Equity curve with selectable timeframes (1W / 1M / 3M / 6M / 1Y / All)
 - Trade history table with win/loss filtering, multi-field sorting, and pagination
 
 ### Settings
@@ -50,7 +50,7 @@ Full CRUD for trade entries — symbol, direction (long/short), entry/exit price
 - Profile management (username, timezone, base currency) with **safe email-change flow** — new address is held as `pendingEmail` and only promoted after re-verification, so a mistyped email can never lock a user out of their account
 - Password change with current-password confirmation
 - **Two-factor authentication** — TOTP enrollment with QR code, confirmation-before-enable, password-gated disable
-- Notification preferences and appearance settings (dark/light theme is fully wired via `next-themes`; a few preferences like compact view and default chart type are scaffolded in the UI/DB but not yet wired to behavior)
+- Notification preferences and appearance settings (dark/light theme is fully wired via `next-themes`, along with few preferences like compact view and default chart type)
 
 ### Alerts
 
@@ -60,22 +60,22 @@ In-app notification sidebar with read/unread state, mark-all-read, and optimisti
 
 ## Tech Stack
 
-| Layer            | Choice                                                                                     |
-| ---------------- | ------------------------------------------------------------------------------------------ |
-| Framework        | Next.js 15 (App Router, Server Components + Server Actions)                                |
-| Language         | TypeScript                                                                                 |
-| Database         | PostgreSQL (Neon), Prisma ORM                                                              |
-| Auth             | NextAuth (Credentials provider), Argon2 password hashing                                   |
-| 2FA              | otplib (TOTP) + qrcode                                                                     |
-| Email            | Resend                                                                                     |
-| Rate limiting    | Upstash Redis + `@upstash/ratelimit`                                                       |
-| Server state     | TanStack Query (React Query)                                                               |
-| Forms/validation | React Hook Form + Zod                                                                      |
-| Styling          | Tailwind CSS                                                                               |
-| Charts           | Recharts, TradingView widget                                                               |
-| Animation        | Motion                                                                                     |
-| Live market data | Binance public WebSocket streams; CoinGecko/Binance REST for historical & snapshot pricing |
-| Deployment       | Vercel                                                                                     |
+| Layer            | Choice                                                                           |
+| ---------------- | -------------------------------------------------------------------------------- |
+| Framework        | Next.js 15 (App Router, Server Components + Server Actions)                      |
+| Language         | TypeScript                                                                       |
+| Database         | PostgreSQL (Neon), Prisma ORM                                                    |
+| Auth             | NextAuth (Credentials provider), Argon2 password hashing                         |
+| 2FA              | otplib (TOTP) + qrcode                                                           |
+| Email            | Resend                                                                           |
+| Rate limiting    | Upstash Redis + `@upstash/ratelimit`                                             |
+| Server state     | TanStack Query (React Query)                                                     |
+| Forms/validation | React Hook Form + Zod                                                            |
+| Styling          | Tailwind CSS                                                                     |
+| Charts           | Recharts, TradingView widget                                                     |
+| Animation        | Motion                                                                           |
+| Live market data | Binance public WebSocket streams; Binance REST for historical & snapshot pricing |
+| Deployment       | Vercel                                                                           |
 
 ---
 
@@ -127,7 +127,6 @@ A few choices worth calling out, since they came from real tradeoffs rather than
 ## Known Limitations
 
 - **Email delivery** is sandboxed to my own address (Resend's free tier requires a verified custom domain to send to arbitrary recipients) — the demo account exists specifically so this doesn't block anyone from trying the app.
-- **Compact view, default chart type, and currency-display toggles** are stored and settable in the UI but not yet wired into rendering behavior everywhere.
 - **Price alerts, daily portfolio summaries, and crypto news digests** are present as notification-preference toggles but don't yet trigger — they require scheduled background jobs, which weren't in scope for this pass.
 
 ---
