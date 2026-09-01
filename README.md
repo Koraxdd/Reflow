@@ -132,3 +132,27 @@ A few choices worth calling out, since they came from real tradeoffs rather than
 ---
 
 ## Screenshots
+
+**Dashboard**
+
+![Dashboard](images/dashboard.png)
+
+**Trade Journal**
+
+![Journal](images/journal.png)
+
+**Analytics**
+
+![Analytics](images/analytics.png)
+
+**2FA**
+
+![2FA](images/2FA.png)
+
+**Landing Page**
+
+![Landing](images/landing.png)
+
+**Mobile**
+
+![Mobile](images/mobile.png)
